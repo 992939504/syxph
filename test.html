@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>改变困难度检测</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #121212;
+            --surface: #1E1E1E;
+            --surface-hover: #2A2A2A;
+            --text: #ffffff;
+            --text-secondary: #9CA3AF;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #333333;
+            --radius: 14px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 0 20px 48px;
+        }
+
+        /* ======== Header ======== */
+        .header {
+            padding: 40px 0 24px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.6em;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 0.92em;
+            color: var(--text-secondary);
+        }
+
+        /* ======== Progress ======== */
+        .progress-wrap {
+            margin-bottom: 28px;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .progress-info .current {
+            color: var(--accent);
+        }
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* ======== Question Card ======== */
+        .question-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px 24px 24px;
+            margin-bottom: 16px;
+        }
+        .question-card.animate-in {
+            animation: fadeSlideUp 0.35s ease;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-number {
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(59, 130, 246, 0.12);
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+        .q-text {
+            font-size: 1.08em;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* ======== Options ======== */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            user-select: none;
+        }
+        .option:hover {
+            background: var(--surface-hover);
+        }
+        .option.selected {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.08);
+        }
+        .option .radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .option.selected .radio {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+        .option.selected .radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        .option .opt-label {
+            flex: 1;
+            font-size: 0.92em;
+            font-weight: 400;
+        }
+        .option .opt-score {
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 20px;
+            text-align: center;
+        }
+        .option.selected .opt-score {
+            color: var(--accent);
+        }
+
+        /* ======== Result ======== */
+        .result-section {
+            display: none;
+            animation: fadeSlideUp 0.4s ease;
+        }
+        .result-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            margin-bottom: 16px;
+        }
+        .result-badge {
+            display: inline-block;
+            font-size: 0.82em;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+        .result-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        .result-score {
+            font-size: 0.88em;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .result-score strong {
+            color: var(--text);
+            font-size: 1.2em;
+        }
+        .result-desc {
+            font-size: 0.92em;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 16px;
+        }
+        .result-desc p {
+            margin-bottom: 12px;
+        }
+
+        /* Red alert - special */
+        .result-red .result-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .result-red .result-title {
+            color: #ef4444;
+        }
+        .result-red .hotline-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .result-red .hotline-box .hotline-num {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #ef4444;
+            letter-spacing: 1px;
+        }
+        .result-red .hotline-box .hotline-label {
+            font-size: 0.82em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Normal result variants */
+        .result-yellow .result-badge { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .result-yellow .result-title { color: #eab308; }
+
+        .result-green .result-badge { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .result-green .result-title { color: #22c55e; }
+
+        .result-orange .result-badge { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+        .result-orange .result-title { color: #f97316; }
+
+        .result-solution {
+            font-size: 0.92em;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+        .result-solution p {
+            margin-bottom: 8px;
+        }
+
+        /* CTA */
+        .cta-block {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .cta-btn {
+            display: block;
+            width: 100%;
+            padding: 18px 24px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .cta-btn:active {
+            transform: scale(0.98);
+        }
+        .cta-btn:hover {
+            background: var(--accent-hover);
+        }
+        .cta-hint {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            margin-bottom: 14px;
+        }
+        .cta-qr {
+            text-align: center;
+        }
+        .cta-qr img {
+            width: 160px;
+            height: 160px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .cta-qr .qr-label {
+            font-size: 0.82em;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* ======== Footer ======== */
+        .footer {
+            text-align: center;
+            padding: 24px 0 8px;
+            font-size: 0.75em;
+            color: #555;
+        }
+
+        /* ======== Mobile ======== */
+        @media (max-width: 480px) {
+            .container { padding: 0 16px 32px; }
+            .header { padding: 28px 0 20px; }
+            .header h1 { font-size: 1.35em; }
+            .question-card { padding: 22px 18px 20px; border-radius: 12px; }
+            .q-text { font-size: 1em; }
+            .option { padding: 12px 14px; gap: 12px; }
+            .option .opt-label { font-size: 0.88em; }
+            .result-card { padding: 22px 18px; }
+            .result-title { font-size: 1.15em; }
+            .cta-qr img { width: 140px; height: 140px; }
+        }
+
+        @media (max-width: 360px) {
+            .option .opt-score { display: none; }
+            .cta-btn { font-size: 0.95em; padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ======== Header ======== -->
+        <header class="header">
+            <h1>改变困难度检测</h1>
+            <p>7道题，帮你找到改变的卡点在哪</p>
+        </header>
+
+        <!-- ======== Progress ======== -->
+        <div class="progress-wrap">
+            <div class="progress-info">
+                <span>进度</span>
+                <span><span class="current" id="progress-current">1</span> / 7</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- ======== Question Area ======== -->
+        <div id="question-area"></div>
+
+        <!-- ======== Result Area ======== -->
+        <div class="result-section" id="result-section">
+            <div class="result-card" id="result-card">
+                <span class="result-badge" id="result-badge"></span>
+                <div class="result-title" id="result-title"></div>
+                <div class="result-score" id="result-score"></div>
+                <div class="result-desc" id="result-desc"></div>
+                <div class="result-solution" id="result-solution"></div>
+            </div>
+            <div id="result-cta"></div>
+        </div>
+
+        <!-- ======== Footer ======== -->
+        <footer class="footer">适应性平衡理论 &middot; 原创者：绝顶赵</footer>
+
+    </div>
+
+    <script>
+        (function() {
+            const questions = [
+                { id: 1, text: '我经常觉得对什么事情都提不起兴趣，做什么都觉得没意思' },
+                { id: 2, text: '我对目前的生活状态很满意，觉得就这样也挺好的' },
+                { id: 3, text: '我有很多想要改变的事情，但总是不知道从哪里开始' },
+                { id: 4, text: '一想到要改变，我就会感到焦虑和害怕，担心自己做不好' },
+                { id: 5, text: '我经常觉得自己很没用，什么事情都做不成' },
+                { id: 6, text: '我对未来没有什么期待，觉得过一天算一天就行' },
+                { id: 7, text: '如果现在不改变，我觉得我的人生会一直这样下去，不会有任何变化' }
+            ];
+
+            const labels = ['完全不符合', '不太符合', '一般', '比较符合', '完全符合'];
+
+            const results = [
+                {
+                    min: 28, max: 35,
+                    badge: 'RED ALERT',
+                    title: '红色预警区',
+                    desc: [
+                        '你现在处于非常脆弱的状态。你可能已经连续两周以上情绪低落，对任何事情都失去了兴趣，觉得活着没有意义。你可能经常感到疲惫、失眠、食欲不振，或者有过自杀的念头。'
+                    ],
+                    sol: [
+                        '请立刻停止所有关于"改变"和"自律"的想法。这不是你的错，你只是生病了，就像感冒发烧一样，需要休息和治疗。',
+                        '请尽快联系专业的心理医生或精神科医生寻求帮助。如果你有自杀的念头，请立刻拨打全国心理援助热线'
+                    ],
+                    hotline: '962525',
+                    type: 'red',
+                    showWechat: false
+                },
+                {
+                    min: 21, max: 27,
+                    badge: 'YELLOW ALERT',
+                    title: '黄色警告区',
+                    desc: [
+                        '你不是懒，也不是意志力差。',
+                        '你只是被大脑的适应性机制困住了。它已经把现在的生活标记为"安全"，所以会自动消解你所有的不满，让你觉得"就这样也挺好的"。',
+                        '你每天躺在床上刷手机，一边刷一边焦虑，一边焦虑一边继续刷。你不是不想动，你是根本不知道第一步该往哪迈。'
+                    ],
+                    sol: [
+                        '加我微信，我会告诉你：',
+                        '- 为什么你明明想改变，却总是动不起来',
+                        '- 如何用最小的力气，打破这种躺平的状态',
+                        '- 零到一的第一步，到底应该怎么走'
+                    ],
+                    type: 'yellow',
+                    showWechat: true,
+                    note: '躺平'
+                },
+                {
+                    min: 14, max: 20,
+                    badge: 'GREEN SAFE',
+                    title: '绿色安全区',
+                    desc: [
+                        '恭喜你！你正处于改变的最佳时机。',
+                        '你对生活中的某一件事有明确的不满，并且有改变的意愿。99%的人都错过了这个时期，因为他们用错了方法，把自己逼到了焦虑或者躺平的极端。',
+                        '你现在缺的不是努力，也不是意志力，而是一个正确的方法。'
+                    ],
+                    sol: [
+                        '加我微信，我会告诉你：',
+                        '- 改变的底层逻辑：为什么一次只能改一件事',
+                        '- 如何用"抓大放小"的策略，以最小的痛苦实现最大的改变',
+                        '- 抓住这个最佳时机，不要错过'
+                    ],
+                    type: 'green',
+                    showWechat: true,
+                    note: '改变'
+                },
+                {
+                    min: 7, max: 13,
+                    badge: 'ORANGE ALERT',
+                    title: '橙色警告区',
+                    desc: [
+                        '你不是不够努力，恰恰相反，你是太努力了。',
+                        '你对太多事情都感到不满，急于求成，想要一步登天。你经常给自己制定宏大的计划，但总是半途而废，然后陷入深深的自责和自我否定。',
+                        '你越逼自己，就越动不了。你已经陷入了"越努力越失败"的恶性循环。'
+                    ],
+                    sol: [
+                        '加我微信，我会告诉你：',
+                        '- 为什么急功近利必然失败',
+                        '- 如何停止内耗，一步一步地实现你的目标',
+                        '- 零到一的正确姿势，到底是什么'
+                    ],
+                    type: 'orange',
+                    showWechat: true,
+                    note: '焦虑'
+                }
+            ];
+
+            const questionArea = document.getElementById('question-area');
+            const resultSection = document.getElementById('result-section');
+            const progressCurrent = document.getElementById('progress-current');
+            const progressFill = document.getElementById('progress-fill');
+
+            let currentQ = 0;
+            let answers = new Array(questions.length).fill(null);
+            let isAnimating = false;
+
+            // Render current question
+            function renderQuestion(index) {
+                if (index >= questions.length) {
+                    showResult();
+                    return;
+                }
+
+                const q = questions[index];
+
+                let optionsHtml = '';
+                for (let i = 0; i < labels.length; i++) {
+                    const score = i + 1;
+                    const selected = answers[index] === score ? ' selected' : '';
+                    optionsHtml += '<div class="option' + selected + '" data-score="' + score + '">' +
+                        '<div class="radio"></div>' +
+                        '<span class="opt-label">' + labels[i] + '</span>' +
+                        '<span class="opt-score">' + score + '</span>' +
+                        '</div>';
+                }
+
+                const qHtml = document.createElement('div');
+                qHtml.className = 'question-card';
+                qHtml.innerHTML =
+                    '<div class="q-number">第 ' + (index + 1) + ' 题</div>' +
+                    '<div class="q-text">' + q.text + '</div>' +
+                    '<div class="options">' + optionsHtml + '</div>';
+
+                questionArea.innerHTML = '';
+                questionArea.appendChild(qHtml);
+
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        qHtml.classList.add('animate-in');
+                    });
+                });
+
+                // Bind option clicks
+                const opts = qHtml.querySelectorAll('.option');
+                opts.forEach(function(opt) {
+                    opt.addEventListener('click', function() {
+                        if (isAnimating) return;
+                        isAnimating = true;
+
+                        const score = parseInt(opt.getAttribute('data-score'));
+                        answers[index] = score;
+
+                        // Visual feedback
+                        opts.forEach(function(o) { o.classList.remove('selected'); });
+                        opt.classList.add('selected');
+
+                        // Update progress
+                        updateProgress(index + 1);
+
+                        // Next question after delay
+                        setTimeout(function() {
+                            currentQ++;
+                            isAnimating = false;
+                            renderQuestion(currentQ);
+                        }, 400);
+                    });
+                });
+            }
+
+            function updateProgress(answered) {
+                const pct = (answered / questions.length) * 100;
+                progressFill.style.width = pct + '%';
+                progressCurrent.textContent = Math.min(answered + 1, questions.length);
+            }
+
+            function showResult() {
+                const total = answers.reduce(function(sum, v) { return sum + v; }, 0);
+
+                const tier = results.find(function(r) { return total >= r.min && total <= r.max; }) || results[results.length - 1];
+
+                questionArea.style.display = 'none';
+
+                const card = document.getElementById('result-card');
+                card.className = 'result-card';
+
+                let cls = '';
+                if (tier.type === 'red') cls = 'result-red';
+                else if (tier.type === 'yellow') cls = 'result-yellow';
+                else if (tier.type === 'green') cls = 'result-green';
+                else if (tier.type === 'orange') cls = 'result-orange';
+                card.classList.add(cls);
+
+                document.getElementById('result-badge').textContent = tier.badge;
+                document.getElementById('result-title').textContent = tier.title;
+                document.getElementById('result-score').innerHTML = '你的总分：<strong>' + total + '</strong> / 35';
+
+                let descHtml = '';
+                tier.desc.forEach(function(p) { descHtml += '<p>' + p + '</p>'; });
+                document.getElementById('result-desc').innerHTML = descHtml;
+
+                let solHtml = '';
+                tier.sol.forEach(function(p) { solHtml += '<p>' + p + '</p>'; });
+                if (tier.hotline) {
+                    solHtml += '<div class="hotline-box">' +
+                        '<div class="hotline-num">' + tier.hotline + '</div>' +
+                        '<div class="hotline-label">全国心理援助热线</div>' +
+                        '</div>';
+                }
+                document.getElementById('result-solution').innerHTML = solHtml;
+
+                const ctaArea = document.getElementById('result-cta');
+                ctaArea.innerHTML = '';
+
+                if (tier.showWechat) {
+                    const ctaBlock = document.createElement('div');
+                    ctaBlock.className = 'cta-block';
+
+                    const ctaBtn = document.createElement('button');
+                    ctaBtn.type = 'button';
+                    ctaBtn.className = 'cta-btn';
+                    ctaBtn.textContent = '加我微信，获取零到一改变破局思路';
+
+                    const ctaHint = document.createElement('p');
+                    ctaHint.className = 'cta-hint';
+                    ctaHint.textContent = '备注"' + tier.note + '"，我通过后直接发给你';
+
+                    const ctaQr = document.createElement('div');
+                    ctaQr.className = 'cta-qr';
+
+                    const qrImg = document.createElement('img');
+                    qrImg.src = 'images/WeChat.png';
+                    qrImg.alt = '微信二维码';
+                    qrImg.loading = 'lazy';
+
+                    const qrLabel = document.createElement('p');
+                    qrLabel.className = 'qr-label';
+                    qrLabel.textContent = '扫码添加微信，备注"' + tier.note + '"';
+
+                    ctaQr.appendChild(qrImg);
+                    ctaQr.appendChild(qrLabel);
+                    ctaBlock.appendChild(ctaBtn);
+                    ctaBlock.appendChild(ctaHint);
+                    ctaArea.appendChild(ctaBlock);
+                    ctaArea.appendChild(ctaQr);
+
+                    ctaBtn.addEventListener('click', function() {
+                        ctaQr.scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+
+                resultSection.classList.add('show');
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // Initialize
+            renderQuestion(0);
+            updateProgress(0);
+        })();
+    </script>
+
+</body>
+</html>

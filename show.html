@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>适应天平 · 状态定位</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --destroy: #FF6B6B;
+            --eager: #FFA94D;
+            --balance: #20C997;
+            --waver: #748FFC;
+            --slack: #4DABF7;
+            --card: #FFFFFF;
+            --bg: #F2F3F7;
+            --primary: #5B5A6E;
+            --radius: 20px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.5;
+            color: #1D1D1F;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ======== 英雄区 ======== */
+        .hero {
+            background: linear-gradient(160deg, #FF6B6B 0%, #FFA94D 25%, #20C997 50%, #748FFC 75%, #4DABF7 100%);
+            padding: 48px 24px 56px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.12);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .hero-icon {
+            font-size: 3em;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .hero h1 {
+            font-size: 2em;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            -webkit-text-stroke: 1px rgba(0,0,0,0.3);
+            paint-order: stroke fill;
+        }
+        .hero .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.05em;
+            font-weight: 500;
+            -webkit-text-stroke: 0.6px rgba(0,0,0,0.2);
+            paint-order: stroke fill;
+        }
+
+        /* ======== 内容区 ======== */
+        .content {
+            max-width: 600px;
+            margin: -32px auto 0;
+            padding: 0 16px 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ======== 两轴定义 ======== */
+        .axis-defs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .axis-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .axis-card:active { transform: scale(0.97); }
+        .axis-card .icon { font-size: 2em; margin-bottom: 8px; display: block; }
+        .axis-card h3 { font-size: 1em; font-weight: 600; margin-bottom: 6px; }
+        .axis-card p { color: #86868B; font-size: 0.82em; line-height: 1.5; }
+        .axis-fire h3 { color: var(--destroy); }
+        .axis-water h3 { color: var(--slack); }
+        .highlight-fire {
+            background: #FFF0EE;
+            color: var(--destroy);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .highlight-water {
+            background: #EEF5FF;
+            color: var(--slack);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* ======== 天平区域 ======== */
+        .beam-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 28px 24px 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .beam-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .beam-labels .label-item {
+            font-size: 0.85em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .beam-labels .left  { color: var(--destroy); }
+        .beam-labels .right { color: var(--slack); }
+
+        /* 光束 */
+        .beam-track {
+            position: relative;
+            height: 24px;
+            border-radius: 12px;
+            background: linear-gradient(
+                to right,
+                var(--destroy) 0%,
+                var(--eager) 22%,
+                var(--balance) 50%,
+                var(--waver) 76%,
+                var(--slack) 100%
+            );
+            margin-bottom: 6px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            overflow: visible;
+        }
+        .beam-track::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            border-radius: 12px 12px 0 0;
+            pointer-events: none;
+        }
+
+        /* 光束指针 */
+        .beam-pointer {
+            position: absolute;
+            top: -6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid var(--balance);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            transform: translateX(-50%);
+            transition: left 0.08s ease, border-color 0.2s;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .beam-zones {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            font-weight: 600;
+            color: #B0B0B8;
+            padding: 0 2px;
+            margin-bottom: 24px;
+        }
+
+        /* ======== 滑块 ======== */
+        .slider-section {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 20px 16px;
+        }
+        .slider-header {
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #B0B0B8;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .slider-row .end-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+            min-width: 28px;
+            text-align: center;
+        }
+        .slider-row .end-label.fire { color: var(--destroy); }
+        .slider-row .end-label.water { color: var(--slack); }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, var(--destroy), var(--eager) 22%, var(--balance) 50%, var(--waver) 76%, var(--slack));
+            outline: none;
+        }
+        .slider-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 3px solid var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+            transition: transform 0.12s, border-color 0.2s;
+        }
+        .slider-row input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.08); }
+        .slider-row input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.04); }
+
+        .slider-row input[type="range"]::-moz-range-thumb {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: #FFFFFF; border: 3px solid var(--primary);
+            cursor: pointer; box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+        }
+        .slider-row input[type="range"]::-moz-range-track {
+            height: 8px; border-radius: 4px;
+            background: linear-gradient(to right, var(--destroy), var(--eager) 22%, var(--balance) 50%, var(--waver) 76%, var(--slack));
+            border: none;
+        }
+
+        /* 当前状态标签 */
+        .state-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1em;
+            letter-spacing: -0.2px;
+            transition: all 0.25s ease;
+        }
+        .state-badge .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        /* ======== 结果卡片 ======== */
+        .result-card {
+            display: none;
+            border-radius: 20px;
+            padding: 0;
+            background: #fff;
+            animation: slideUp 0.35s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .result-card.show { display: block; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-card::before {
+            display: none;
+        }
+
+        /* ---- 描边文字效果 ---- */
+        .result-card .r-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .result-card .r-quote {
+            font-size: 0.95em;
+            font-style: italic;
+            margin: 0 24px 16px;
+            padding: 10px 14px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border-left: 3px solid #ddd;
+            color: #666;
+        }
+
+        .result-card .r-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px 16px;
+            margin-bottom: 0;
+        }
+        .result-card .r-emoji { font-size: 2.4em; }
+
+        /* ---- 症状 / 解法 区块 ---- */
+        .r-section {
+            margin-bottom: 16px;
+            padding: 0 24px;
+        }
+        .r-section:last-child {
+            margin-bottom: 20px;
+        }
+        .r-section-title {
+            font-size: 0.78em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding: 4px 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            display: inline-block;
+            color: #333;
+        }
+        .r-section ul {
+            list-style: none;
+        }
+        .r-section li {
+            padding: 8px 0 8px 22px;
+            position: relative;
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: #333;
+        }
+        .r-section li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+        .r-section.solution li::before {
+            background: transparent;
+            width: 6px;
+            height: 6px;
+            border: 2px solid #999;
+        }
+
+        .card-destroy  .r-header { background: linear-gradient(135deg, #FF8E8E, #FF6B6B); }
+        .card-eager    .r-header { background: linear-gradient(135deg, #FFC078, #FFA94D); }
+        .card-balance  .r-header { background: linear-gradient(135deg, #4DDFB0, #20C997); }
+        .card-waver    .r-header { background: linear-gradient(135deg, #98A8FF, #748FFC); }
+        .card-slack    .r-header { background: linear-gradient(135deg, #78C8FF, #4DABF7); }
+
+        /* ======== 脚注 ======== */
+        .footer-note {
+            text-align: center;
+            padding: 20px 0 8px;
+            font-size: 0.78em;
+            color: #B0B0B8;
+        }
+
+        /* ======== 手机端适配 ======== */
+        @media (max-width: 480px) {
+            .hero { padding: 36px 16px 44px; }
+            .hero h1 { font-size: 1.6em; }
+            .hero-icon { font-size: 2.4em; }
+            .content { padding: 0 12px 32px; margin-top: -24px; }
+            .axis-defs { gap: 10px; }
+            .axis-card { padding: 16px 12px; }
+            .axis-card .icon { font-size: 1.6em; }
+            .axis-card h3 { font-size: 0.92em; }
+            .beam-card { padding: 20px 14px 18px; border-radius: 16px; }
+            .beam-track { height: 20px; border-radius: 10px; }
+            .beam-pointer { width: 30px; height: 30px; top: -5px; font-size: 12px; }
+            .slider-section { padding: 16px 12px; }
+            .slider-row input[type="range"]::-webkit-slider-thumb { width: 48px; height: 48px; }
+            .slider-row input[type="range"]::-moz-range-thumb { width: 48px; height: 48px; }
+            .result-card { padding: 22px 18px; border-radius: 16px; }
+            .result-card .r-emoji { font-size: 2.2em; }
+            .result-card .r-title { font-size: 1.3em; }
+            .r-section li { font-size: 0.85em; }
+            .beam-zones { font-size: 0.65em; }
+        }
+
+        @media (max-width: 360px) {
+            .hero { padding: 28px 12px 36px; }
+            .hero h1 { font-size: 1.35em; }
+            .axis-defs { grid-template-columns: 1fr; }
+            .beam-zones span:nth-child(2),
+            .beam-zones span:nth-child(4) { display: none; }
+        }
+        /* ======== 推广区域 ======== */
+        .promo-section {
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+        .promo-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 28px 24px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.35);
+        }
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .promo-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .promo-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .promo-desc {
+            font-size: 0.92em;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .promo-offer {
+            background: rgba(255,255,255,0.15);
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .promo-price {
+            text-align: center;
+            min-width: 70px;
+        }
+        .price-num {
+            font-size: 2.2em;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .price-unit {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+        .promo-include {
+            list-style: none;
+            flex: 1;
+        }
+        .promo-include li {
+            font-size: 0.88em;
+            padding: 4px 0;
+            opacity: 0.95;
+        }
+        .promo-cta {
+            text-align: center;
+            background: rgba(255,255,255,0.95);
+            color: #764ba2;
+            border-radius: 12px;
+            padding: 14px 20px;
+        }
+        .cta-label {
+            display: block;
+            font-size: 0.82em;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+        .cta-wechat {
+            font-size: 1.3em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 480px) {
+            .promo-card { padding: 24px 18px; }
+            .promo-title { font-size: 1.3em; }
+            .promo-offer { flex-direction: column; gap: 12px; text-align: center; }
+            .promo-include li { font-size: 0.85em; }
+            .price-num { font-size: 2em; }
+        }
+
+        @media (max-width: 360px) {
+            .promo-section { margin-top: 24px; }
+            .promo-card { padding: 20px 16px; border-radius: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== 英雄区 ======== -->
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-icon">⚖️</span>
+            <h1>适应天平</h1>
+            <p class="subtitle">拖动滑块，找到你此刻的位置</p>
+        </div>
+    </header>
+
+    <!-- ======== 内容 ======== -->
+    <main class="content">
+
+        <!-- 两轴定义 -->
+        <section class="axis-defs">
+            <article class="axis-card axis-fire">
+                <span class="icon">🔥</span>
+                <h3>不满意</h3>
+                <p>对现状的不满，是<span class="highlight-fire">改变的核燃料</span></p>
+            </article>
+            <article class="axis-card axis-water">
+                <span class="icon">💧</span>
+                <h3>适应性</h3>
+                <p>对痛苦的缓冲，是<span class="highlight-water">情绪的缓冲垫</span></p>
+            </article>
+        </section>
+
+        <!-- 天平区域 -->
+        <section class="beam-card">
+            <div class="beam-labels">
+                <span class="label-item left">🔥 不满意主导</span>
+                <span class="label-item right">💧 适应性主导</span>
+            </div>
+            <div class="beam-track" id="beam-track">
+                <div class="beam-pointer" id="beam-pointer">⚖️</div>
+            </div>
+            <div class="beam-zones">
+                <span>崩溃</span>
+                <span>三分钟热度</span>
+                <span>执行力</span>
+                <span>想动动不了</span>
+                <span>不想动</span>
+            </div>
+            <div class="slider-section">
+                <p class="slider-header">拖动选择你的位置</p>
+                <div class="slider-row">
+                    <span class="end-label fire">不满</span>
+                    <input type="range" id="balance-slider" min="0" max="100" value="50" step="1">
+                    <span class="end-label water">适应</span>
+                </div>
+                <div class="state-badge" id="state-badge">
+                    <span class="dot" id="state-dot"></span>
+                    <span id="state-name">平衡级</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== 毁灭级 ======== -->
+        <article id="card-destroy" class="result-card card-destroy">
+            <div class="r-header">
+                <span class="r-emoji">🔥</span>
+                <span class="r-title">毁灭级</span>
+            </div>
+            <div class="r-quote">"想毁灭世界，发现只能毁灭自己"</div>
+            <div class="r-section symptom">
+                <div class="r-section-title">🔍 症状</div>
+                <ul>
+                    <li>每天都在痛苦里，觉得活着不如死了</li>
+                    <li>对一切只剩下愤怒或绝望，没有缓冲</li>
+                    <li>知道自己该改变，但痛苦已经把行动力烧光了</li>
+                </ul>
+            </div>
+            <div class="r-section solution">
+                <div class="r-section-title">💡 解法</div>
+                <ul>
+                    <li>先保命，再谈改变——这不是意志力问题，是生存警报超载</li>
+                    <li>微量适应性注入：允许自己"今天只做到这一步"</li>
+                    <li>找一个安全的人倾诉，不要独自扛</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ======== 急功近利级 ======== -->
+        <article id="card-eager" class="result-card card-eager">
+            <div class="r-header">
+                <span class="r-emoji">⚡</span>
+                <span class="r-title">急功近利级</span>
+            </div>
+            <div class="r-quote">"想要立刻看到改变，立刻看到结果"</div>
+            <div class="r-section symptom">
+                <div class="r-section-title">🔍 症状</div>
+                <ul>
+                    <li>做事三分钟热度，刚开始很猛，很快泄气</li>
+                    <li>想要立刻看到结果，等不了</li>
+                    <li>总觉得"别人都在变好，只有我原地踏步"</li>
+                </ul>
+            </div>
+            <div class="r-section solution">
+                <div class="r-section-title">💡 解法</div>
+                <ul>
+                    <li>设定最低坚持期：14-30天内不评估结果，只记录次数</li>
+                    <li>每天给自己一个确定性积分 +1，不需要看到结果才满意</li>
+                    <li>天平翻转是非线性的——前期积累的是势能，不是位移</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ======== 平衡级 ======== -->
+        <article id="card-balance" class="result-card card-balance">
+            <div class="r-header">
+                <span class="r-emoji">✅</span>
+                <span class="r-title">平衡级（目标状态）</span>
+            </div>
+            <div class="r-quote">"让时间慢慢用于改变，让成果慢慢发芽"</div>
+            <div class="r-section symptom">
+                <div class="r-section-title">🔍 状态特征</div>
+                <ul>
+                    <li>有目标、有节奏、有耐心</li>
+                    <li>不满持续供能，但不会烧穿自己</li>
+                    <li>适应适度缓冲，但不会灭火</li>
+                </ul>
+            </div>
+            <div class="r-section solution">
+                <div class="r-section-title">🛡️ 保持方法</div>
+                <ul>
+                    <li>不满锚定具体目标，不泛化——对一切不满等于对什么都不满</li>
+                    <li>适应有边界，不越界——缓冲不等于麻醉</li>
+                    <li>每周一问："这周我淘汰了什么旧认知？"</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ======== 摇摆/空转 ======== -->
+        <article id="card-waver" class="result-card card-waver">
+            <div class="r-header">
+                <span class="r-emoji">🌫️</span>
+                <span class="r-title">摇摆／空转</span>
+            </div>
+            <div class="r-quote">"好像要动？好像也能不动……"</div>
+            <div class="r-section symptom">
+                <div class="r-section-title">🔍 症状</div>
+                <ul>
+                    <li>经常想改变，但很快就被"算了"消解</li>
+                    <li>看见别人努力会焦虑，但自己还是不动</li>
+                    <li>好像有点不满，又好像也还行——说不清</li>
+                </ul>
+            </div>
+            <div class="r-section solution">
+                <div class="r-section-title">💡 解法</div>
+                <ul>
+                    <li>量化你的时间分配——适应靠模糊生存，量化就是破局</li>
+                    <li>问自己："如果10年后还是这样，我能接受吗？"</li>
+                    <li>找一个让你"不服"的人或故事，唤醒不满</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ======== 摆烂级 ======== -->
+        <article id="card-slack" class="result-card card-slack">
+            <div class="r-header">
+                <span class="r-emoji">💧</span>
+                <span class="r-title">摆烂级</span>
+            </div>
+            <div class="r-quote">"什么时候快乐什么时候就行"</div>
+            <div class="r-section symptom">
+                <div class="r-section-title">🔍 症状</div>
+                <ul>
+                    <li>懂很多道理，但就是不行动</li>
+                    <li>对现状没有不满，觉得"也还行"</li>
+                    <li>别人问你想要什么，你说"不知道"或"都行"</li>
+                </ul>
+            </div>
+            <div class="r-section solution">
+                <div class="r-section-title">💡 解法</div>
+                <ul>
+                    <li>量化现状：记录每天真实时间分配，看清楚你把时间给了谁</li>
+                    <li>微量不满注入：问"10年后的我还是这样，能接受吗？"</li>
+                    <li>一毫克启动：今天做一件小到可笑的事——打开文档也算</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- ======== 推广区域 ======== -->
+        <section class="promo-section">
+            <div class="promo-card">
+                <div class="promo-badge">完整方法论</div>
+                <h3 class="promo-title">适应性平衡</h3>
+                <p class="promo-desc">
+                    从「崩溃」到「摆烂」，五级状态精准定位。<br>
+                    不只是诊断——是持续进化的行动系统。
+                </p>
+                <div class="promo-offer">
+                    <div class="promo-price">
+                        <span class="price-num">¥49</span>
+                        <span class="price-unit">元</span>
+                    </div>
+                    <ul class="promo-include">
+                        <li>📖 完整适应性平衡方法论</li>
+                        <li>🤖 一个知行合一智能体</li>
+                        <li>💬 一次一对一咨询</li>
+                    </ul>
+                </div>
+                <div class="promo-cta">
+                    <span class="cta-label">扫码添加微信</span>
+                    <span class="cta-wechat">think99zj</span>
+                </div>
+                <div style="text-align:center; margin-top:16px;">
+                    <img src="images/WeChat.png" alt="微信二维码" style="width:140px; height:140px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+                </div>
+            </div>
+        </section>
+
+        <p class="footer-note">适应性平衡模型 · 原创概念</p>
+    </main>
+
+    <script>
+        (() => {
+            const slider = document.getElementById('balance-slider');
+            const pointer = document.getElementById('beam-pointer');
+            const stateBadge = document.getElementById('state-badge');
+            const stateDot = document.getElementById('state-dot');
+            const stateName = document.getElementById('state-name');
+            const cards = {
+                destroy: document.getElementById('card-destroy'),
+                eager:   document.getElementById('card-eager'),
+                balance: document.getElementById('card-balance'),
+                waver:   document.getElementById('card-waver'),
+                slack:   document.getElementById('card-slack'),
+            };
+
+            const states = [
+                { min: 0,  max: 20, key: 'destroy', name: '毁灭级',     color: '#FF6B6B', bg: '#FFF0EE' },
+                { min: 21, max: 44, key: 'eager',   name: '急功近利级', color: '#FFA94D', bg: '#FFF5E6' },
+                { min: 45, max: 55, key: 'balance', name: '平衡级',     color: '#20C997', bg: '#E9FBF4' },
+                { min: 56, max: 80, key: 'waver',   name: '摇摆／空转', color: '#748FFC', bg: '#EEF0FF' },
+                { min: 81, max: 100,key: 'slack',   name: '摆烂级',     color: '#4DABF7', bg: '#EAF4FF' },
+            ];
+
+            function update() {
+                const v = parseInt(slider.value);
+                const s = states.find(st => v >= st.min && v <= st.max);
+
+                pointer.style.left = v + '%';
+                pointer.style.borderColor = s.color;
+
+                stateDot.style.background = s.color;
+                stateName.textContent = s.name;
+                stateName.style.color = s.color;
+                stateBadge.style.background = s.bg;
+
+                Object.values(cards).forEach(c => c.classList.remove('show'));
+                cards[s.key].classList.add('show');
+
+                if (window.innerWidth <= 480) {
+                    setTimeout(() => {
+                        cards[s.key].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 50);
+                }
+            }
+
+            slider.addEventListener('input', update);
+            update();
+        })();
+    </script>
+</body>
+</html>
