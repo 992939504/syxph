@@ -316,6 +316,24 @@
             color: var(--text-secondary);
             margin-top: 8px;
         }
+        .retry-wrap {
+            text-align: center;
+            margin-top: 12px;
+        }
+        .retry-btn {
+            background: none;
+            border: 1px solid #555;
+            color: #9CA3AF;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .retry-btn:hover {
+            color: #d1d5db;
+            border-color: #777;
+        }
 
         /* ======== Footer ======== */
         .footer {
@@ -342,6 +360,7 @@
         @media (max-width: 360px) {
             .option .opt-score { display: none; }
             .cta-btn { font-size: 0.95em; padding: 16px 20px; }
+            .retry-btn { font-size: 0.8em; padding: 8px 20px; }
         }
 
         /* ======== Desktop ======== */
@@ -390,6 +409,10 @@
                 padding: 20px 32px;
                 font-size: 1.1em;
             }
+            .retry-btn {
+                font-size: 0.9em;
+                padding: 12px 28px;
+            }
         }
     </style>
 </head>
@@ -427,6 +450,9 @@
                 <div class="result-solution" id="result-solution"></div>
             </div>
             <div id="result-cta"></div>
+            <div class="retry-wrap">
+                <button type="button" id="retry-btn" class="retry-btn">重新测试</button>
+            </div>
         </div>
 
         <!-- ======== Footer ======== -->
@@ -474,7 +500,7 @@
                         '你每天躺在床上刷手机，一边刷一边焦虑，一边焦虑一边继续刷。你不是不想动，你是根本不知道第一步该往哪迈。'
                     ],
                     sol: [
-                        '加我微信，我会告诉你：',
+                        '加我微信，我会把完整理论文档免费发给你：',
                         '- 为什么你明明想改变，却总是动不起来',
                         '- 如何用最小的力气，打破这种躺平的状态',
                         '- 零到一的第一步，到底应该怎么走'
@@ -493,7 +519,7 @@
                         '你现在缺的不是努力，也不是意志力，而是一个正确的方法。'
                     ],
                     sol: [
-                        '加我微信，我会告诉你：',
+                        '加我微信，我会把完整理论文档免费发给你：',
                         '- 改变的底层逻辑：为什么一次只能改一件事',
                         '- 如何用"抓大放小"的策略，以最小的痛苦实现最大的改变',
                         '- 抓住这个最佳时机，不要错过'
@@ -512,7 +538,7 @@
                         '你越逼自己，就越动不了。你已经陷入了"越努力越失败"的恶性循环。'
                     ],
                     sol: [
-                        '加我微信，我会告诉你：',
+                        '加我微信，我会把完整理论文档免费发给你：',
                         '- 为什么急功近利必然失败',
                         '- 如何停止内耗，一步一步地实现你的目标',
                         '- 零到一的正确姿势，到底是什么'
@@ -646,11 +672,11 @@
                     const ctaBtn = document.createElement('button');
                     ctaBtn.type = 'button';
                     ctaBtn.className = 'cta-btn';
-                    ctaBtn.textContent = '加我微信，获取零到一改变破局思路';
+                    ctaBtn.textContent = '加我微信，免费获取完整理论文档';
 
                     const ctaHint = document.createElement('p');
                     ctaHint.className = 'cta-hint';
-                    ctaHint.textContent = '备注"' + tier.note + '"，我通过后直接发给你';
+                    ctaHint.textContent = '备注"' + tier.note + '"，通过后免费发给你';
 
                     const ctaQr = document.createElement('div');
                     ctaQr.className = 'cta-qr';
@@ -662,7 +688,7 @@
 
                     const qrLabel = document.createElement('p');
                     qrLabel.className = 'qr-label';
-                    qrLabel.textContent = '扫码添加微信，备注"' + tier.note + '"';
+                    qrLabel.textContent = '扫码添加微信，免费获取完整理论文档，备注"' + tier.note + '"';
 
                     ctaQr.appendChild(qrImg);
                     ctaQr.appendChild(qrLabel);
@@ -679,6 +705,19 @@
                 resultSection.classList.add('show');
                 resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+
+            // Retry
+            document.getElementById('retry-btn').addEventListener('click', function() {
+                currentQ = 0;
+                answers = new Array(questions.length).fill(null);
+                isAnimating = false;
+                resultSection.classList.remove('show');
+                questionArea.style.display = 'block';
+                progressFill.style.width = '0%';
+                renderQuestion(0);
+                updateProgress(0);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
 
             // Initialize
             renderQuestion(0);

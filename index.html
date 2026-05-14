@@ -38,35 +38,17 @@
             padding: 48px 24px 40px;
             text-align: center;
         }
-        .hero-tag {
-            display: inline-block;
-            background: var(--accent);
-            color: #fff;
-            font-size: 0.75em;
-            font-weight: 600;
-            padding: 4px 14px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
         .hero h1 {
             font-size: 2em;
             font-weight: 700;
             letter-spacing: -0.5px;
             margin-bottom: 8px;
+            color: var(--primary);
         }
         .hero .subtitle {
             font-size: 1.05em;
             color: var(--secondary);
             font-weight: 500;
-        }
-        .hero .author {
-            margin-top: 12px;
-            font-size: 0.92em;
-            color: var(--secondary);
-        }
-        .hero .author strong {
-            color: var(--primary);
         }
 
         /* ======== Divider ======== */
@@ -195,7 +177,25 @@
             color: var(--accent);
         }
 
-        /* ======== Entry Cards ======== */
+        /* ======== Entry Cards ========
+         * 如需添加新的入口卡片，有两种方式：
+         *
+         * 方式 A：内部页面（如 show.html / test.html）
+         *   添加一个独立 class，如 .card-foo，包含背景渐变色 + 白色文字
+         *   参考 .card-show、.card-test
+         *
+         * 方式 B：外部链接（推荐）
+         *   HTML class 写 "entry-card card-external"
+         *   颜色用 style 行内写 background:linear-gradient(...)
+         *   无需新增任何 CSS
+         *   示例：
+         *   <a class="entry-card card-external" href="https://..."
+         *      style="background:linear-gradient(160deg, #c1, #c2)"
+         *      target="_blank" rel="noopener">
+         *       <span class="entry-name">名称</span>
+         *       <span class="entry-desc">一句话描述</span>
+         *   </a>
+         */
         .entry-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -237,6 +237,33 @@
             color: #fff;
         }
         .entry-card.card-test .entry-desc {
+            color: rgba(255,255,255,0.8);
+        }
+        .entry-card.card-md {
+            background: linear-gradient(160deg, #0f766e, #14b8a6);
+            color: #fff;
+        }
+        .entry-card.card-md .entry-desc {
+            color: rgba(255,255,255,0.8);
+        }
+        .entry-card.card-golden {
+            background: linear-gradient(160deg, #b45309, #f59e0b);
+            color: #fff;
+        }
+        .entry-card.card-golden .entry-desc {
+            color: rgba(255,255,255,0.8);
+        }
+        .entry-card.card-xiaozhi {
+            background: linear-gradient(160deg, #0891b2, #06b6d4);
+            color: #fff;
+        }
+        .entry-card.card-xiaozhi .entry-desc {
+            color: rgba(255,255,255,0.8);
+        }
+        .entry-card.card-external {
+            color: #fff;
+        }
+        .entry-card.card-external .entry-desc {
             color: rgba(255,255,255,0.8);
         }
 
@@ -290,6 +317,7 @@
                 padding: 32px;
             }
             .entry-grid {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 16px;
             }
             .entry-card {
@@ -330,10 +358,8 @@
 
         <!-- ======== Hero ======== -->
         <header class="hero">
-            <span class="hero-tag">原创理论</span>
-            <h1>适应性平衡理论</h1>
-            <p class="subtitle">人类改变的底层定律</p>
-            <p class="author">原创者：<strong>绝顶赵</strong></p>
+            <h1>绝顶赵</h1>
+            <p class="subtitle">适应性平衡理论 · 个人作品</p>
         </header>
 
         <!-- ======== Entries ======== -->
@@ -347,6 +373,18 @@
                 <a class="entry-card card-test" href="test.html">
                     <span class="entry-name">改变困难度检测</span>
                     <span class="entry-desc">7道题诊断你的改变卡点</span>
+                </a>
+                <a class="entry-card card-md" href="https://md.363749768.xyz/" target="_blank" rel="noopener">
+                    <span class="entry-name">MD 在线阅读器</span>
+                    <span class="entry-desc">阅读和浏览 Markdown 文档</span>
+                </a>
+                <a class="entry-card card-golden" href="https://www.goldentaskcalculator.dpdns.org/" target="_blank" rel="noopener">
+                    <span class="entry-name">黄金任务法</span>
+                    <span class="entry-desc">排序任务，找出你生活中最重要的</span>
+                </a>
+                <a class="entry-card card-xiaozhi" href="https://zcnfd45yf372.feishu.cn/wiki/FGOWwHhE4iM486knzNrc2wv8nAZ" target="_blank" rel="noopener">
+                    <span class="entry-name">小知</span>
+                    <span class="entry-desc">知识库整理助手，标记灵感和想法，形成知识图谱</span>
                 </a>
             </div>
         </section>
