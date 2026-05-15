@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>动力归位检测</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #121212;
+            --surface: #1E1E1E;
+            --surface-hover: #2A2A2A;
+            --text: #ffffff;
+            --text-secondary: #9CA3AF;
+            --accent: #7c3aed;
+            --accent-hover: #6d28d9;
+            --border: #333333;
+            --radius: 14px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 0 20px 48px;
+        }
+
+        /* ======== Header ======== */
+        .header {
+            padding: 40px 0 24px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.6em;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 12px;
+        }
+        .header .sub {
+            font-size: 0.92em;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .header .sub strong {
+            color: var(--accent);
+        }
+
+        /* ======== Progress ======== */
+        .progress-wrap {
+            margin-bottom: 28px;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .progress-info .current {
+            color: var(--accent);
+        }
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* ======== Question Card ======== */
+        .question-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px 24px 24px;
+            margin-bottom: 16px;
+        }
+        .question-card.animate-in {
+            animation: fadeSlideUp 0.35s ease;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-number {
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(124, 58, 237, 0.12);
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+        .q-dimension {
+            font-size: 0.72em;
+            color: var(--text-secondary);
+            margin-left: 8px;
+            display: inline-block;
+        }
+        .q-text {
+            font-size: 1.08em;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* ======== Options ======== */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            user-select: none;
+        }
+        .option:hover {
+            background: var(--surface-hover);
+        }
+        .option.selected {
+            border-color: var(--accent);
+            background: rgba(124, 58, 237, 0.08);
+        }
+        .option .radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .option.selected .radio {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+        .option.selected .radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        .option .opt-label {
+            flex: 1;
+            font-size: 0.92em;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* ======== Result ======== */
+        .result-section {
+            display: none;
+            animation: fadeSlideUp 0.4s ease;
+        }
+        .result-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            margin-bottom: 16px;
+        }
+        .result-badge {
+            display: inline-block;
+            font-size: 0.82em;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+        .result-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .result-score {
+            font-size: 0.88em;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .result-score strong {
+            color: var(--text);
+            font-size: 1.2em;
+        }
+        .result-desc {
+            font-size: 0.92em;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 16px;
+        }
+        .result-desc p {
+            margin-bottom: 12px;
+        }
+        .result-solution {
+            font-size: 0.92em;
+            line-height: 1.8;
+            color: #d1d5db;
+        }
+        .result-solution p {
+            margin-bottom: 8px;
+        }
+
+        /* Result color variants */
+        .result-driver .result-badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        .result-driver .result-title {
+            color: #22c55e;
+        }
+
+        .result-passenger .result-badge {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+        .result-passenger .result-title {
+            color: #eab308;
+        }
+
+        .result-complaint .result-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .result-complaint .result-title {
+            color: #ef4444;
+        }
+
+        .retry-wrap {
+            text-align: center;
+            margin-top: 12px;
+        }
+        .retry-btn {
+            background: none;
+            border: 1px solid #555;
+            color: #9CA3AF;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .retry-btn:hover {
+            color: #d1d5db;
+            border-color: #777;
+        }
+
+        /* ======== Footer ======== */
+        .footer {
+            text-align: center;
+            padding: 24px 0 8px;
+            font-size: 0.75em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* ======== Mobile ======== */
+        @media (max-width: 480px) {
+            .container { padding: 0 16px 32px; }
+            .header { padding: 28px 0 20px; }
+            .header h1 { font-size: 1.35em; }
+            .question-card { padding: 22px 18px 20px; border-radius: 12px; }
+            .q-text { font-size: 1em; }
+            .option { padding: 12px 14px; gap: 12px; }
+            .option .opt-label { font-size: 0.88em; }
+            .result-card { padding: 22px 18px; }
+            .result-title { font-size: 1.15em; }
+        }
+
+        @media (max-width: 360px) {
+            .retry-btn { font-size: 0.8em; padding: 8px 20px; }
+        }
+
+        /* ======== Desktop ======== */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+                padding: 0 32px 64px;
+            }
+            .header {
+                padding: 56px 0 32px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .header .sub {
+                font-size: 1em;
+            }
+            .question-card {
+                padding: 32px 28px;
+            }
+            .q-text {
+                font-size: 1.15em;
+            }
+            .options {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .option {
+                padding: 16px 20px;
+            }
+            .result-card {
+                padding: 36px 32px;
+            }
+            .result-title {
+                font-size: 1.5em;
+            }
+            .result-badge {
+                font-size: 0.88em;
+                padding: 8px 20px;
+            }
+            .result-desc {
+                font-size: 1em;
+            }
+            .result-solution {
+                font-size: 1em;
+            }
+            .retry-btn {
+                font-size: 0.9em;
+                padding: 12px 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ======== Header ======== -->
+        <header class="header">
+            <h1>动力归位检测</h1>
+            <p class="sub">
+                这不是一个给你打分的心理测试，而是一面照见你真实内心的镜子。
+                <strong>10道题</strong>，帮你搞清楚：你到底是自己人生的司机，还是乘客？
+            </p>
+        </header>
+
+        <!-- ======== Progress ======== -->
+        <div class="progress-wrap">
+            <div class="progress-info">
+                <span>进度</span>
+                <span><span class="current" id="progress-current">1</span> / 10</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- ======== Question Area ======== -->
+        <div id="question-area"></div>
+
+        <!-- ======== Result Area ======== -->
+        <div class="result-section" id="result-section">
+            <div class="result-card" id="result-card">
+                <span class="result-badge" id="result-badge"></span>
+                <div class="result-title" id="result-title"></div>
+                <div class="result-score" id="result-score"></div>
+                <div class="result-desc" id="result-desc"></div>
+                <div class="result-solution" id="result-solution"></div>
+            </div>
+            <div class="retry-wrap">
+                <button type="button" id="retry-btn" class="retry-btn">重新测试</button>
+            </div>
+        </div>
+
+        <!-- ======== Footer ======== -->
+        <footer class="footer">
+            本测试基于绝顶赵原创《适应性平衡理论》<br>
+            适应性平衡理论 &middot; 原创者：绝顶赵
+        </footer>
+
+    </div>
+
+    <script>
+        (function() {
+            var questions = [
+                {
+                    id: 1,
+                    text: '你对现在的生活不满意，你经常怎么想？',
+                    dimension: '乘客思维',
+                    options: [
+                        { label: '我得做点什么来改变现状', score: 1 },
+                        { label: '要是老板/父母/伴侣能改变就好了', score: 0 },
+                        { label: '要是天上能掉馅饼就好了', score: 0 }
+                    ]
+                },
+                {
+                    id: 2,
+                    text: '遇到困难的时候，你一般怎么处理？',
+                    dimension: '乘客思维',
+                    options: [
+                        { label: '先自己想办法解决', score: 1 },
+                        { label: '等着别人来帮我想办法', score: 0 },
+                        { label: '抱怨两句，然后放着不管', score: 0 }
+                    ]
+                },
+                {
+                    id: 3,
+                    text: '看到别人比你过得好，你通常会怎么想？',
+                    dimension: '乘客思维',
+                    options: [
+                        { label: '我也要做点什么让自己变得更好', score: 1 },
+                        { label: '人家命好/有背景，比不了', score: 0 },
+                        { label: '要是我也有那样的机会就好了', score: 0 }
+                    ]
+                },
+                {
+                    id: 4,
+                    text: '和人闹矛盾时，你首先想到的是什么？',
+                    dimension: '改变对象',
+                    options: [
+                        { label: '不管谁的错，我能做点什么来改善', score: 1 },
+                        { label: '他/她为什么要这样对我', score: 0 },
+                        { label: '只要对方先低头，一切就好', score: 0 }
+                    ]
+                },
+                {
+                    id: 5,
+                    text: '你觉得自己人生最大的问题在哪？',
+                    dimension: '改变对象',
+                    options: [
+                        { label: '我自己的某些习惯和做事方式', score: 1 },
+                        { label: '身边的一些人不靠谱', score: 0 },
+                        { label: '大环境不好，我能怎么办', score: 0 }
+                    ]
+                },
+                {
+                    id: 6,
+                    text: '你想要改变一件事，主要是因为什么？',
+                    dimension: '动力来源',
+                    options: [
+                        { label: '我自己受不了了，想活得更舒服', score: 1 },
+                        { label: '身边人都这样，不改变会被淘汰', score: 0 },
+                        { label: '我想证明给别人看', score: 0 }
+                    ]
+                },
+                {
+                    id: 7,
+                    text: '如果全世界只剩你一个人，你还会想做你现在想改变的那件事吗？',
+                    dimension: '动力来源',
+                    options: [
+                        { label: '会，那是我真心想要的', score: 1 },
+                        { label: '不会，那没什么意义了', score: 0 },
+                        { label: '可能会，但动力没那么强了', score: 0 }
+                    ]
+                },
+                {
+                    id: 8,
+                    text: '做一件事的时候，什么最能让你坚持下去？',
+                    dimension: '动力来源',
+                    options: [
+                        { label: '这件事本身让我有成就感、快乐', score: 1 },
+                        { label: '别人的认可和鼓励', score: 0 },
+                        { label: '怕做不好被人看不起', score: 0 }
+                    ]
+                },
+                {
+                    id: 9,
+                    text: '如果改变意味着要放弃一些安全和稳定，你愿意吗？',
+                    dimension: '安全感',
+                    options: [
+                        { label: '愿意，想要更好的生活就得承担风险', score: 1 },
+                        { label: '很纠结，既想改变又怕失去现在有的', score: 0 },
+                        { label: '不愿意，现在这样就挺安稳的', score: 0 }
+                    ]
+                },
+                {
+                    id: 10,
+                    text: '下面哪句话最接近你现在的状态？',
+                    dimension: '安全感',
+                    options: [
+                        { label: '我准备好了，该来的总要来', score: 1 },
+                        { label: '我也想改变，但现在还不是时候', score: 0 },
+                        { label: '就这样吧，折腾来折腾去也没什么意思', score: 0 }
+                    ]
+                }
+            ];
+
+            var results = [
+                {
+                    min: 8, max: 10,
+                    badge: '司机型人格',
+                    title: '你已经完成了动力归位',
+                    desc: [
+                        '恭喜你！你已经完成了动力归位，是自己人生的司机。',
+                        '你知道自己想要什么，也愿意为自己的人生负责。你拥有真正的、持久的内驱力，只要用对方法，你一定能够成功改变。'
+                    ],
+                    sol: [
+                        '现在你可以开始使用《适应性平衡理论》的核心方法——一次只改变一件事，抓大放小，稳步前进。',
+                        '记住：你的动力来自自己，只要方向正确，没有人能阻止你。'
+                    ],
+                    cls: 'result-driver'
+                },
+                {
+                    min: 4, max: 7,
+                    badge: '乘客型人格',
+                    title: '你现在还是人生的乘客',
+                    desc: [
+                        '你对现状不满，也想要改变，但你内心深处还在等着有一个人、一个机会来拉着你前进。',
+                        '你的动力不够稳定，很容易半途而废。你不是做不到，你只是还没有真正把人生的方向盘握在自己手里。'
+                    ],
+                    sol: [
+                        '先不要急着开始改变。花点时间想清楚：如果没有人会来帮你，你自己能做什么来让生活变得好一点点？',
+                        '从一件最小的事情开始，拿回人生的主动权。哪怕只是每天早起十分钟，都是在告诉自己：我在为自己而活。'
+                    ],
+                    cls: 'result-passenger'
+                },
+                {
+                    min: 0, max: 3,
+                    badge: '抱怨型人格',
+                    title: '你把力量用错了方向',
+                    desc: [
+                        '你把所有的问题都归罪于别人和环境。你觉得自己的所有不幸都是别人造成的，你不想改变自己，只想改变别人。',
+                        '在这种状态下，任何改变都不可能成功——因为你能改变的，从来都只有你自己。'
+                    ],
+                    sol: [
+                        '先停下来，不要再抱怨了。诚实地问自己一个问题：如果所有的人都永远不会改变，我该怎么办？',
+                        '当你真正面对这个问题的时候，改变才会开始。你唯一能掌控的，就是你自己。'
+                    ],
+                    cls: 'result-complaint'
+                }
+            ];
+
+            var questionArea = document.getElementById('question-area');
+            var resultSection = document.getElementById('result-section');
+            var progressCurrent = document.getElementById('progress-current');
+            var progressFill = document.getElementById('progress-fill');
+
+            var currentQ = 0;
+            var answers = new Array(questions.length).fill(null);
+            var isAnimating = false;
+
+            function renderQuestion(index) {
+                if (index >= questions.length) {
+                    showResult();
+                    return;
+                }
+
+                var q = questions[index];
+                var letters = ['A', 'B', 'C'];
+
+                var optionsHtml = '';
+                for (var i = 0; i < q.options.length; i++) {
+                    var opt = q.options[i];
+                    var selected = answers[index] === i ? ' selected' : '';
+                    optionsHtml += '<div class="option' + selected + '" data-index="' + i + '">' +
+                        '<div class="radio"></div>' +
+                        '<span class="opt-label">' + letters[i] + '. ' + opt.label + '</span>' +
+                        '</div>';
+                }
+
+                var qHtml = document.createElement('div');
+                qHtml.className = 'question-card animate-in';
+                qHtml.innerHTML =
+                    '<div class="q-number">第 ' + (index + 1) + ' 题<span class="q-dimension">' + q.dimension + '</span></div>' +
+                    '<div class="q-text">' + q.text + '</div>' +
+                    '<div class="options">' + optionsHtml + '</div>';
+
+                questionArea.innerHTML = '';
+                questionArea.appendChild(qHtml);
+
+                var opts = qHtml.querySelectorAll('.option');
+                opts.forEach(function(opt) {
+                    opt.addEventListener('click', function() {
+                        if (isAnimating) return;
+                        isAnimating = true;
+
+                        var optIdx = parseInt(opt.getAttribute('data-index'));
+                        answers[index] = optIdx;
+
+                        opts.forEach(function(o) { o.classList.remove('selected'); });
+                        opt.classList.add('selected');
+
+                        updateProgress(index + 1);
+
+                        setTimeout(function() {
+                            currentQ++;
+                            isAnimating = false;
+                            renderQuestion(currentQ);
+                        }, 400);
+                    });
+                });
+            }
+
+            function updateProgress(answered) {
+                var pct = (answered / questions.length) * 100;
+                progressFill.style.width = pct + '%';
+                progressCurrent.textContent = Math.min(answered + 1, questions.length);
+            }
+
+            function showResult() {
+                var total = 0;
+                for (var i = 0; i < answers.length; i++) {
+                    total += questions[i].options[answers[i]].score;
+                }
+
+                var tier = results[results.length - 1];
+                for (var i = 0; i < results.length; i++) {
+                    if (total >= results[i].min && total <= results[i].max) {
+                        tier = results[i];
+                        break;
+                    }
+                }
+
+                questionArea.style.display = 'none';
+
+                var card = document.getElementById('result-card');
+                card.className = 'result-card ' + tier.cls;
+
+                document.getElementById('result-badge').textContent = tier.badge;
+                document.getElementById('result-title').textContent = tier.title;
+                document.getElementById('result-score').innerHTML = '你的得分：<strong>' + total + '</strong> / 10';
+
+                var descHtml = '';
+                for (var i = 0; i < tier.desc.length; i++) {
+                    descHtml += '<p>' + tier.desc[i] + '</p>';
+                }
+                document.getElementById('result-desc').innerHTML = descHtml;
+
+                var solHtml = '';
+                for (var i = 0; i < tier.sol.length; i++) {
+                    solHtml += '<p>' + tier.sol[i] + '</p>';
+                }
+                document.getElementById('result-solution').innerHTML = solHtml;
+
+                resultSection.classList.add('show');
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            document.getElementById('retry-btn').addEventListener('click', function() {
+                currentQ = 0;
+                answers = new Array(questions.length).fill(null);
+                isAnimating = false;
+                resultSection.classList.remove('show');
+                questionArea.style.display = 'block';
+                progressFill.style.width = '0%';
+                renderQuestion(0);
+                updateProgress(0);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            renderQuestion(0);
+            updateProgress(0);
+        })();
+    </script>
+
+</body>
+</html>
