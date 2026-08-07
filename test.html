@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>改变困难度检测 · __SITE__</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233D5AFE'/%3E%3Ctext x='32' y='45' font-size='38' font-weight='700' text-anchor='middle' fill='white' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E7%BB%9D%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230A0A0A'/%3E%3Ctext x='32' y='45' font-size='36' font-weight='700' text-anchor='middle' fill='%23FFC300' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E7%BB%9D%3C/text%3E%3C/svg%3E">
     <!--
         站点名常量：改这里即可全站换名（导航 / 页脚 / <title> 全部跟随）。
         SITE.name  = 中文名
@@ -13,24 +13,26 @@
     <script>const SITE = { name: "绝顶赵", latin: "JUEDING ZHAO" }; document.title = document.title.replace("__SITE__", SITE.name);</script>
     <style>
         :root {
-            --bg: #F7F7F8;
+            --bg: #F4F2EC;
             --surface: #FFFFFF;
-            --surface-hover: #F2F2F5;
-            --text: #141417;
-            --text-secondary: #6E6E76;
-            --accent: #3D5AFE;
-            --accent-hover: #2F49E8;
-            --border: rgba(0, 0, 0, 0.08);
-            --radius: 16px;
-            --radius-lg: 20px;
-            --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            --surface-hover: #F6F4EE;
+            --ink: #0A0A0A;
+            --ink-2: #6E6E76;
+            --ink-3: #A8A8B0;
+            --accent: #FFC300;
+            --accent-hover: #FFD84D;
+            --line: rgba(0, 0, 0, 0.12);
+            --radius: 6px;
+            --radius-lg: 10px;
+            --spring: cubic-bezier(.16, 1, .3, 1);
+            --font: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: var(--font);
             background: var(--bg);
-            color: var(--text);
+            color: var(--ink);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -38,60 +40,69 @@
         }
         a { color: inherit; text-decoration: none; }
 
-        /* ======== 顶部导航 ======== */
+        /* ======== 顶部导航（黑色） ======== */
         .topnav {
             position: sticky; top: 0; z-index: 50;
-            background: rgba(247, 247, 248, 0.86);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border);
+            background: var(--ink);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
         }
         .topnav-inner {
             max-width: 1080px; margin: 0 auto;
-            height: 56px; padding: 0 24px;
+            height: 60px; padding: 0 24px;
             display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
-        .topnav-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 0.98em; letter-spacing: -0.01em; }
-        .brand-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--accent); flex-shrink: 0; }
+        .topnav-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 0.98em; color: #fff; letter-spacing: -0.01em; }
+        .brand-logo {
+            width: 28px; height: 28px;
+            background: var(--accent); color: var(--ink);
+            font-weight: 900; font-size: 1.05em;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 2px;
+        }
         .topnav-back {
             display: inline-flex; align-items: center; gap: 6px;
-            font-size: 0.85em; color: #4A4A52; font-weight: 600;
-            padding: 7px 14px; border-radius: 999px;
-            border: 1px solid rgba(0, 0, 0, 0.16); background: var(--surface);
-            transition: color 0.2s, border-color 0.2s, transform 0.2s;
+            font-size: 0.84em; font-weight: 600; color: rgba(255, 255, 255, 0.72);
+            padding: 7px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 2px;
+            transition: background 0.25s, color 0.25s, border-color 0.25s;
         }
-        .topnav-back:hover { color: var(--text); border-color: rgba(0, 0, 0, 0.3); }
+        .topnav-back:hover { color: var(--ink); background: var(--accent); border-color: var(--accent); }
         .topnav-back svg { width: 14px; height: 14px; }
         .progress-bar { position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--accent); }
 
         /* ======== 工具页 ======== */
-        .tool-main { max-width: 760px; margin: 0 auto; padding: 48px 24px 24px; }
+        .tool-main { max-width: 760px; margin: 0 auto; padding: 56px 24px 24px; }
         .tool-hero { text-align: center; padding: 8px 0 36px; }
         .tool-hero-icon {
-            width: 56px; height: 56px; border-radius: 18px;
-            background: rgba(61, 90, 254, 0.08); color: var(--accent);
+            width: 60px; height: 60px;
+            background: var(--ink); color: var(--accent);
             display: inline-flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
+            border-radius: 2px;
+            margin-bottom: 18px;
         }
         .tool-hero-icon svg { width: 28px; height: 28px; }
-        .tool-hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 10px; }
-        .tool-hero .sub { font-size: 0.96em; color: var(--text-secondary); }
+        .tool-hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px; }
+        .tool-hero .sub { font-size: 0.96em; color: var(--ink-2); }
 
         /* ======== Progress ======== */
         .progress-wrap { margin-bottom: 28px; }
         .progress-info {
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.85em; font-weight: 600; color: var(--text-secondary);
+            font-size: 0.85em; font-weight: 700; color: var(--ink-2);
             margin-bottom: 8px;
         }
-        .progress-info .current { color: var(--accent); }
-        .progress-bar-track { height: 6px; background: rgba(0, 0, 0, 0.07); border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease; }
+        .progress-info .current {
+            color: var(--ink); font-weight: 900;
+            background: var(--accent);
+            padding: 2px 9px; border-radius: 2px;
+        }
+        .progress-bar-track { height: 6px; background: rgba(0, 0, 0, 0.1); border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
 
         /* ======== Question Card ======== */
         .question-card {
             background: var(--surface);
-            border: 1px solid var(--border); border-radius: var(--radius);
+            border: 1px solid var(--line); border-radius: var(--radius);
             padding: 28px 24px 24px;
             margin-bottom: 16px;
         }
@@ -101,58 +112,58 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .q-number {
-            font-size: 0.78em; font-weight: 600; color: var(--accent);
-            background: rgba(61, 90, 254, 0.1);
-            display: inline-block; padding: 3px 12px; border-radius: 20px;
+            font-size: 0.78em; font-weight: 800; color: var(--ink);
+            background: var(--accent);
+            display: inline-block; padding: 4px 12px; border-radius: 2px;
             margin-bottom: 14px;
         }
-        .q-text { font-size: 1.08em; font-weight: 500; line-height: 1.7; margin-bottom: 24px; }
+        .q-text { font-size: 1.08em; font-weight: 600; line-height: 1.7; margin-bottom: 24px; }
 
         /* ======== Options ======== */
         .options { display: flex; flex-direction: column; gap: 10px; }
         .option {
             display: flex; align-items: center; gap: 14px;
             padding: 14px 18px;
-            background: #F6F6F8;
-            border: 1.5px solid transparent; border-radius: 12px;
+            background: var(--surface);
+            border: 1.5px solid var(--line); border-radius: var(--radius);
             cursor: pointer;
             transition: border-color 0.2s, background 0.2s;
             user-select: none;
         }
-        .option:hover { background: var(--surface-hover); }
-        .option.selected { border-color: var(--accent); background: rgba(61, 90, 254, 0.08); }
+        .option:hover { border-color: var(--ink); background: var(--surface-hover); }
+        .option.selected { border-color: var(--ink); background: var(--accent); }
         .option .radio {
             width: 20px; height: 20px; border-radius: 50%;
-            border: 2px solid rgba(0, 0, 0, 0.18);
+            border: 2px solid rgba(0, 0, 0, 0.3);
             flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
             transition: border-color 0.2s, background 0.2s;
         }
-        .option.selected .radio { border-color: var(--accent); background: var(--accent); }
+        .option.selected .radio { border-color: var(--ink); background: var(--ink); }
         .option.selected .radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
         .option .opt-label { flex: 1; font-size: 0.92em; font-weight: 400; }
         .option .opt-score {
-            font-size: 0.78em; font-weight: 600; color: var(--text-secondary);
+            font-size: 0.78em; font-weight: 800; color: var(--ink-2);
             min-width: 20px; text-align: center;
         }
-        .option.selected .opt-score { color: var(--accent); }
+        .option.selected .opt-score { color: var(--ink); }
 
         /* ======== Result ======== */
         .result-section { display: none; animation: fadeSlideUp 0.4s ease; }
         .result-section.show { display: block; }
         .result-card {
             background: var(--surface);
-            border: 1px solid var(--border); border-radius: var(--radius-lg);
+            border: 1px solid var(--line); border-radius: var(--radius-lg);
             padding: 28px 24px;
             margin-bottom: 16px;
         }
         .result-badge {
-            display: inline-block; font-size: 0.82em; font-weight: 700;
-            padding: 6px 16px; border-radius: 20px; margin-bottom: 16px;
+            display: inline-block; font-size: 0.82em; font-weight: 800;
+            padding: 6px 16px; border-radius: 2px; margin-bottom: 16px;
         }
-        .result-title { font-size: 1.3em; font-weight: 700; margin-bottom: 16px; line-height: 1.4; }
-        .result-score { font-size: 0.88em; color: var(--text-secondary); margin-bottom: 20px; }
-        .result-score strong { color: var(--text); font-size: 1.2em; }
+        .result-title { font-size: 1.3em; font-weight: 900; margin-bottom: 16px; line-height: 1.4; }
+        .result-score { font-size: 0.88em; color: var(--ink-2); margin-bottom: 20px; }
+        .result-score strong { color: var(--ink); font-size: 1.2em; }
         .result-desc { font-size: 0.92em; line-height: 1.85; color: #4A4A52; margin-bottom: 16px; }
         .result-desc p { margin-bottom: 12px; }
 
@@ -162,16 +173,16 @@
         .result-red .hotline-box {
             background: rgba(239, 68, 68, 0.08);
             border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 12px;
+            border-radius: 4px;
             padding: 16px 18px;
             margin-bottom: 16px;
             text-align: center;
         }
         .result-red .hotline-box .hotline-num {
-            font-size: 1.4em; font-weight: 700; color: #DC2626; letter-spacing: 1px;
+            font-size: 1.4em; font-weight: 900; color: #DC2626; letter-spacing: 1px;
         }
         .result-red .hotline-box .hotline-label {
-            font-size: 0.82em; color: var(--text-secondary); margin-top: 4px;
+            font-size: 0.82em; color: var(--ink-2); margin-top: 4px;
         }
 
         /* Normal result variants */
@@ -190,40 +201,45 @@
         .cta-btn {
             display: block; width: 100%;
             padding: 18px 24px;
-            background: var(--accent); color: #fff;
-            border: none; border-radius: 12px;
-            font-size: 1.05em; font-weight: 600; font-family: var(--font);
+            background: var(--ink); color: #fff;
+            border: none; border-radius: 2px;
+            font-size: 1.05em; font-weight: 800; font-family: var(--font);
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.2s, transform 0.1s, color 0.2s;
         }
         .cta-btn:active { transform: scale(0.98); }
-        .cta-btn:hover { background: var(--accent-hover); }
-        .cta-hint { font-size: 0.8em; color: var(--text-secondary); margin-top: 10px; margin-bottom: 14px; }
+        .cta-btn:hover { background: var(--accent); color: var(--ink); }
+        .cta-hint { font-size: 0.8em; color: var(--ink-2); margin-top: 10px; margin-bottom: 14px; }
         .cta-qr { text-align: center; }
         .cta-qr img {
-            width: 160px; height: 160px; border-radius: 12px;
-            border: 1px solid var(--border);
+            width: 160px; height: 160px; border-radius: 2px;
+            border: 2px solid var(--ink);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
-        .cta-qr .qr-label { font-size: 0.82em; color: var(--text-secondary); margin-top: 8px; }
+        .cta-qr .qr-label { font-size: 0.82em; color: var(--ink-2); margin-top: 8px; }
 
         .retry-wrap { text-align: center; margin-top: 12px; }
         .retry-btn {
-            background: none; border: 1px solid rgba(0, 0, 0, 0.2);
-            color: var(--text-secondary);
-            padding: 10px 24px; border-radius: 10px;
-            font-size: 0.85em; font-family: var(--font); cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
+            background: none; border: 1.5px solid var(--ink);
+            color: var(--ink-2);
+            padding: 10px 24px; border-radius: 2px;
+            font-size: 0.85em; font-family: var(--font); font-weight: 700; cursor: pointer;
+            transition: color 0.2s, background 0.2s, border-color 0.2s;
         }
-        .retry-btn:hover { color: var(--text); border-color: rgba(0, 0, 0, 0.3); }
+        .retry-btn:hover { color: #fff; background: var(--ink); }
 
-        /* ======== 页脚 ======== */
-        .footer { border-top: 1px solid var(--border); margin-top: 32px; padding: 42px 24px 52px; text-align: center; }
-        .footer p { font-size: 0.8em; color: var(--ink-3, #B0B0B8); line-height: 2; }
-        .footer p:first-child { color: var(--text-secondary); font-weight: 600; }
+        /* ======== 页脚（黑色） ======== */
+        .footer {
+            background: var(--ink);
+            margin-top: 40px;
+            padding: 56px 24px 60px; text-align: center;
+            border-top: none;
+        }
+        .footer p { font-size: 0.8em; color: rgba(255, 255, 255, 0.55); line-height: 2; }
+        .footer p:first-child { color: rgba(255, 255, 255, 0.78); font-weight: 600; }
 
         /* ======== 动效 ======== */
-        .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s var(--spring); }
         .reveal.in { opacity: 1; transform: none; }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
@@ -234,8 +250,8 @@
         /* ======== 响应式 ======== */
         @media (max-width: 640px) {
             .topnav-inner { padding: 0 16px; }
-            .tool-main { padding: 32px 16px 16px; }
-            .question-card { padding: 22px 18px 20px; border-radius: 14px; }
+            .tool-main { padding: 40px 16px 16px; }
+            .question-card { padding: 22px 18px 20px; border-radius: var(--radius); }
             .q-text { font-size: 1em; }
             .option { padding: 12px 14px; gap: 12px; }
             .option .opt-label { font-size: 0.88em; }
@@ -268,11 +284,11 @@
         <div class="progress-bar" id="progress-bar"></div>
         <div class="topnav-inner">
             <a class="topnav-brand" href="index.html">
-                <span class="brand-dot"></span>
+                <span class="brand-logo">绝</span>
                 <span data-site-name>绝顶赵</span>
             </a>
             <a class="topnav-back" href="index.html">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
                 返回首页
             </a>
         </div>
@@ -283,7 +299,7 @@
 
         <header class="tool-hero reveal">
             <div class="tool-hero-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
             </div>
             <h1>改变困难度检测</h1>
             <p class="sub">7道题，帮你找到改变的卡点在哪</p>
