@@ -419,6 +419,90 @@
             padding: 2px 14px; margin-left: 6px;
         }
 
+        /* ======== 付费咨询（服务区白卡 + 展开详情） ======== */
+        .consult-wrap { margin-bottom: 72px; }
+        .consult-card {
+            display: block; width: 100%;
+            text-align: left;
+            font-family: var(--font);
+            color: var(--black);
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 3px;
+            padding: 30px 34px;
+            cursor: pointer;
+            box-shadow: 8px 8px 0 rgba(10, 10, 10, 0.9);
+            transition: transform 0.35s var(--spring), box-shadow 0.35s var(--spring);
+        }
+        .consult-card:hover { transform: translate(-2px, -2px); box-shadow: 12px 12px 0 rgba(10, 10, 10, 0.9); }
+        .consult-card:active { transform: translate(0, 0) scale(0.99); }
+        .cc-top {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+        }
+        .cc-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
+        .cc-price-row {
+            display: flex; align-items: baseline; justify-content: space-between;
+            gap: 16px; flex-wrap: wrap;
+        }
+        .cc-price {
+            font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+            font-weight: 900; letter-spacing: -0.02em; line-height: 1.1;
+            background: linear-gradient(120deg, #FFC300, #FFD84D);
+            color: var(--black);
+            padding: 0.02em 0.18em;
+        }
+        .cc-hint {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em;
+            color: rgba(0, 0, 0, 0.6);
+            border-bottom: 2px solid var(--black);
+            padding-bottom: 2px;
+        }
+        .cc-hint svg { width: 16px; height: 16px; transition: transform 0.4s var(--spring); }
+        .consult-card.open .cc-hint svg { transform: rotate(180deg); }
+
+        /* 详情展开：grid 0fr→1fr 高度动画（不跳页，移动端顺滑） */
+        .consult-detail {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.55s var(--spring);
+        }
+        .consult-detail.open { grid-template-rows: 1fr; }
+        .cd-inner {
+            overflow: hidden; min-height: 0;
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-top: none;
+            border-radius: 0 0 3px 3px;
+            box-shadow: 8px 8px 0 rgba(10, 10, 10, 0.9);
+        }
+        .cd-body { padding: 28px 34px 34px; }
+        .cd-title {
+            font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+            font-weight: 900; letter-spacing: -0.02em; line-height: 1.4;
+            margin-bottom: 18px;
+        }
+        .cd-body p { font-size: 0.98em; line-height: 1.9; color: rgba(10, 10, 10, 0.88); margin-bottom: 14px; }
+        .cd-body p:last-child { margin-bottom: 0; }
+        .cd-list { list-style: none; margin: 0 0 14px; padding: 0; }
+        .cd-list li {
+            position: relative;
+            padding: 7px 0 7px 24px;
+            font-size: 0.97em; line-height: 1.8;
+            color: rgba(10, 10, 10, 0.88);
+        }
+        .cd-list li::before {
+            content: '';
+            position: absolute; left: 4px; top: 15px;
+            width: 7px; height: 7px;
+            background: var(--yellow);
+            border: 1.5px solid var(--black);
+            border-radius: 1px;
+        }
+        .cd-strong { font-weight: 800; color: var(--black); }
+
+
         /* ======== 关于区（白幕 · 左文右引 + 卷轴长字） ======== */
         .about { background: var(--paper); color: var(--black); }
         .about-wrap { max-width: 1180px; margin: 0 auto; padding: 110px 28px 90px; }
@@ -585,6 +669,11 @@
             .svc-grid { grid-template-columns: 1fr; gap: 34px; margin-bottom: 52px; }
             .svc-item { padding: 0; }
             .svc-item + .svc-item { border-left: none; border-top: 2px solid rgba(0, 0, 0, 0.55); padding-top: 34px; }
+            .consult-wrap { margin-bottom: 52px; }
+            .consult-card { padding: 24px 20px; }
+            .cc-price-row { gap: 10px; }
+            .cc-hint { font-size: 0.8rem; }
+            .cd-body { padding: 22px 20px 26px; }
             .about-cols { grid-template-columns: 1fr; gap: 40px; }
             .about-strip { padding: 40px 0; }
             .contact-links { gap: 10px; }
@@ -610,6 +699,7 @@
             .hero-fade { opacity: 1 !important; transform: none !important; }
             .mask-box .m { transform: none !important; }
             .reveal { opacity: 1 !important; transform: none !important; }
+            .consult-detail { grid-template-rows: 1fr !important; }
         </style>
     </noscript>
 
@@ -824,6 +914,40 @@
                 </div>
             </div>
 
+            <!-- ======== 付费咨询（点击展开详情） ======== -->
+            <div class="consult-wrap reveal">
+                <button type="button" class="consult-card" id="consult-toggle" aria-expanded="false" aria-controls="consult-detail">
+                    <div class="cc-top">
+                        <span class="cc-title">付费咨询</span>
+                    </div>
+                    <div class="cc-price-row">
+                        <span class="cc-price">99元/小时</span>
+                        <span class="cc-hint">点击查看详情
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                        </span>
+                    </div>
+                </button>
+                <div class="consult-detail" id="consult-detail">
+                    <div class="cd-inner">
+                        <div class="cd-body">
+                            <h3 class="cd-title">付费咨询：用我的方法，拆你的问题</h3>
+                            <p>你好，我是绝顶赵。小学二年级辍学，靠国家电视台自学认字，08年买了第一台电脑，从此一个人把知识的路走通到今天。</p>
+                            <p>我没有文凭，但我的方法全是自己身上长出来的——因为我知道"普通人学不进去"到底卡在哪。</p>
+                            <p>如果你正在经历这些：</p>
+                            <ul class="cd-list">
+                                <li>想学习，但一翻开书就犯困，买了课永远停在第一节</li>
+                                <li>执行力差，定了计划从没完成过，越拖越自责</li>
+                                <li>上班被老板PUA，内耗到下班，不知道自己在图什么</li>
+                                <li>想改变，但不知道自己要什么，干什么都没劲</li>
+                            </ul>
+                            <p>我能给你：60分钟一对一诊断，用我原创的方法论（执行力系统、职场不入局框架、认知决策工具）拆开你的具体问题，给你一张能直接照着做的方案，不是鸡汤，不是大道理。</p>
+                            <p><span class="cd-strong">费用：99元/小时（微信语音/文字均可）</span></p>
+                            <p>买的是方案，不是陪聊。加我微信，备注"咨询"。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <p class="svc-note reveal">以上服务均需联系购买 · 加微信 <strong>think99zj</strong> 咨询</p>
         </div>
     </section>
@@ -1003,6 +1127,17 @@
             if (topBtn) {
                 topBtn.addEventListener('click', function () {
                     window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+                });
+            }
+
+            /* ---------- 付费咨询展开/收起 ---------- */
+            var consultToggle = document.getElementById('consult-toggle');
+            var consultDetail = document.getElementById('consult-detail');
+            if (consultToggle && consultDetail) {
+                consultToggle.addEventListener('click', function () {
+                    var open = consultDetail.classList.toggle('open');
+                    consultToggle.classList.toggle('open', open);
+                    consultToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
                 });
             }
 
