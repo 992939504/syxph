@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获得执行力（中）：为什么我们无法行动？ · __SITE__</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233D5AFE'/%3E%3Ctext x='32' y='45' font-size='38' font-weight='700' text-anchor='middle' fill='white' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E7%BB%9D%3C/text%3E%3C/svg%3E">
+    <!--
+        站点名常量：改这里即可全站换名（导航 / 页脚 / <title> 全部跟随）。
+        SITE.name  = 中文名
+        SITE.latin = 拉丁展示字
+    -->
+    <script>const SITE = { name: "绝顶赵", latin: "JUEDING ZHAO" }; document.title = document.title.replace("__SITE__", SITE.name);</script>
+    <style>
+        :root {
+            --bg: #F7F7F8;
+            --surface: #FFFFFF;
+            --ink: #141417;
+            --ink-2: #6E6E76;
+            --ink-3: #B0B0B8;
+            --accent: #3D5AFE;
+            --accent-soft: rgba(61, 90, 254, 0.08);
+            --line: rgba(0, 0, 0, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* ======== 顶部导航 ======== */
+        .topnav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(247, 247, 248, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--line);
+        }
+        .topnav-inner {
+            max-width: 1080px; margin: 0 auto;
+            height: 56px; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        .topnav-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 0.98em; letter-spacing: -0.01em; }
+        .brand-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--accent); flex-shrink: 0; }
+        .topnav-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.85em; color: #4A4A52; font-weight: 600;
+            padding: 7px 14px; border-radius: 999px;
+            border: 1px solid rgba(0, 0, 0, 0.16); background: var(--surface);
+            transition: color 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .topnav-back:hover { color: var(--ink); border-color: rgba(0, 0, 0, 0.3); }
+        .topnav-back svg { width: 14px; height: 14px; }
+        .progress-bar { position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--accent); }
+
+        /* ======== 文章 ======== */
+        .article { max-width: 720px; margin: 0 auto; padding: 56px 24px 0; }
+        .article-head { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+        .article-head-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+        .badge-community {
+            display: inline-flex; align-items: center;
+            font-size: 0.73em; font-weight: 600; letter-spacing: 0.04em;
+            color: var(--accent); background: var(--accent-soft);
+            padding: 3px 10px; border-radius: 999px;
+        }
+        .article-series { font-size: 0.78em; color: var(--ink-2); font-weight: 500; }
+        .article-date { font-size: 0.78em; color: #8E8E96; margin-left: auto; font-variant-numeric: tabular-nums; }
+        .article-head-title {
+            font-size: clamp(1.7rem, 4.4vw, 2.35rem);
+            font-weight: 700; letter-spacing: -0.02em; line-height: 1.3;
+            margin-bottom: 12px;
+        }
+        .article-head-title .accent { color: var(--accent); }
+        .article-head-sub { font-size: 1.04em; color: var(--ink-2); line-height: 1.7; }
+
+        .article-body { max-width: 680px; }
+        .article-body p { font-size: 1.02em; line-height: 1.85; margin-bottom: 1.35em; }
+        .article-body p strong { font-weight: 700; }
+        .article-body .section-heading {
+            font-size: 1.35em; font-weight: 700; letter-spacing: -0.02em;
+            margin: 2em 0 0.8em;
+        }
+        .article-body .sub-heading {
+            font-size: 1.13em; font-weight: 700; letter-spacing: -0.01em;
+            margin: 1.8em 0 0.7em;
+        }
+        .article-body .keyword { color: var(--accent); font-weight: 700; }
+        .quote-block {
+            margin: 1.8em 0; padding: 20px 24px;
+            background: var(--surface);
+            border: 1px solid var(--line); border-left: 3px solid var(--ink);
+            border-radius: var(--radius-md);
+        }
+        .quote-block p { margin-bottom: 0.6em; color: #4A4A52; font-size: 0.98em; line-height: 1.8; }
+        .quote-block p:last-child { margin-bottom: 0; }
+        .qa-block {
+            margin: 1.8em 0; padding: 22px 24px;
+            background: rgba(61, 90, 254, 0.05);
+            border: 1px solid rgba(61, 90, 254, 0.2);
+            border-radius: var(--radius-md);
+        }
+        .qa-block .qa-label {
+            display: block; font-size: 0.76em; font-weight: 700; letter-spacing: 0.1em;
+            color: var(--accent); margin-bottom: 10px;
+        }
+        .qa-block .qa-q { font-size: 1em; font-weight: 700; line-height: 1.7; margin-bottom: 12px; }
+        .qa-block p { font-size: 0.97em; line-height: 1.8; margin-bottom: 0; }
+        .divider { height: 1px; background: var(--line); margin: 2.4em 0; border: none; }
+
+        .footer-note {
+            margin: 2.4em 0 0; padding: 30px 26px;
+            background: var(--surface);
+            border: 1px solid var(--line); border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        .footer-note .label {
+            display: block; font-size: 0.78em; font-weight: 700; letter-spacing: 0.16em;
+            color: var(--accent); margin-bottom: 12px;
+        }
+        .footer-note p { font-size: 0.95em; line-height: 1.85; color: var(--ink-2); }
+        .footer-note p strong { color: var(--ink); }
+
+        /* ======== 系列导航 ======== */
+        .series-nav {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            margin: 48px 0 0; padding-bottom: 8px;
+        }
+        .series-card {
+            display: flex; flex-direction: column; gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--line); border-radius: var(--radius-md);
+            padding: 18px 20px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .series-card:hover { transform: translateY(-2px); border-color: rgba(61, 90, 254, 0.4); box-shadow: 0 10px 26px rgba(20, 20, 23, 0.06); }
+        .series-label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76em; color: var(--ink-3); }
+        .series-label svg { width: 13px; height: 13px; }
+        .series-title { font-size: 0.98em; font-weight: 600; line-height: 1.5; }
+        .series-card.next { text-align: right; align-items: flex-end; }
+        .series-card.disabled { opacity: 0.42; pointer-events: none; }
+
+        /* ======== 页脚 ======== */
+        .footer { border-top: 1px solid var(--line); margin-top: 56px; padding: 42px 24px 52px; text-align: center; }
+        .footer p { font-size: 0.8em; color: var(--ink-3); line-height: 2; }
+        .footer p:first-child { color: var(--ink-2); font-weight: 600; }
+
+        /* ======== 动效 ======== */
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+
+        /* ======== 响应式 ======== */
+        @media (max-width: 640px) {
+            .topnav-inner { padding: 0 16px; }
+            .article { padding: 36px 16px 0; }
+            .article-body p { font-size: 1em; }
+            .series-nav { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== 顶部导航 ======== -->
+    <nav class="topnav">
+        <div class="progress-bar" id="progress-bar"></div>
+        <div class="topnav-inner">
+            <a class="topnav-brand" href="../index.html">
+                <span class="brand-dot"></span>
+                <span data-site-name>绝顶赵</span>
+            </a>
+            <a class="topnav-back" href="../index.html">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                返回首页
+            </a>
+        </div>
+    </nav>
+
+    <!-- ======== 文章 ======== -->
+    <article class="article">
+
+        <header class="article-head reveal">
+            <div class="article-head-meta">
+                <span class="badge-community">社群专享</span>
+                <span class="article-series">获得执行力 · 中</span>
+                <time class="article-date" datetime="2026-08-07">2026-08-07</time>
+            </div>
+            <h1 class="article-head-title">为什么我们<span class="accent">无法行动</span>？</h1>
+            <p class="article-head-sub">上期我们说改变不需要战胜自己。<br>这一期，我们来回答那个更深的问题：<br>我知道该做什么，可为什么就是不愿意去做？</p>
+        </header>
+
+        <div class="article-body reveal">
+
+            <p>感谢大家对上一期文章的支持、评论及问题。</p>
+
+            <p>以前有人问我迷茫怎么办，我总会说："那是因为你没在做事，做着做着就知道了。"</p>
+
+            <p>但后来我发现，这个回答只对一小部分人有用。对更多人来说，它是一句正确的废话。<strong>你连做什么都不知道，怎么做？</strong></p>
+
+            <p>我想重新回答这个问题。</p>
+
+            <p>到了今天，我才知道为什么很多人没有办法行动，也知道为什么我自己没有办法行动。</p>
+
+            <p>上一期我们分享了：改变必须配合环境才能发生。大部分人所谓的躺平、偷懒，其实是一种自我保护。真正的改变要从小于 1% 开始。找到生活当中不满的那一点，开始改变。</p>
+
+            <p>这期文章，我们一起了解一下：<strong>为什么我知道该做什么，可就是不愿意去做</strong>。而从根本上说，我们的出发点就错了。</p>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">一个丢脸的故事</h2>
+
+            <p>再次回到我的故事。</p>
+
+            <p>拥有电脑之后，我开始疯狂玩游戏。我爸说我不务正业。如果以正常人的视角看，那确实是不务正业。他让我在网络上赚钱，其实我是同意的，我知道赚钱是一件正确的事情。</p>
+
+            <p><strong class="keyword">可我就是无法开始。我就是有一种抵触心理。</strong></p>
+
+            <p>和大家坦白一件很羞耻的事。</p>
+
+            <p>网络上有句话说："有钱人的快乐，你想象不到。"可是，对于我来说，钱到底是什么？我在那个时候也想象不到。</p>
+
+            <p>从小到大，我没有自己的钱。我想要什么必须求别人，必须拿出十二分的态度恳求，而且不一定被同意。</p>
+
+            <p>所以这个时候你让我赚钱，我是非常不理解的。我为什么要去赚钱呢？赚的钱又不属于我自己，我又支配不了，那我到底是在为谁赚钱？我想自己买什么都得求别人。钱对我来说，不过是别人权力的一种表现。</p>
+
+            <div class="quote-block">
+                <p><strong>当你没有自己的钱包，没有对自己生命的权利的时候，你根本不会想去赚钱，因为那是在浪费时间。</strong></p>
+            </div>
+
+            <p>这个丢脸的故事，其实和改变的道理完全一样。</p>
+
+            <div class="quote-block">
+                <p><strong>当你连自己为什么要做一件事都不知道的时候，你根本不会去做。这不是懒，不是执行力差，这是你没找到那个属于你自己的答案。</strong></p>
+            </div>
+
+            <p>当我们觉得没有动力的时候，不是执行力有问题，而是我们没有想清楚，或者说有一个疑问没有被回答：<strong>我到底为了什么而行动？</strong></p>
+
+            <p>大部分人给的答案，尤其是比较敏感的人给的答案是，别人这样做，所以我也要这样做。但这个想法是违背自己意愿的，所以会本能地抵触。</p>
+
+            <p><strong>很多时候并不是执行力有问题，而是你没有找到行动的答案。</strong></p>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">你到底在为谁行动？</h2>
+
+            <p>有一句话叫："当你不知道自己为了什么而行动的时候，其实你在完成别人的目标。"这句话的意思是，大部分人都在瞎忙。还有一种解释是：当你的注意力花在别的地方的时候，你以为自己在活着、在娱乐，其实在完成别人的目标。</p>
+
+            <p>但这句话反过来也能用：<strong>当你感觉自己没有执行力的时候，试着想清楚，我为什么要这么做？它能完成什么样的目标？这个目标真的是我想要的吗？</strong></p>
+
+            <p>就像我爸让我赚钱，可我不知道我为什么要赚钱，我赚的钱又不在我的口袋里面。说得更难听一点，我甚至不知道"钱"这个概念到底是什么。我知道它可以买东西，可问题是，从小到大我就没有买过东西。只在有了网络之后，我给别人买过东西，但也只是给别人买东西。</p>
+
+            <p>而我今天才知道：<strong class="keyword">只有懂得花钱，你才会想赚钱。</strong></p>
+
+            <p>只有你用钱换到了实实在在的好处。哪怕是他妈充值玩游戏，也是一种好处。只有强烈的欲望想要什么，你才会去行动。不然的话，永远不可能行动。</p>
+
+            <p><strong>只有强烈的欲望想要什么，你才会去行动。不然，永远不可能行动。</strong></p>
+
+            <p>而我今天的目标就是赚到钱：给我奶奶买药，也为我以后的生存做准备。</p>
+
+            <p>转变的契机是什么呢？我爸把低保的卡给我了。我终于有了自己可以支配的钱。于是我玩游戏，于是我买东西，我开始网购，终于了解了钱是什么概念，以及钱可以干嘛。<strong class="keyword">人只有真正尝到支配的滋味，才会有行动的欲望。</strong></p>
+
+            <p>这个道理是相通的：大部分人追求的根本不是自己想要的。所以你会感受迷茫，感受自己根本没有执行力，然后又反过来审判自己。</p>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">两个答案</h2>
+
+            <p><strong>执行力的问题，底层还是"你到底想要什么"的终极问题。</strong></p>
+
+            <p>"我是为了什么而行动？"这个东西有两种答案。</p>
+
+            <h3 class="sub-heading">答案一：你还没体验过你想要的东西</h3>
+
+            <p>就像之前的例子，别人都说赚钱，但我就是没兴趣。因为钱不在我手里，我支配不了，我掌握不了。</p>
+
+            <p>当你没有目标的时候，试着问自己一个问题：<strong class="keyword">我是不是在压制自己的欲望？</strong></p>
+
+            <p>网上有人说：只有体验过美好，你才会追求美好。还有一个很粗暴的方法，去那些有钱人消费的地方，看一下他们在干什么。</p>
+
+            <p>所以，第一个答案就是：<strong>在遇到真正想做的事之前，我们是不知道自己想干什么的。</strong></p>
+
+            <h3 class="sub-heading">答案二：你体验过了，但你觉得得不到</h3>
+
+            <p>就像我自己。我内心是渴望的，渴望被爱，渴望被别人关注。但我知道那实现不了。在前网络时代，总会有人想找我网恋，但都被我拒绝了。因为我害怕给不了别人结果，我知道自己什么情况，所以我只能拒绝。</p>
+
+            <p>于是我才说自己没有欲望，不知道想要什么。</p>
+
+            <p>我相信这也是很多人的答案：<strong>我确实想要什么，但是实现不了，所以我只能伪装起来，我好像对什么都不感兴趣。</strong></p>
+
+            <p>扪心自问：我想要被爱，我想要被别人关注，我想要被别人认可。这就是核心出发点。找到这个之后，我才开始改变。</p>
+
+            <div class="quote-block">
+                <p><strong>你其实想要什么，但你觉得自己得不到，所以你告诉自己："我不想要。"这不是说谎，这是保护自己。</strong></p>
+            </div>
+
+            <p>就像我拒绝网恋，不是不渴望，是害怕给不了别人结果。</p>
+
+            <p>但今天我想告诉你：<strong class="keyword">那个你想要的东西，可能和你以为的路径不一样。你不要变成另一个人才能被爱，你只需要换一种方式证明自己值得被爱。</strong></p>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">如果实在找不到，那就去赚钱</h2>
+
+            <p>这两个答案，其实共同导向同一个目标：去赚钱。</p>
+
+            <p>如果你实在找不到自己真正想要什么，那就把赚钱当成答案。</p>
+
+            <div class="quote-block">
+                <p><strong>金钱的本质是别人认可你，认可你的劳动。它是这个世界上最高级的认可方式，是你的信用凭证，代表了多少人认可你。</strong></p>
+            </div>
+
+            <p>我不是说去坑蒙拐骗，而是说真正去创造价值，让别人愿意掏钱给你。这就是这个世界的认可。</p>
+
+            <p>也许你会说：你搞了半天，原来就是让我去挣钱。</p>
+
+            <p>对的。但理由不一样。<strong class="keyword">普通人挣钱是为了生存。而我们挣钱，是为了证明自己是一个值得被爱的人。</strong></p>
+
+            <p>查理·芒格说过一句话："如何找到很好的伴侣？那就是成为一个能配得上别人的人。"</p>
+
+            <p>这个答案放在朋友关系上也适用：你想要被别人渴望，那你就要值得被别人渴望。</p>
+
+            <p><strong>钱，就是证明你是一个值得被别人关注、值得被别人爱的人的标记。我说的不是资源的拥有量，而是持续创造资源的能力。</strong></p>
+
+            <p>反过来想，比起爱上一个拥有很多钱的人，我们更喜欢一个能赚取很多钱的人。</p>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">回答问题</h2>
+
+            <div class="qa-block">
+                <span class="qa-label">读者提问</span>
+                <div class="qa-q">"我既不知道自己想要什么，又觉得自己什么都做不了，那我要从哪里开始？"</div>
+                <p><strong>从体验开始，从不满开始。</strong>找到你生活当中不满的地方，然后尝试改变它。或者想象一下：如果解决了它，你的生活能有多好？</p>
+                <p style="margin-top:12px">这个问题有一个隐藏前提：大多数人害怕被人拒绝，太过于迎合别人。这是从小没有被爱的孩子共同的问题：你觉得自己在付出，但别人觉得你在矫情。所以，<strong>试着变得更"自私"一点，不要想那么多。</strong></p>
+            </div>
+
+            <div class="qa-block">
+                <span class="qa-label">读者提问</span>
+                <div class="qa-q">"如果赚钱是最高的认可方式，那我试过赚钱但失败了，是不是说明我没有价值？"</div>
+                <p>这个问题会在下一期详细回答。但现在可以先说一点：<strong class="keyword">不要把方法和价值判断混在一起。</strong></p>
+                <p style="margin-top:12px">你试过做什么但失败了，这是方法问题，和对你这个人的价值判断没有任何关系。</p>
+            </div>
+
+            <div class="quote-block">
+                <p><strong>不要把一个瞬间、一个过去，当作是你人生的所有证据。</strong></p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="footer-note">
+                <span class="label">预告</span>
+                <p>下一期，我们将进入实际操作，如何真实地迭代自己的方法？如何让自己一步一步变得更好？欢迎留言，我很期待大家的问题。欢迎在社区或微信中问我。</p>
+                <p style="margin-top:16px">但在那之前，我想让你记住这一期最重要的一句话：<br><strong>你想要的，和你以为自己想要的，可能不是同一个东西。先找到那个真正属于你的答案，然后再谈方法。顺序对了，一切才对。</strong></p>
+                <p style="margin-top:16px">看了这篇文章之后，也许你还是会感到迷茫。那也不要紧。</p>
+                <p>还有一个很简单的方法：不要问"我应该干嘛"，而要问"我想要什么"。就算只是"想玩游戏"也可以。那我现在的目标就是赚够能让我自由买游戏的钱。</p>
+            </div>
+
+        </div>
+
+        <!-- ======== 系列导航 ======== -->
+        <nav class="series-nav reveal">
+            <a class="series-card" href="获得执行力（上）.html">
+                <span class="series-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                    上一篇
+                </span>
+                <span class="series-title">获得执行力（上）</span>
+            </a>
+            <a class="series-card next" href="获得执行力（下）：行动的方法.html">
+                <span class="series-label">下一篇
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                </span>
+                <span class="series-title">获得执行力（下）· 行动的方法</span>
+            </a>
+        </nav>
+
+    </article>
+
+    <!-- ======== 页脚 ======== -->
+    <footer class="footer">
+        <p><span data-site-name>绝顶赵</span> · 个人博客</p>
+        <p>适应性平衡理论 · 原创者：<span data-site-name>绝顶赵</span></p>
+        <p>基于 MIT-Style with Attribution 协议发布</p>
+    </footer>
+
+    <script>
+        (function () {
+            var named = document.querySelectorAll('[data-site-name], [data-site-latin]');
+            for (var i = 0; i < named.length; i++) {
+                named[i].textContent = named[i].hasAttribute('data-site-name') ? SITE.name : SITE.latin;
+            }
+
+            var bar = document.getElementById('progress-bar');
+            function onScroll() {
+                if (!bar) return;
+                var h = document.documentElement;
+                var max = h.scrollHeight - h.clientHeight;
+                bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var reveals = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                for (var j = 0; j < reveals.length; j++) reveals[j].classList.add('in');
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+            for (var k = 0; k < reveals.length; k++) {
+                reveals[k].style.transitionDelay = Math.min(k * 70, 350) + 'ms';
+                io.observe(reveals[k]);
+            }
+        })();
+    </script>
+</body>
+</html>

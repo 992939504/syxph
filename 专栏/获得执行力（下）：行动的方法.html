@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获得执行力（下）：行动的方法 · __SITE__</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233D5AFE'/%3E%3Ctext x='32' y='45' font-size='38' font-weight='700' text-anchor='middle' fill='white' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E7%BB%9D%3C/text%3E%3C/svg%3E">
+    <!--
+        站点名常量：改这里即可全站换名（导航 / 页脚 / <title> 全部跟随）。
+        SITE.name  = 中文名
+        SITE.latin = 拉丁展示字
+    -->
+    <script>const SITE = { name: "绝顶赵", latin: "JUEDING ZHAO" }; document.title = document.title.replace("__SITE__", SITE.name);</script>
+    <style>
+        :root {
+            --bg: #F7F7F8;
+            --surface: #FFFFFF;
+            --ink: #141417;
+            --ink-2: #6E6E76;
+            --ink-3: #B0B0B8;
+            --accent: #3D5AFE;
+            --accent-soft: rgba(61, 90, 254, 0.08);
+            --accent-lite: #7C8CFF;
+            --line: rgba(0, 0, 0, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* ======== 顶部导航 ======== */
+        .topnav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(247, 247, 248, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--line);
+        }
+        .topnav-inner {
+            max-width: 1080px; margin: 0 auto;
+            height: 56px; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        .topnav-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 0.98em; letter-spacing: -0.01em; }
+        .brand-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--accent); flex-shrink: 0; }
+        .topnav-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.85em; color: #4A4A52; font-weight: 600;
+            padding: 7px 14px; border-radius: 999px;
+            border: 1px solid rgba(0, 0, 0, 0.16); background: var(--surface);
+            transition: color 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .topnav-back:hover { color: var(--ink); border-color: rgba(0, 0, 0, 0.3); }
+        .topnav-back svg { width: 14px; height: 14px; }
+        .progress-bar { position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--accent); }
+
+        /* ======== 文章 ======== */
+        .article { max-width: 720px; margin: 0 auto; padding: 56px 24px 0; }
+        .article-head { margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+        .article-head-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+        .badge-community {
+            display: inline-flex; align-items: center;
+            font-size: 0.73em; font-weight: 600; letter-spacing: 0.04em;
+            color: var(--accent); background: var(--accent-soft);
+            padding: 3px 10px; border-radius: 999px;
+        }
+        .article-series { font-size: 0.78em; color: var(--ink-2); font-weight: 500; }
+        .article-date { font-size: 0.78em; color: #8E8E96; margin-left: auto; font-variant-numeric: tabular-nums; }
+        .article-head-title {
+            font-size: clamp(1.7rem, 4.4vw, 2.35rem);
+            font-weight: 700; letter-spacing: -0.02em; line-height: 1.3;
+            margin-bottom: 12px;
+        }
+        .article-head-title .accent { color: var(--accent); }
+        .article-head-sub { font-size: 1.04em; color: var(--ink-2); line-height: 1.7; }
+
+        .article-body { max-width: 680px; }
+        .article-body p { font-size: 1.02em; line-height: 1.85; margin-bottom: 1.35em; }
+        .article-body p strong { font-weight: 700; }
+        .article-body .section-heading {
+            font-size: 1.35em; font-weight: 700; letter-spacing: -0.02em;
+            margin: 2em 0 0.8em;
+        }
+        .article-body .keyword { color: var(--accent); font-weight: 700; }
+        .quote-block {
+            margin: 1.8em 0; padding: 20px 24px;
+            background: var(--surface);
+            border: 1px solid var(--line); border-left: 3px solid var(--ink);
+            border-radius: var(--radius-md);
+        }
+        .quote-block p { margin-bottom: 0.6em; color: #4A4A52; font-size: 0.98em; line-height: 1.8; }
+        .quote-block p:last-child { margin-bottom: 0; }
+        .qa-block {
+            margin: 1.8em 0; padding: 22px 24px;
+            background: rgba(61, 90, 254, 0.05);
+            border: 1px solid rgba(61, 90, 254, 0.2);
+            border-radius: var(--radius-md);
+        }
+        .qa-block .qa-label {
+            display: block; font-size: 0.76em; font-weight: 700; letter-spacing: 0.1em;
+            color: var(--accent); margin-bottom: 10px;
+        }
+        .qa-block .qa-q { font-size: 1em; font-weight: 700; line-height: 1.7; margin-bottom: 12px; }
+        .qa-block p { font-size: 0.97em; line-height: 1.8; margin-bottom: 0; }
+        .case-block {
+            margin: 1.8em 0; padding: 20px 24px;
+            background: rgba(255, 159, 67, 0.07);
+            border: 1px solid rgba(255, 159, 67, 0.22);
+            border-radius: var(--radius-md);
+        }
+        .case-block .case-label {
+            display: block; font-size: 0.76em; font-weight: 700; letter-spacing: 0.1em;
+            color: #B45309; margin-bottom: 10px;
+        }
+        .case-block p { font-size: 0.97em; line-height: 1.8; margin-bottom: 10px; }
+        .case-block p:last-child { margin-bottom: 0; }
+        .framework-block {
+            margin: 1.8em 0; padding: 24px 26px;
+            background: rgba(124, 58, 237, 0.06);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: var(--radius-md);
+        }
+        .framework-block .fw-label {
+            display: block; font-size: 0.78em; font-weight: 700; letter-spacing: 0.16em;
+            color: #6D28D9; margin-bottom: 16px;
+        }
+        .framework-block .fw-item { margin-bottom: 12px; line-height: 1.85; font-size: 0.97em; }
+        .framework-block .fw-item:last-child { margin-bottom: 0; }
+        .framework-block .fw-term { font-weight: 800; color: #5B21B6; }
+        .divider { height: 1px; background: var(--line); margin: 2.4em 0; border: none; }
+
+        .footer-note {
+            margin: 2.4em 0 0; padding: 30px 26px;
+            background: var(--surface);
+            border: 1px solid var(--line); border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        .footer-note .label {
+            display: block; font-size: 0.78em; font-weight: 700; letter-spacing: 0.16em;
+            color: var(--accent); margin-bottom: 12px;
+        }
+        .footer-note p { font-size: 0.95em; line-height: 1.85; color: var(--ink-2); }
+        .footer-note p strong { color: var(--ink); }
+
+        /* ======== 推广 ======== */
+        .promo-block {
+            margin: 2.4em 0; padding: 36px 30px;
+            background: var(--ink);
+            border-radius: var(--radius-lg);
+            text-align: center; color: #fff;
+        }
+        .promo-block .promo-title { font-size: 1.3em; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 16px; }
+        .promo-block p { font-size: 0.94em; line-height: 1.85; color: rgba(255, 255, 255, 0.82); margin-bottom: 12px; }
+        .promo-block p strong { color: #fff; }
+        .promo-block .promo-price {
+            font-size: 3em; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+            color: var(--accent-lite); margin: 16px 0 6px;
+        }
+        .promo-block .promo-wechat { font-size: 1.05em; font-weight: 700; color: #fff; margin: 18px 0 12px; }
+        .promo-block .promo-wechat span { color: var(--accent-lite); }
+        .promo-block .promo-muted { font-size: 0.85em; color: rgba(255, 255, 255, 0.55); }
+
+        /* ======== 系列导航 ======== */
+        .series-nav {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            margin: 48px 0 0; padding-bottom: 8px;
+        }
+        .series-card {
+            display: flex; flex-direction: column; gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--line); border-radius: var(--radius-md);
+            padding: 18px 20px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .series-card:hover { transform: translateY(-2px); border-color: rgba(61, 90, 254, 0.4); box-shadow: 0 10px 26px rgba(20, 20, 23, 0.06); }
+        .series-label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76em; color: var(--ink-3); }
+        .series-label svg { width: 13px; height: 13px; }
+        .series-title { font-size: 0.98em; font-weight: 600; line-height: 1.5; }
+        .series-card.next { text-align: right; align-items: flex-end; }
+        .series-card.disabled { opacity: 0.42; pointer-events: none; }
+
+        /* ======== 页脚 ======== */
+        .footer { border-top: 1px solid var(--line); margin-top: 56px; padding: 42px 24px 52px; text-align: center; }
+        .footer p { font-size: 0.8em; color: var(--ink-3); line-height: 2; }
+        .footer p:first-child { color: var(--ink-2); font-weight: 600; }
+
+        /* ======== 动效 ======== */
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+
+        /* ======== 响应式 ======== */
+        @media (max-width: 640px) {
+            .topnav-inner { padding: 0 16px; }
+            .article { padding: 36px 16px 0; }
+            .article-body p { font-size: 1em; }
+            .series-nav { grid-template-columns: 1fr; }
+            .promo-block { padding: 28px 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== 顶部导航 ======== -->
+    <nav class="topnav">
+        <div class="progress-bar" id="progress-bar"></div>
+        <div class="topnav-inner">
+            <a class="topnav-brand" href="../index.html">
+                <span class="brand-dot"></span>
+                <span data-site-name>绝顶赵</span>
+            </a>
+            <a class="topnav-back" href="../index.html">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                返回首页
+            </a>
+        </div>
+    </nav>
+
+    <!-- ======== 文章 ======== -->
+    <article class="article">
+
+        <header class="article-head reveal">
+            <div class="article-head-meta">
+                <span class="badge-community">社群专享</span>
+                <span class="article-series">获得执行力 · 下</span>
+                <time class="article-date" datetime="2026-08-07">2026-08-07</time>
+            </div>
+            <h1 class="article-head-title">行动的<span class="accent">方法</span></h1>
+            <p class="article-head-sub">当我们有了动力之后，剩下的就是方法问题。<br>三个方法，让你从"知道"走到"做到"。</p>
+        </header>
+
+        <div class="article-body reveal">
+
+            <p>再次感谢大家的观看和评论上一期文章。</p>
+
+            <p>当我们有动力之后，剩下的就是方法问题了，这也是最好解决的问题了。</p>
+
+            <p>我一年之前的状态，大概每天要玩6个多小时游戏，而且是一种逃避状态。就像上一期我们说过，心里知道我们是有什么目标的，但是我们感觉实现不了，于是只能逃避，去沉浸到游戏当中、小说当中或者短剧当中。</p>
+
+            <p>所以检查你自己是不是这种状态，只需要看你刷短视频、玩游戏、看小说，是沉浸进去呢，还是真的想要把它做好。比如说，玩游戏也会查攻略，也会查百科，看二创，看小说你会写书评。这种状态是一种享受状态，但如果你不是这样的话，那你就像我之前一样，渴望被爱，但是达不到，于是只能去选择逃避。</p>
+
+            <p>但是一年之后，我可以读书写作6个小时，关键就在于找到你自己的目标，想办法得到它。我渴望被爱，但是我换了一种形式。最爱我的那个人早在我8岁的时候就离去了，但我现在有大家关注着我，让我体验到了另一种被爱的方式。这也就是我的目标。我能看见，你也可以。</p>
+
+            <hr class="divider">
+
+            <p>下面是我改变的方法，以问答形式给大家解释。</p>
+
+            <div class="qa-block">
+                <span class="qa-label">Q1 · 环境诱惑太大，总是失败</span>
+                <div class="qa-q">生活的环境诱惑太大了，我总是失败。忍不住玩游戏，忍不住刷短视频。我知道这样做是不对的，我也想去看书。</div>
+                <p>如果你确认了自己的目标，那你面对生活里的诱惑——玩游戏、刷短视频——至少应该是犹豫的。这说明你心里其实知道什么更重要。</p>
+                <p style="margin-top:12px"><strong class="keyword">IF...THEN模型</strong>能帮你在<strong>犹豫的那个瞬间</strong>做出对的选择。但它帮不了你的是：如果你面对诱惑根本不犹豫、直接跟着走了，那我没办法让你改变。我不是操作人心的鬼神，我只是给了你一把在十字路口用得上的工具。</p>
+                <p style="margin-top:12px">所以这个时候我们就可以使用这个模型：<strong>如果xx，我就xx</strong>。</p>
+            </div>
+
+            <div class="case-block">
+                <span class="case-label">举个例子</span>
+                <p>我最近其实挺喜欢玩守望先锋二，刚好十周年有活动，然后有两次不小心熬夜过头了。所以我给自己定下了规矩，<strong>每次脑子说"再来一把就睡"，我就直接睡，不接它的话。</strong></p>
+                <p>这个模型的使用就是这样，给自己定下一条简单得不能再简单的一句话：如果发生了什么，我就什么，或者说，如果我想干什么，我就什么。具体可以参考我的置顶视频"你的人生提示词"。</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="qa-block">
+                <span class="qa-label">Q2 · 学习上进却没结果，总感觉原地踏步</span>
+                <div class="qa-q">我也在学习，也在上进，可是没什么结果，总感觉好像自己在原地踏步，应该怎么办？</div>
+                <p>这个问题最常见的一个坑是<strong class="keyword">自我感动</strong>，大部分人都会陷入这个坑里面。</p>
+                <p style="margin-top:12px">我就以我自己去举例子吧。大概还是去年的这个时候，我做视频每周只能做两个甚至一个视频，但是每天都很忙，每天不停地在改稿子找素材。到了后来，我才想通了，我要的只是一种<strong>我在努力的状态</strong>，而不是真正的要结果。所以我时常反思自己，我是不是在感动自己，还是我真的想要那个结果呢？</p>
+                <p style="margin-top:12px"><strong>解决办法就是设定每周的目标是什么，每天的目标是什么</strong>，而不是说不停地查资料、读书。</p>
+            </div>
+
+            <p>另一个坑呢，是由<strong class="keyword">内耗引起的梦想问题</strong>。</p>
+
+            <p>我们内耗是什么呢？就是不停地反刍自己过去做了什么，做的对不对，当初要是什么什么就好了。但是这个习惯在我们不内耗的时候会反过来，让我们沉迷成另一种状态：</p>
+
+            <div class="quote-block">
+                <p><strong>我成功了会怎样？我成功后我要干什么？我要买大别墅！我要一顿饭三个鸡腿！你的注意力就都放在这个上了，每天大部分的时间不是在完成目标的路径，而是在想我成功了之后要什么。</strong></p>
+            </div>
+
+            <p>所以解决办法呢，直观地用笔去写下你的目标是什么，完成路径是什么，每天要做什么，把注意力放在每天要做的这件事情上。还是刚才的那个方法，一旦你开始幻想，就告诉自己：<strong>现在我要把注意力放在我每天要做什么事情上。</strong></p>
+
+            <hr class="divider">
+
+            <div class="qa-block">
+                <span class="qa-label">Q3 · 屡战屡败，没有心力</span>
+                <div class="qa-q">我屡战屡败怎么办？我做什么都感觉做不好，我感觉自己没有心力了。</div>
+                <p>为什么我们屡战屡败呢？这个原因就在于<strong>规律</strong>。你要做一件事情，你要摸清它的规律。</p>
+                <p style="margin-top:12px">比如说，你去五金店买零食，肯定是买不到的，你必须去超市才能买到。只有你去五金店买了一次零食，你才会发现没有，它会告诉你哪里是对的，然后你就去了超市。</p>
+            </div>
+
+            <div class="quote-block">
+                <p><strong>我们人活在世界上，做事最重要的秘诀就是把自己以为的和真实的规律对齐。</strong></p>
+            </div>
+
+            <p>像我做短视频，上来我就直接叭叭搁那说是没人看的。我要知道说什么话能让人听进去？怎么解释才能让人不反感？</p>
+
+            <h2 class="section-heading">道法如来：持续做成一件事的方法</h2>
+
+            <p>那么如何正确地掌握规律呢？如何持续地做成一件事情呢？就是四个字，<strong class="keyword">道法如来</strong>。</p>
+
+            <p>道法如来这四个字本来是《遥远的救世主》小说当中的，但是我发现这个总结其实挺合适的，它本来是对儒释道三者的总结，但是我发现它解释自然规律是非常合适的。本来是讲贝叶斯思维的，但是我发现这四个字也许可以让大家更好地理解，所以就用这四个字吧。</p>
+
+            <div class="framework-block">
+                <span class="fw-label">道 · 法 · 如 · 来</span>
+                <div class="fw-item">
+                    <span class="fw-term">道</span> —— 认识到你脑子里的规律和现实的规律不一样。比如说，我以为把视频拍出去就会有人看，但是实际上没有流量，这就说明我以为的和现实当中的真实规律不一样。
+                </div>
+                <div class="fw-item">
+                    <span class="fw-term">法</span> —— 模仿。看别人是怎么做的，他的开头、内容、结尾是怎么设计的，时间大概是多少。
+                </div>
+                <div class="fw-item">
+                    <span class="fw-term">如</span> —— 假设迭代。模仿了，效果有点儿但是不明显，于是做出积极假设。
+                </div>
+                <div class="fw-item">
+                    <span class="fw-term">来</span> —— 结果。通过假设尝试后得到结果，再根据这个来继续假设、继续迭代，一步一步靠近目标。
+                </div>
+            </div>
+
+            <div class="case-block">
+                <span class="case-label">就比如说</span>
+                <p>我和某一个大V用同样的开头，结果发现人家有播放量，播放量在十几万，而我只有增加了几千的播放量。于是我做出了一个假设：<strong>内容都对了，但是我的神态不对。模仿别人不能只模仿别人的内容，也得尝试表达真实的自己。</strong>于是我做了这样的尝试，结果好了一点儿。</p>
+                <p>所谓迭代呢，就是不断地把最后这两步不停地做，一次一次做到最好。甚至你不需要做到最好，走出自己的风格，能获得收益就行了。</p>
+            </div>
+
+            <p>通过这四步的理解，我不停在"如来"两个字持续迭代，你看我现在有几个自己的小爆款视频。只要我继续迭代下去，我的爆款视频会越来越多。</p>
+
+            <div class="quote-block">
+                <p><strong>整个过程就是观察到世界上实际的那个规律和你脑子里的规律不一样，然后通过模仿，模仿之后通过假设，假设之后得到结果，继续迭代，一步一步接近，这就是做事的方法，也是一种学习法。</strong></p>
+                <p style="margin-top:8px">而且，如果你真的理解了这四个字，你会发现一个更深刻的洞见：<strong class="keyword">失败就是放弃迭代</strong>。只要你愿意持续地迭代下去，你永远不会失败。你做什么事情都可以成功，想学什么也都能成功，再也不用担心执行力的问题。</p>
+            </div>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">总结</h2>
+
+            <p>我就是通过这三个方法，让自己一步一步越来越好，像我现在都从来不觉得自己有执行力的问题。</p>
+
+            <p>所以你看，从所谓懒惰到拥有执行力，到底需要克服什么？我们认识到：所谓懒惰其实是保护我们身体的保镖，所谓躺平其实是爱而不得的无奈，所谓气馁其实是做事的方法出了问题，并不是人有问题。</p>
+
+            <div class="quote-block">
+                <p><strong>当你理解接纳自己之后，反而你才能前行。</strong></p>
+            </div>
+
+            <hr class="divider">
+
+            <p>好了，前面我把自己这一年怎么走过来的，还有我试过有效的方法，都摊开给你了。但我知道，每个人卡住的点不一样。你今天回去试，可能会遇到一些我没写到的问题。</p>
+
+            <div class="footer-note">
+                <span class="label">全系列完</span>
+                <p>获得执行力系列三篇文章到此完结。<br>从认识保镖，到寻找答案，再到掌握方法——<br>愿你在接纳自己的路上，一步一步走得更远。</p>
+            </div>
+
+            <div class="promo-block">
+                <div class="promo-title">锦囊妙计</div>
+                <p>一个持续更新的执行力问题库。你遇到任何卡点，打开网页，按目录找到你的问题，就能看到我的解法。它会从20个问题开始，每两个月更新一次，增加到40个、60个，甚至更多。</p>
+                <p style="margin-top:8px">如果你在库里找不到你的问题，你可以直接告诉我，我会把它加进下次的更新里。这不是课程，也不是训练营，就是一个能帮你解决实际卡点的工具箱。</p>
+                <div class="promo-price">49元</div>
+                <p class="promo-wechat">添加微信购买：<span>think99zj</span></p>
+                <p style="margin-top:16px">为了感谢最初信任我的人，<strong>前10位购买的朋友</strong>，我会额外送你一次和我一对一咨询的机会。我们可以聊聊你目前最大的卡点，我帮你理一理。</p>
+                <p style="margin-top:12px"><strong>一年之内，只要你觉得自己没有收获，或者任何理由都随时找我，我全额退款。你什么都不用损失。</strong></p>
+                <p class="promo-muted" style="margin-top:16px">其实不买也没关系，现在的方法够用了，而且大部分的内容在我的视频里也有。</p>
+            </div>
+
+        </div>
+
+        <!-- ======== 系列导航 ======== -->
+        <nav class="series-nav reveal">
+            <a class="series-card" href="获得执行力（中）：为什么我们无法行动？.html">
+                <span class="series-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                    上一篇
+                </span>
+                <span class="series-title">获得执行力（中）· 为什么我们无法行动？</span>
+            </a>
+            <a class="series-card next disabled" href="#" aria-disabled="true">
+                <span class="series-label">下一篇</span>
+                <span class="series-title">这是系列的最后一篇</span>
+            </a>
+        </nav>
+
+    </article>
+
+    <!-- ======== 页脚 ======== -->
+    <footer class="footer">
+        <p><span data-site-name>绝顶赵</span> · 个人博客</p>
+        <p>适应性平衡理论 · 原创者：<span data-site-name>绝顶赵</span></p>
+        <p>基于 MIT-Style with Attribution 协议发布</p>
+    </footer>
+
+    <script>
+        (function () {
+            var named = document.querySelectorAll('[data-site-name], [data-site-latin]');
+            for (var i = 0; i < named.length; i++) {
+                named[i].textContent = named[i].hasAttribute('data-site-name') ? SITE.name : SITE.latin;
+            }
+
+            var bar = document.getElementById('progress-bar');
+            function onScroll() {
+                if (!bar) return;
+                var h = document.documentElement;
+                var max = h.scrollHeight - h.clientHeight;
+                bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var reveals = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                for (var j = 0; j < reveals.length; j++) reveals[j].classList.add('in');
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+            for (var k = 0; k < reveals.length; k++) {
+                reveals[k].style.transitionDelay = Math.min(k * 70, 350) + 'ms';
+                io.observe(reveals[k]);
+            }
+        })();
+    </script>
+</body>
+</html>

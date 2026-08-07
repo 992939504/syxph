@@ -2,675 +2,400 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>适应天平 · 状态定位</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>适应天平 · 状态定位 · __SITE__</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233D5AFE'/%3E%3Ctext x='32' y='45' font-size='38' font-weight='700' text-anchor='middle' fill='white' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E7%BB%9D%3C/text%3E%3C/svg%3E">
+    <!--
+        站点名常量：改这里即可全站换名（导航 / 页脚 / <title> 全部跟随）。
+        SITE.name  = 中文名
+        SITE.latin = 拉丁展示字
+    -->
+    <script>const SITE = { name: "绝顶赵", latin: "JUEDING ZHAO" }; document.title = document.title.replace("__SITE__", SITE.name);</script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
+            --bg: #F7F7F8;
+            --surface: #FFFFFF;
+            --ink: #141417;
+            --ink-2: #6E6E76;
+            --ink-3: #B0B0B8;
+            --accent: #3D5AFE;
+            --accent-soft: rgba(61, 90, 254, 0.08);
+            --line: rgba(0, 0, 0, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
             --destroy: #FF6B6B;
             --eager: #FFA94D;
             --balance: #20C997;
             --waver: #748FFC;
             --slack: #4DABF7;
-            --card: #FFFFFF;
-            --bg: #F2F3F7;
-            --primary: #5B5A6E;
-            --radius: 20px;
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            font-family: var(--font);
             background: var(--bg);
-            min-height: 100vh;
-            padding: 0;
-            line-height: 1.5;
-            color: #1D1D1F;
+            color: var(--ink);
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
         }
+        a { color: inherit; text-decoration: none; }
 
-        /* ======== 英雄区 ======== */
-        .hero {
-            background: linear-gradient(160deg, #FF6B6B 0%, #FFA94D 25%, #20C997 50%, #748FFC 75%, #4DABF7 100%);
-            padding: 48px 24px 56px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        /* ======== 顶部导航 ======== */
+        .topnav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(247, 247, 248, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--line);
         }
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.12);
+        .topnav-inner {
+            max-width: 1080px; margin: 0 auto;
+            height: 56px; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 480px;
-            margin: 0 auto;
+        .topnav-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 0.98em; letter-spacing: -0.01em; }
+        .brand-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--accent); flex-shrink: 0; }
+        .topnav-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.85em; color: #4A4A52; font-weight: 600;
+            padding: 7px 14px; border-radius: 999px;
+            border: 1px solid rgba(0, 0, 0, 0.16); background: var(--surface);
+            transition: color 0.2s, border-color 0.2s, transform 0.2s;
         }
-        .hero-icon {
-            font-size: 3em;
-            margin-bottom: 12px;
-            display: block;
-        }
-        .hero h1 {
-            font-size: 2em;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-            -webkit-text-stroke: 1px rgba(0,0,0,0.3);
-            paint-order: stroke fill;
-        }
-        .hero .subtitle {
-            color: rgba(255,255,255,0.9);
-            font-size: 1.05em;
-            font-weight: 500;
-            -webkit-text-stroke: 0.6px rgba(0,0,0,0.2);
-            paint-order: stroke fill;
-        }
+        .topnav-back:hover { color: var(--ink); border-color: rgba(0, 0, 0, 0.3); }
+        .topnav-back svg { width: 14px; height: 14px; }
+        .progress-bar { position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--accent); }
 
-        /* ======== 内容区 ======== */
-        .content {
-            max-width: 600px;
-            margin: -32px auto 0;
-            padding: 0 16px 40px;
-            position: relative;
-            z-index: 2;
+        /* ======== 工具页 ======== */
+        .tool-main { max-width: 760px; margin: 0 auto; padding: 48px 24px 24px; }
+        .tool-hero { text-align: center; padding: 8px 0 36px; }
+        .tool-hero-icon {
+            width: 56px; height: 56px; border-radius: 18px;
+            background: var(--accent-soft); color: var(--accent);
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
         }
+        .tool-hero-icon svg { width: 28px; height: 28px; }
+        .tool-hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 10px; }
+        .tool-hero .sub { color: var(--ink-2); font-size: 1em; line-height: 1.7; }
 
         /* ======== 两轴定义 ======== */
-        .axis-defs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
+        .axis-defs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
         .axis-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 20px 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            background: var(--surface);
+            border: 1px solid var(--line); border-radius: var(--radius-md);
+            padding: 22px 18px;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         }
-        .axis-card:active { transform: scale(0.97); }
-        .axis-card .icon { font-size: 2em; margin-bottom: 8px; display: block; }
-        .axis-card h3 { font-size: 1em; font-weight: 600; margin-bottom: 6px; }
-        .axis-card p { color: #86868B; font-size: 0.82em; line-height: 1.5; }
+        .axis-card:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(20, 20, 23, 0.06); }
+        .axis-card .icon { display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; width: 44px; height: 44px; border-radius: 12px; }
+        .axis-card .icon svg { width: 22px; height: 22px; }
+        .axis-card h3 { font-size: 1em; font-weight: 700; margin-bottom: 6px; }
+        .axis-card p { color: var(--ink-2); font-size: 0.84em; line-height: 1.6; }
+        .axis-fire .icon { background: rgba(255, 107, 107, 0.12); color: var(--destroy); }
         .axis-fire h3 { color: var(--destroy); }
+        .axis-water .icon { background: rgba(77, 171, 247, 0.12); color: var(--slack); }
         .axis-water h3 { color: var(--slack); }
-        .highlight-fire {
-            background: #FFF0EE;
-            color: var(--destroy);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        .highlight-water {
-            background: #EEF5FF;
-            color: var(--slack);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
+        .highlight-fire { background: rgba(255, 107, 107, 0.1); color: var(--destroy); padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+        .highlight-water { background: rgba(77, 171, 247, 0.1); color: var(--slack); padding: 2px 8px; border-radius: 6px; font-weight: 600; }
 
         /* ======== 天平区域 ======== */
         .beam-card {
-            background: var(--card);
-            border-radius: var(--radius);
+            background: var(--surface);
+            border: 1px solid var(--line); border-radius: var(--radius-lg);
             padding: 28px 24px 24px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
             margin-bottom: 20px;
         }
-
-        .beam-labels {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .beam-labels .label-item {
-            font-size: 0.85em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .beam-labels .left  { color: var(--destroy); }
+        .beam-labels { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .beam-labels .label-item { font-size: 0.85em; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        .beam-labels .label-item svg { width: 15px; height: 15px; }
+        .beam-labels .left { color: var(--destroy); }
         .beam-labels .right { color: var(--slack); }
 
-        /* 光束 */
         .beam-track {
-            position: relative;
-            height: 24px;
-            border-radius: 12px;
-            background: linear-gradient(
-                to right,
-                var(--destroy) 0%,
-                var(--eager) 22%,
-                var(--balance) 50%,
-                var(--waver) 76%,
-                var(--slack) 100%
-            );
+            position: relative; height: 24px; border-radius: 12px;
+            background: linear-gradient(to right,
+                var(--destroy) 0%, var(--eager) 22%, var(--balance) 50%, var(--waver) 76%, var(--slack) 100%);
             margin-bottom: 6px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
             overflow: visible;
         }
         .beam-track::after {
             content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 50%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            position: absolute; top: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.32), transparent);
             border-radius: 12px 12px 0 0;
             pointer-events: none;
         }
-
-        /* 光束指针 */
         .beam-pointer {
-            position: absolute;
-            top: -6px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #fff;
+            position: absolute; top: -6px; width: 36px; height: 36px;
+            border-radius: 50%; background: #fff;
             border: 3px solid var(--balance);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
             transform: translateX(-50%);
             transition: left 0.08s ease, border-color 0.2s;
             z-index: 3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
             pointer-events: none;
         }
-
-        .beam-zones {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7em;
-            font-weight: 600;
-            color: #B0B0B8;
-            padding: 0 2px;
-            margin-bottom: 24px;
-        }
+        .beam-pointer svg { width: 16px; height: 16px; color: #5B5A6E; }
+        .beam-zones { display: flex; justify-content: space-between; font-size: 0.7em; font-weight: 600; color: var(--ink-3); padding: 0 2px; margin-bottom: 24px; }
 
         /* ======== 滑块 ======== */
-        .slider-section {
-            background: var(--bg);
-            border-radius: 14px;
-            padding: 20px 16px;
-        }
+        .slider-section { background: #F2F2F5; border-radius: 14px; padding: 20px 16px; }
         .slider-header {
-            font-size: 0.78em;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #B0B0B8;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 14px;
+            font-size: 0.76em; text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--ink-3); font-weight: 600; text-align: center; margin-bottom: 14px;
         }
-
-        .slider-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .slider-row .end-label {
-            font-size: 0.8em;
-            font-weight: 600;
-            white-space: nowrap;
-            min-width: 28px;
-            text-align: center;
-        }
+        .slider-row { display: flex; align-items: center; gap: 12px; }
+        .slider-row .end-label { font-size: 0.8em; font-weight: 600; white-space: nowrap; min-width: 28px; text-align: center; }
         .slider-row .end-label.fire { color: var(--destroy); }
         .slider-row .end-label.water { color: var(--slack); }
-
         .slider-row input[type="range"] {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            border-radius: 4px;
+            flex: 1; -webkit-appearance: none; appearance: none;
+            height: 8px; border-radius: 4px;
             background: linear-gradient(to right, var(--destroy), var(--eager) 22%, var(--balance) 50%, var(--waver) 76%, var(--slack));
             outline: none;
         }
         .slider-row input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #FFFFFF;
-            border: 3px solid var(--primary);
-            cursor: pointer;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+            -webkit-appearance: none; appearance: none;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: #FFFFFF; border: 3px solid #5B5A6E;
+            cursor: pointer; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.14);
             transition: transform 0.12s, border-color 0.2s;
         }
         .slider-row input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.08); }
         .slider-row input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.04); }
-
         .slider-row input[type="range"]::-moz-range-thumb {
             width: 44px; height: 44px; border-radius: 50%;
-            background: #FFFFFF; border: 3px solid var(--primary);
-            cursor: pointer; box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+            background: #FFFFFF; border: 3px solid #5B5A6E;
+            cursor: pointer; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.14);
         }
         .slider-row input[type="range"]::-moz-range-track {
             height: 8px; border-radius: 4px;
             background: linear-gradient(to right, var(--destroy), var(--eager) 22%, var(--balance) 50%, var(--waver) 76%, var(--slack));
             border: none;
         }
-
-        /* 当前状态标签 */
         .state-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 16px;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 1em;
-            letter-spacing: -0.2px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 16px; padding: 10px 20px; border-radius: 30px;
+            font-weight: 600; font-size: 1em; letter-spacing: -0.2px;
             transition: all 0.25s ease;
         }
-        .state-badge .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
+        .state-badge .dot { width: 10px; height: 10px; border-radius: 50%; transition: background 0.2s; }
 
         /* ======== 结果卡片 ======== */
         .result-card {
             display: none;
-            border-radius: 20px;
-            padding: 0;
-            background: #fff;
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            border: 1px solid var(--line);
             animation: slideUp 0.35s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative; overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
         .result-card.show { display: block; }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .result-card::before {
-            display: none;
+        .result-card .r-header { display: flex; align-items: center; gap: 14px; padding: 22px 26px 18px; }
+        .result-card .r-icon {
+            width: 44px; height: 44px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.24);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
         }
-
-        /* ---- 描边文字效果 ---- */
-        .result-card .r-title {
-            font-size: 1.5em;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #fff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.15);
-        }
+        .result-card .r-icon svg { width: 23px; height: 23px; color: #fff; }
+        .result-card .r-title { font-size: 1.4em; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
         .result-card .r-quote {
-            font-size: 0.95em;
-            font-style: italic;
-            margin: 0 24px 16px;
-            padding: 10px 14px;
-            background: #f8f8f8;
-            border-radius: 10px;
-            border-left: 3px solid #ddd;
-            color: #666;
+            font-size: 0.94em; margin: 0 26px 16px; padding: 12px 16px;
+            background: #F2F2F5; border-radius: 10px; border-left: 3px solid #DADAE0;
+            color: var(--ink-2);
         }
-
-        .result-card .r-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 20px 24px 16px;
-            margin-bottom: 0;
-        }
-        .result-card .r-emoji { font-size: 2.4em; }
-
-        /* ---- 症状 / 解法 区块 ---- */
-        .r-section {
-            margin-bottom: 16px;
-            padding: 0 24px;
-        }
-        .r-section:last-child {
-            margin-bottom: 20px;
-        }
+        .r-section { margin-bottom: 16px; padding: 0 26px; }
+        .r-section:last-child { margin-bottom: 24px; }
         .r-section-title {
-            font-size: 0.78em;
-            font-weight: 700;
+            display: inline-flex; align-items: center; gap: 7px;
+            font-size: 0.76em; font-weight: 700; letter-spacing: 0.08em;
+            margin-bottom: 8px; padding: 5px 12px;
+            background: #F2F2F5; border-radius: 8px; color: #4A4A52;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            padding: 4px 12px;
-            background: #f0f0f0;
-            border-radius: 6px;
-            display: inline-block;
-            color: #333;
         }
-        .r-section ul {
-            list-style: none;
-        }
+        .r-section-title svg { width: 13px; height: 13px; }
+        .r-section ul { list-style: none; }
         .r-section li {
-            padding: 8px 0 8px 22px;
-            position: relative;
-            font-size: 0.9em;
-            line-height: 1.6;
-            color: #333;
+            padding: 8px 0 8px 22px; position: relative;
+            font-size: 0.92em; line-height: 1.7; color: #4A4A52;
         }
         .r-section li::before {
             content: "";
-            position: absolute;
-            left: 0;
-            top: 14px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #ccc;
+            position: absolute; left: 2px; top: 15px;
+            width: 7px; height: 7px; border-radius: 50%; background: #C9C9D0;
         }
         .r-section.solution li::before {
-            background: transparent;
-            width: 6px;
-            height: 6px;
-            border: 2px solid #999;
+            background: transparent; width: 6px; height: 6px; border: 2px solid #A8A8B0;
         }
 
-        .card-destroy  .r-header { background: linear-gradient(135deg, #FF8E8E, #FF6B6B); }
-        .card-eager    .r-header { background: linear-gradient(135deg, #FFC078, #FFA94D); }
-        .card-balance  .r-header { background: linear-gradient(135deg, #4DDFB0, #20C997); }
-        .card-waver    .r-header { background: linear-gradient(135deg, #98A8FF, #748FFC); }
-        .card-slack    .r-header { background: linear-gradient(135deg, #78C8FF, #4DABF7); }
+        .card-destroy .r-header { background: linear-gradient(135deg, #FF8E8E, #FF6B6B); }
+        .card-eager .r-header { background: linear-gradient(135deg, #FFC078, #FFA94D); }
+        .card-balance .r-header { background: linear-gradient(135deg, #4DDFB0, #20C997); }
+        .card-waver .r-header { background: linear-gradient(135deg, #98A8FF, #748FFC); }
+        .card-slack .r-header { background: linear-gradient(135deg, #78C8FF, #4DABF7); }
 
-        /* ======== 脚注 ======== */
-        .footer-note {
-            text-align: center;
-            padding: 20px 0 8px;
-            font-size: 0.78em;
-            color: #B0B0B8;
-        }
-
-        /* ======== 手机端适配 ======== */
-        @media (max-width: 480px) {
-            .hero { padding: 36px 16px 44px; }
-            .hero h1 { font-size: 1.6em; }
-            .hero-icon { font-size: 2.4em; }
-            .content { padding: 0 12px 32px; margin-top: -24px; }
-            .axis-defs { gap: 10px; }
-            .axis-card { padding: 16px 12px; }
-            .axis-card .icon { font-size: 1.6em; }
-            .axis-card h3 { font-size: 0.92em; }
-            .beam-card { padding: 20px 14px 18px; border-radius: 16px; }
-            .beam-track { height: 20px; border-radius: 10px; }
-            .beam-pointer { width: 30px; height: 30px; top: -5px; font-size: 12px; }
-            .slider-section { padding: 16px 12px; }
-            .slider-row input[type="range"]::-webkit-slider-thumb { width: 48px; height: 48px; }
-            .slider-row input[type="range"]::-moz-range-thumb { width: 48px; height: 48px; }
-            .result-card { padding: 22px 18px; border-radius: 16px; }
-            .result-card .r-emoji { font-size: 2.2em; }
-            .result-card .r-title { font-size: 1.3em; }
-            .r-section li { font-size: 0.85em; }
-            .beam-zones { font-size: 0.65em; }
-        }
-
-        @media (max-width: 360px) {
-            .hero { padding: 28px 12px 36px; }
-            .hero h1 { font-size: 1.35em; }
-            .axis-defs { grid-template-columns: 1fr; }
-            .beam-zones span:nth-child(2),
-            .beam-zones span:nth-child(4) { display: none; }
-        }
         /* ======== 推广区域 ======== */
-        .promo-section {
-            margin-top: 32px;
-            margin-bottom: 16px;
-        }
+        .promo-section { margin-top: 32px; margin-bottom: 16px; }
         .promo-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 28px 24px;
+            background: var(--ink);
+            border-radius: var(--radius-lg);
+            padding: 34px 30px;
             color: #fff;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.35);
+            position: relative; overflow: hidden;
         }
         .promo-card::before {
             content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            position: absolute; top: -50%; right: -50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
             pointer-events: none;
         }
         .promo-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            display: inline-block; background: rgba(255, 255, 255, 0.14);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.74em; font-weight: 600; letter-spacing: 0.06em;
             margin-bottom: 12px;
         }
-        .promo-title {
-            font-size: 1.5em;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-        .promo-desc {
-            font-size: 0.92em;
-            opacity: 0.9;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
+        .promo-title { font-size: 1.5em; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+        .promo-desc { font-size: 0.92em; opacity: 0.82; line-height: 1.7; margin-bottom: 20px; }
         .promo-offer {
-            background: rgba(255,255,255,0.15);
-            border-radius: 14px;
-            padding: 16px 18px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px; padding: 16px 18px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 20px;
         }
-        .promo-price {
-            text-align: center;
-            min-width: 70px;
-        }
-        .price-num {
-            font-size: 2.2em;
-            font-weight: 700;
-            line-height: 1;
-        }
-        .price-unit {
-            font-size: 0.85em;
-            opacity: 0.9;
-        }
-        .promo-include {
-            list-style: none;
-            flex: 1;
-        }
-        .promo-include li {
-            font-size: 0.88em;
-            padding: 4px 0;
-            opacity: 0.95;
-        }
+        .promo-price { text-align: center; min-width: 70px; }
+        .price-num { font-size: 2.2em; font-weight: 800; line-height: 1; letter-spacing: -0.04em; color: #7C8CFF; }
+        .price-unit { font-size: 0.85em; opacity: 0.7; }
+        .promo-include { list-style: none; flex: 1; }
+        .promo-include li { font-size: 0.88em; padding: 5px 0; opacity: 0.92; display: flex; align-items: center; gap: 8px; }
+        .promo-include li svg { width: 15px; height: 15px; color: #7C8CFF; flex-shrink: 0; }
         .promo-cta {
-            text-align: center;
-            background: rgba(255,255,255,0.95);
-            color: #764ba2;
-            border-radius: 12px;
-            padding: 14px 20px;
+            text-align: center; background: rgba(255, 255, 255, 0.95);
+            color: var(--ink); border-radius: 12px; padding: 14px 20px;
         }
-        .cta-label {
-            display: block;
-            font-size: 0.82em;
-            opacity: 0.7;
-            margin-bottom: 4px;
-        }
-        .cta-wechat {
-            font-size: 1.3em;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .promo-qr-wrapper {
-            text-align: center;
-            margin-top: 16px;
-        }
+        .cta-label { display: block; font-size: 0.8em; opacity: 0.6; margin-bottom: 4px; }
+        .cta-wechat { font-size: 1.3em; font-weight: 700; letter-spacing: 1px; }
+        .promo-qr-wrapper { text-align: center; margin-top: 16px; }
         .promo-qr-img {
-            width: 140px;
-            height: 140px;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            width: 140px; height: 140px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
         }
 
-        @media (max-width: 480px) {
-            .promo-card { padding: 24px 18px; }
+        /* ======== 页脚 ======== */
+        .footer { border-top: 1px solid var(--line); margin-top: 32px; padding: 42px 24px 52px; text-align: center; }
+        .footer p { font-size: 0.8em; color: var(--ink-3); line-height: 2; }
+        .footer p:first-child { color: var(--ink-2); font-weight: 600; }
+
+        /* ======== 动效 ======== */
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+
+        /* ======== 响应式 ======== */
+        @media (max-width: 640px) {
+            .topnav-inner { padding: 0 16px; }
+            .tool-main { padding: 32px 16px 16px; }
+            .axis-defs { gap: 10px; }
+            .axis-card { padding: 18px 14px; }
+            .beam-card { padding: 20px 16px 18px; border-radius: var(--radius-md); }
+            .beam-track { height: 20px; border-radius: 10px; }
+            .beam-pointer { width: 32px; height: 32px; top: -6px; }
+            .beam-pointer svg { width: 14px; height: 14px; }
+            .slider-section { padding: 16px 12px; }
+            .slider-row input[type="range"]::-webkit-slider-thumb { width: 48px; height: 48px; }
+            .slider-row input[type="range"]::-moz-range-thumb { width: 48px; height: 48px; }
+            .result-card .r-header { padding: 18px 20px 16px; }
+            .result-card .r-title { font-size: 1.25em; }
+            .result-card .r-quote { margin: 0 20px 14px; }
+            .r-section { padding: 0 20px; }
+            .r-section:last-child { margin-bottom: 20px; }
+            .promo-card { padding: 26px 20px; }
             .promo-title { font-size: 1.3em; }
             .promo-offer { flex-direction: column; gap: 12px; text-align: center; }
-            .promo-include li { font-size: 0.85em; }
-            .price-num { font-size: 2em; }
-        }
-
-        @media (max-width: 360px) {
-            .promo-section { margin-top: 24px; }
-            .promo-card { padding: 20px 16px; border-radius: 16px; }
-        }
-
-        /* ======== Desktop ======== */
-        @media (min-width: 768px) {
-            .hero {
-                padding: 64px 32px 72px;
-            }
-            .hero-content {
-                max-width: 600px;
-            }
-            .hero-icon {
-                font-size: 3.6em;
-            }
-            .hero h1 {
-                font-size: 2.6em;
-            }
-            .hero .subtitle {
-                font-size: 1.15em;
-            }
-            .content {
-                max-width: 800px;
-                padding: 0 32px 48px;
-                margin-top: -40px;
-            }
-            .axis-card {
-                padding: 28px 24px;
-            }
-            .axis-card .icon {
-                font-size: 2.4em;
-            }
-            .axis-card h3 {
-                font-size: 1.1em;
-            }
-            .axis-card p {
-                font-size: 0.9em;
-            }
-            .beam-card {
-                padding: 36px 32px 28px;
-            }
-            .beam-track {
-                height: 28px;
-                border-radius: 14px;
-            }
-            .beam-pointer {
-                width: 42px;
-                height: 42px;
-                top: -7px;
-                font-size: 16px;
-            }
-            .result-card {
-                border-radius: 24px;
-            }
-            .result-card .r-header {
-                padding: 24px 32px 20px;
-            }
-            .result-card .r-title {
-                font-size: 1.7em;
-            }
-            .result-card .r-quote {
-                margin: 0 32px 20px;
-                padding: 14px 18px;
-                font-size: 1em;
-            }
-            .r-section {
-                padding: 0 32px;
-            }
-            .r-section li {
-                font-size: 0.95em;
-            }
-            .promo-card {
-                padding: 36px 32px;
-            }
-            .promo-title {
-                font-size: 1.7em;
-            }
-            .promo-offer {
-                padding: 20px 24px;
-                gap: 24px;
-            }
-            .promo-include li {
-                font-size: 0.95em;
-            }
-            .price-num {
-                font-size: 2.6em;
-            }
-            .cta-wechat {
-                font-size: 1.4em;
-            }
+            .promo-include li { font-size: 0.85em; justify-content: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ======== 英雄区 ======== -->
-    <header class="hero">
-        <div class="hero-content">
-            <span class="hero-icon">⚖️</span>
-            <h1>适应天平</h1>
-            <p class="subtitle">拖动滑块，找到你此刻的位置</p>
+    <!-- ======== 顶部导航 ======== -->
+    <nav class="topnav">
+        <div class="progress-bar" id="progress-bar"></div>
+        <div class="topnav-inner">
+            <a class="topnav-brand" href="index.html">
+                <span class="brand-dot"></span>
+                <span data-site-name>绝顶赵</span>
+            </a>
+            <a class="topnav-back" href="index.html">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                返回首页
+            </a>
         </div>
-    </header>
+    </nav>
 
-    <!-- ======== 内容 ======== -->
-    <main class="content">
+    <!-- ======== 工具页 ======== -->
+    <main class="tool-main">
+
+        <header class="tool-hero reveal">
+            <div class="tool-hero-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+            </div>
+            <h1>适应天平</h1>
+            <p class="sub">拖动滑块，找到你此刻的位置</p>
+        </header>
 
         <!-- 两轴定义 -->
-        <section class="axis-defs">
+        <section class="axis-defs reveal">
             <article class="axis-card axis-fire">
-                <span class="icon">🔥</span>
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                </span>
                 <h3>不满意</h3>
                 <p>对现状的不满，是<span class="highlight-fire">改变的核燃料</span></p>
             </article>
             <article class="axis-card axis-water">
-                <span class="icon">💧</span>
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.3 1-3.2s1.3-1.5 1.56-2.22"/></svg>
+                </span>
                 <h3>适应性</h3>
                 <p>对痛苦的缓冲，是<span class="highlight-water">情绪的缓冲垫</span></p>
             </article>
         </section>
 
         <!-- 天平区域 -->
-        <section class="beam-card">
+        <section class="beam-card reveal">
             <div class="beam-labels">
-                <span class="label-item left">🔥 不满意主导</span>
-                <span class="label-item right">💧 适应性主导</span>
+                <span class="label-item left">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    不满意主导
+                </span>
+                <span class="label-item right">
+                    适应性主导
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.3 1-3.2s1.3-1.5 1.56-2.22"/></svg>
+                </span>
             </div>
             <div class="beam-track" id="beam-track">
-                <div class="beam-pointer" id="beam-pointer">⚖️</div>
+                <div class="beam-pointer" id="beam-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+                </div>
             </div>
             <div class="beam-zones">
                 <span>崩溃</span>
@@ -696,12 +421,17 @@
         <!-- ======== 毁灭级 ======== -->
         <article id="card-destroy" class="result-card card-destroy">
             <div class="r-header">
-                <span class="r-emoji">🔥</span>
+                <span class="r-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                </span>
                 <span class="r-title">毁灭级</span>
             </div>
             <div class="r-quote">"想毁灭世界，发现只能毁灭自己"</div>
             <div class="r-section symptom">
-                <div class="r-section-title">🔍 症状</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    症状
+                </div>
                 <ul>
                     <li>每天都在痛苦里，觉得活着不如死了</li>
                     <li>对一切只剩下愤怒或绝望，没有缓冲</li>
@@ -709,7 +439,10 @@
                 </ul>
             </div>
             <div class="r-section solution">
-                <div class="r-section-title">💡 解法</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    解法
+                </div>
                 <ul>
                     <li>先保命，再谈改变——这不是意志力问题，是生存警报超载</li>
                     <li>微量适应性注入：允许自己"今天只做到这一步"</li>
@@ -721,12 +454,17 @@
         <!-- ======== 急功近利级 ======== -->
         <article id="card-eager" class="result-card card-eager">
             <div class="r-header">
-                <span class="r-emoji">⚡</span>
+                <span class="r-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </span>
                 <span class="r-title">急功近利级</span>
             </div>
             <div class="r-quote">"想要立刻看到改变，立刻看到结果"</div>
             <div class="r-section symptom">
-                <div class="r-section-title">🔍 症状</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    症状
+                </div>
                 <ul>
                     <li>做事三分钟热度，刚开始很猛，很快泄气</li>
                     <li>想要立刻看到结果，等不了</li>
@@ -734,7 +472,10 @@
                 </ul>
             </div>
             <div class="r-section solution">
-                <div class="r-section-title">💡 解法</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    解法
+                </div>
                 <ul>
                     <li>设定最低坚持期：14-30天内不评估结果，只记录次数</li>
                     <li>每天给自己一个确定性积分 +1，不需要看到结果才满意</li>
@@ -746,12 +487,17 @@
         <!-- ======== 平衡级 ======== -->
         <article id="card-balance" class="result-card card-balance">
             <div class="r-header">
-                <span class="r-emoji">✅</span>
+                <span class="r-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                </span>
                 <span class="r-title">平衡级（目标状态）</span>
             </div>
             <div class="r-quote">"让时间慢慢用于改变，让成果慢慢发芽"</div>
             <div class="r-section symptom">
-                <div class="r-section-title">🔍 状态特征</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    状态特征
+                </div>
                 <ul>
                     <li>有目标、有节奏、有耐心</li>
                     <li>不满持续供能，但不会烧穿自己</li>
@@ -759,7 +505,10 @@
                 </ul>
             </div>
             <div class="r-section solution">
-                <div class="r-section-title">🛡️ 保持方法</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                    保持方法
+                </div>
                 <ul>
                     <li>不满锚定具体目标，不泛化——对一切不满等于对什么都不满</li>
                     <li>适应有边界，不越界——缓冲不等于麻醉</li>
@@ -771,12 +520,17 @@
         <!-- ======== 摇摆/空转 ======== -->
         <article id="card-waver" class="result-card card-waver">
             <div class="r-header">
-                <span class="r-emoji">🌫️</span>
+                <span class="r-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 17H7"/><path d="M17 21H9"/></svg>
+                </span>
                 <span class="r-title">摇摆／空转</span>
             </div>
             <div class="r-quote">"好像要动？好像也能不动……"</div>
             <div class="r-section symptom">
-                <div class="r-section-title">🔍 症状</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    症状
+                </div>
                 <ul>
                     <li>经常想改变，但很快就被"算了"消解</li>
                     <li>看见别人努力会焦虑，但自己还是不动</li>
@@ -784,7 +538,10 @@
                 </ul>
             </div>
             <div class="r-section solution">
-                <div class="r-section-title">💡 解法</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    解法
+                </div>
                 <ul>
                     <li>量化你的时间分配——适应靠模糊生存，量化就是破局</li>
                     <li>问自己："如果10年后还是这样，我能接受吗？"</li>
@@ -796,12 +553,17 @@
         <!-- ======== 摆烂级 ======== -->
         <article id="card-slack" class="result-card card-slack">
             <div class="r-header">
-                <span class="r-emoji">💧</span>
+                <span class="r-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.3 1-3.2s1.3-1.5 1.56-2.22"/></svg>
+                </span>
                 <span class="r-title">摆烂级</span>
             </div>
             <div class="r-quote">"什么时候快乐什么时候就行"</div>
             <div class="r-section symptom">
-                <div class="r-section-title">🔍 症状</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    症状
+                </div>
                 <ul>
                     <li>懂很多道理，但就是不行动</li>
                     <li>对现状没有不满，觉得"也还行"</li>
@@ -809,7 +571,10 @@
                 </ul>
             </div>
             <div class="r-section solution">
-                <div class="r-section-title">💡 解法</div>
+                <div class="r-section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    解法
+                </div>
                 <ul>
                     <li>量化现状：记录每天真实时间分配，看清楚你把时间给了谁</li>
                     <li>微量不满注入：问"10年后的我还是这样，能接受吗？"</li>
@@ -819,7 +584,7 @@
         </article>
 
         <!-- ======== 推广区域 ======== -->
-        <section class="promo-section">
+        <section class="promo-section reveal">
             <div class="promo-card">
                 <div class="promo-badge">完整方法论</div>
                 <h3 class="promo-title">适应性平衡</h3>
@@ -833,9 +598,18 @@
                         <span class="price-unit">元</span>
                     </div>
                     <ul class="promo-include">
-                        <li>📖 完整适应性平衡方法论</li>
-                        <li>🤖 一个知行合一智能体</li>
-                        <li>💬 一次一对一咨询</li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            完整适应性平衡方法论
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                            一个知行合一智能体
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            一次一对一咨询
+                        </li>
                     </ul>
                 </div>
                 <div class="promo-cta">
@@ -848,8 +622,15 @@
             </div>
         </section>
 
-        <p class="footer-note">适应性平衡模型 · 原创概念</p>
+        <p class="footer-note" style="text-align:center;padding:20px 0 8px;font-size:0.78em;color:var(--ink-3);">适应性平衡模型 · 原创概念</p>
     </main>
+
+    <!-- ======== 页脚 ======== -->
+    <footer class="footer">
+        <p><span data-site-name>绝顶赵</span> · 个人博客</p>
+        <p>适应性平衡理论 · 原创者：<span data-site-name>绝顶赵</span></p>
+        <p>基于 MIT-Style with Attribution 协议发布</p>
+    </footer>
 
     <script>
         (() => {
@@ -898,6 +679,44 @@
 
             slider.addEventListener('input', update);
             update();
+        })();
+    </script>
+
+    <script>
+        (function () {
+            var named = document.querySelectorAll('[data-site-name], [data-site-latin]');
+            for (var i = 0; i < named.length; i++) {
+                named[i].textContent = named[i].hasAttribute('data-site-name') ? SITE.name : SITE.latin;
+            }
+
+            var bar = document.getElementById('progress-bar');
+            function onScroll() {
+                if (!bar) return;
+                var h = document.documentElement;
+                var max = h.scrollHeight - h.clientHeight;
+                bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var reveals = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                for (var j = 0; j < reveals.length; j++) reveals[j].classList.add('in');
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+            for (var k = 0; k < reveals.length; k++) {
+                reveals[k].style.transitionDelay = Math.min(k * 70, 350) + 'ms';
+                io.observe(reveals[k]);
+            }
         })();
     </script>
 </body>
