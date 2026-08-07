@@ -30,6 +30,15 @@
            - 黑卡黄边重点块：<div class="highlight-block"><p><strong>案例</strong></p>
              <p>内容</p></div>
            - 分隔线：<hr class="divider">
+           - 无序列表：<ul><li>列表项</li></ul>（黄色方块标记）
+           - 编号列表：<ol><li>要点</li></ol>（自动 01/02/03 黄色角标）
+           - 图标条款列表：<ul><li><svg…circle-check…></svg> 允许项</li></ul>
+             （允许/禁止类条款用 Lucide 图标，禁止用 emoji）
+           - 表格：<div class="article-table-wrap"><table><thead><tr><th>列名</th></tr>
+             </thead><tbody><tr><td>内容</td></tr></tbody></table></div>
+             （黄底表头 + 黑白硬边，移动端自动横向滚动）
+           - 公式块：<div class="formula-block"><span class="fb-title">公式名</span>公式内容</div>
+             （黑底黄边；多行直接换行写；注意 <code>&gt;</code> 要写成 <code>&amp;gt;</code>）
            - 结尾预告：<div class="footer-note"><span class="label">预告</span><p>…</p></div>
         4. 修改系列导航（上一篇 / 下一篇）的链接和标题；
            没有上一篇/下一篇时，保留 disabled 写法
@@ -308,6 +317,86 @@
         .promo-block .promo-wechat span { color: var(--yellow); }
         .promo-block .promo-muted { font-size: 0.85em; color: rgba(255, 255, 255, 0.55); }
 
+        /* ======== 正文列表 ======== */
+        .article-body ul, .article-body ol { margin: 0 0 1.4em; padding: 0; list-style: none; }
+        .article-body ul li {
+            position: relative;
+            padding: 6px 0 6px 24px;
+            font-size: 0.99em; line-height: 1.85;
+            color: rgba(10, 10, 10, 0.86);
+        }
+        .article-body ul li::before {
+            content: '';
+            position: absolute; left: 4px; top: 15px;
+            width: 7px; height: 7px;
+            background: var(--yellow);
+            border: 1.5px solid var(--black);
+            border-radius: 1px;
+        }
+        .article-body ol { counter-reset: ab-ol; }
+        .article-body ol li {
+            position: relative;
+            padding: 6px 0 6px 30px;
+            font-size: 0.99em; line-height: 1.85;
+            color: rgba(10, 10, 10, 0.86);
+            counter-increment: ab-ol;
+        }
+        .article-body ol li::before {
+            content: counter(ab-ol, decimal-leading-zero);
+            position: absolute; left: 0; top: 7px;
+            font-family: var(--font-disp);
+            font-size: 0.8em; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--black); background: var(--yellow);
+            padding: 1px 6px; border-radius: 2px;
+        }
+        .article-body li strong { font-weight: 800; color: var(--black); }
+        .article-body li svg { display: inline-block; width: 15px; height: 15px; vertical-align: -2px; margin-right: 6px; }
+        .article-body li ul { margin: 4px 0 2px; }
+        .article-body li ul li { padding: 3px 0 3px 20px; font-size: 0.95em; }
+
+        /* ======== 正文表格 ======== */
+        .article-table-wrap { margin: 2em 0; overflow-x: auto; }
+        .article-body table {
+            width: 100%; border-collapse: collapse;
+            background: var(--white);
+            border: 2px solid var(--black);
+            font-size: 0.9em;
+        }
+        .article-body th {
+            background: var(--yellow); color: var(--black);
+            font-weight: 900; text-align: left;
+            padding: 12px 14px; border: 1px solid var(--black);
+            letter-spacing: 0.02em;
+        }
+        .article-body td {
+            padding: 11px 14px; border: 1px solid var(--hair-lt);
+            color: rgba(10, 10, 10, 0.85);
+            line-height: 1.75; vertical-align: top;
+        }
+        .article-body tr:nth-child(even) td { background: #FBF9F4; }
+        .article-body td strong { font-weight: 800; color: var(--black); }
+
+        /* ======== 正文公式块 ======== */
+        .formula-block {
+            margin: 2em 0; padding: 24px 28px;
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-left: 4px solid var(--yellow);
+            font-family: var(--font-disp), var(--font);
+            font-size: 0.95em; line-height: 1.9;
+            color: rgba(255, 255, 255, 0.92);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .formula-block .fb-title {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.72em; font-weight: 700; letter-spacing: 0.18em;
+            color: var(--yellow); margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .formula-block b { color: var(--yellow-2); }
         /* ======== 系列导航 ======== */
         .series-nav {
             display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
@@ -390,8 +479,8 @@
 
         <!--
             文章头部：
-            - badge-community：黄色「社群专享」标签（不需要就删掉这一行）
-            - article-series：系列标识，如「获得执行力 · 上」（没有系列就删掉）
+            - badge-community：黄色标签，文字可自定义，如「社群专享」「核心理论」（不需要就删掉这一行）
+            - article-series：系列标识，如「获得执行力 · 上」「理论原著 · V3.2」（没有系列就删掉）
             - time：发布日期，改成你发布的那天
             - 标题：会显示为空心描边大字；想要其中几个字变实心黄色，
               给它们包一层 <span class="accent">，如：为什么我们<span class="accent">无法行动</span>？
@@ -445,6 +534,51 @@
                 <p><strong>案例</strong></p>
                 <p>需要重点强调的内容，黑底黄边卡片，放在这里。</p>
             </div>
+
+            <h3 class="sub-heading">列表 / 表格 / 公式（理论类文章常用）</h3>
+
+            <p>普通列表（无序）：</p>
+            <ul>
+                <li>列表项一：直接写内容</li>
+                <li>列表项二：<strong>重点可以加粗</strong></li>
+                <li>列表项三：嵌套子项
+                    <ul>
+                        <li>子项一</li>
+                        <li>子项二</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p>编号列表（有序，自动生成 01/02/03）：</p>
+            <ol>
+                <li><strong>要点一</strong>：解释内容</li>
+                <li><strong>要点二</strong>：解释内容</li>
+            </ol>
+
+            <p>带图标的条款列表（用于允许/禁止类条款，图标用 Lucide 内联 SVG，禁止用 emoji）：</p>
+            <ul>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 允许的行为（circle-check 图标）</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> 禁止的行为（circle-x 图标）</li>
+            </ul>
+
+            <p>对比表 / 速查表（黄底表头 + 黑白硬边，移动端自动横向滚动）：</p>
+            <div class="article-table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>对比维度</th><th>方案一</th><th>方案二</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>触发条件</strong></td><td>单元格内容</td><td>单元格内容</td></tr>
+                        <tr><td><strong>核心目标</strong></td><td>单元格内容</td><td>单元格内容</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>公式块（黑底黄边，多行公式直接换行写，注意 <code>&gt;</code> 要写成 <code>&amp;gt;</code>）：</p>
+            <div class="formula-block"><span class="fb-title">公式标题</span>公式内容 = 变量一 + 变量二
+其中：
+- 变量一：解释
+- 变量二：解释</div>
 
             <hr class="divider">
 
