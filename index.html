@@ -201,7 +201,7 @@
             font-size: 1.06em; color: var(--gray-dk);
             margin-top: 34px; letter-spacing: 0.02em;
         }
-        .hero-cta { display: flex; gap: 14px; margin-top: 44px; flex-wrap: wrap; justify-content: center; }
+        .hero-cta { position: relative; z-index: 3; display: flex; gap: 14px; margin-top: 44px; flex-wrap: wrap; justify-content: center; }
         .btn {
             display: inline-flex; align-items: center; gap: 10px;
             padding: 15px 34px;
@@ -623,13 +623,16 @@
         .fw-line { font-size: 0.84em; color: var(--gray-dk); line-height: 2.1; }
         .fw-line.dim { color: rgba(255, 255, 255, 0.4); }
         .top-btn {
-            margin-top: 44px;
+            position: fixed; right: 28px; bottom: 28px; z-index: 150;
             width: 58px; height: 58px; border-radius: 50%;
             border: none; cursor: pointer;
             background: var(--yellow); color: var(--black);
             display: inline-flex; align-items: center; justify-content: center;
-            transition: transform 0.4s var(--spring), background 0.3s;
+            opacity: 0; visibility: hidden; transform: translateY(16px);
+            transition: transform 0.4s var(--spring), background 0.3s, opacity 0.3s, visibility 0.3s;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
         }
+        .top-btn.show { opacity: 1; visibility: visible; transform: none; }
         .top-btn:hover { transform: translateY(-5px) rotate(-90deg); background: var(--yellow-2); }
         .top-btn svg { width: 22px; height: 22px; }
 
@@ -648,6 +651,8 @@
             .reveal { opacity: 1; transform: none; }
             .cursor-dot, .cursor-ring { display: none; }
             .strip-track { transform: none !important; }
+            /* 跑马灯静止时只显示一段，避免重复文本观感 */
+            .marquee-seq:nth-child(2) { display: none; }
         }
 
         /* ======== 响应式 ======== */
@@ -678,6 +683,7 @@
             .about-strip { padding: 40px 0; }
             .contact-links { gap: 10px; }
             .contact-link { flex-direction: column; gap: 2px; align-items: center; }
+            .top-btn { right: 16px; bottom: 16px; width: 52px; height: 52px; }
             .footer { padding: 64px 20px 52px; }
         }
     </style>
@@ -998,13 +1004,13 @@
                 <p class="qr-label">扫码添加微信 · 备注来意，更快通过</p>
             </div>
         </div>
-        <div class="marquee marquee--rev" aria-hidden="true">
+            <div class="marquee marquee--rev" aria-hidden="true">
             <div class="marquee-track">
                 <div class="marquee-seq">
-                    <span>适应性平衡理论</span><b>·</b><span data-site-name>绝顶赵</span><b>·</b><span>把半辈子的思考，写成文字和工具</span><b>·</b>
+                    <span>获得执行力系列</span><b>·</b><span>改变从1%开始</span><b>·</b><span>认知升级</span><b>·</b>
                 </div>
                 <div class="marquee-seq">
-                    <span>适应性平衡理论</span><b>·</b><span data-site-name>绝顶赵</span><b>·</b><span>把半辈子的思考，写成文字和工具</span><b>·</b>
+                    <span>获得执行力系列</span><b>·</b><span>改变从1%开始</span><b>·</b><span>认知升级</span><b>·</b>
                 </div>
             </div>
         </div>
@@ -1118,12 +1124,17 @@
                 });
             }
 
-            /* ---------- 回到顶部 ---------- */
+            /* ---------- 回到顶部（固定悬浮，滚动超一屏显示） ---------- */
             var topBtn = document.getElementById('top-btn');
             if (topBtn) {
                 topBtn.addEventListener('click', function () {
                     window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
                 });
+                function toggleTopBtn() {
+                    topBtn.classList.toggle('show', (window.pageYOffset || docEl.scrollTop) > window.innerHeight * 0.6);
+                }
+                window.addEventListener('scroll', toggleTopBtn, { passive: true });
+                toggleTopBtn();
             }
 
             /* ---------- 付费咨询展开/收起 ---------- */
