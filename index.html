@@ -348,6 +348,78 @@
         .article-row .ar-main .mask-box:nth-child(2) .m { transition-delay: 0.16s; }
         .article-row .ar-main .mask-box:nth-child(3) .m { transition-delay: 0.24s; }
 
+        /* ======== 归档区（白幕 · 按月目录） ======== */
+        .archive { background: var(--paper); color: var(--black); border-top: 1px solid var(--hair-lt); }
+        .archive-list { border-top: 1px solid var(--hair-lt); }
+        .arch-month {
+            background: var(--white);
+            border: 2px solid var(--black);
+            margin-bottom: 34px;
+        }
+        .arch-month-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px;
+            padding: 15px 22px;
+            background: var(--yellow);
+            border-bottom: 2px solid var(--black);
+        }
+        .arch-month-label {
+            display: inline-flex; align-items: center; gap: 12px;
+            font-family: var(--font-disp);
+            font-size: 1.12rem; font-weight: 700; letter-spacing: 0.05em;
+            color: var(--black);
+        }
+        .arch-month-label::before {
+            content: ''; width: 10px; height: 10px;
+            background: var(--black); display: inline-block;
+        }
+        .arch-month-count {
+            font-family: var(--font-disp);
+            font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em;
+            color: var(--black);
+            background: var(--white);
+            border: 1.5px solid var(--black);
+            padding: 3px 10px; border-radius: 2px;
+            white-space: nowrap;
+        }
+        .arch-item {
+            display: grid;
+            grid-template-columns: 96px 1fr auto 36px;
+            gap: 16px; align-items: center;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--hair-lt);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .arch-item:last-child { border-bottom: none; }
+        .arch-item:hover { background: var(--black); color: var(--paper); }
+        .arch-item-date {
+            font-family: var(--font-disp);
+            font-size: 0.82rem; letter-spacing: 0.1em;
+            color: var(--gray-lt);
+            font-variant-numeric: tabular-nums;
+            transition: color 0.3s;
+        }
+        .arch-item:hover .arch-item-date { color: var(--yellow); }
+        .arch-item-title { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em; }
+        .arch-item-tag {
+            font-size: 0.72em; font-weight: 700; letter-spacing: 0.1em;
+            color: var(--black); background: var(--yellow);
+            padding: 3px 9px; border-radius: 2px;
+            white-space: nowrap;
+        }
+        .arch-item-arrow {
+            display: flex; align-items: center; justify-content: center;
+            justify-self: end;
+            width: 34px; height: 34px;
+            border: 1.5px solid var(--hair-lt);
+            border-radius: 50%;
+            opacity: 0; transform: translateX(10px) rotate(-45deg);
+            transition: opacity 0.3s, transform 0.35s var(--spring), border-color 0.3s, color 0.3s;
+            color: var(--black);
+        }
+        .arch-item:hover .arch-item-arrow { opacity: 1; transform: translateX(0) rotate(0); border-color: var(--yellow); color: var(--yellow); }
+        .arch-item-arrow svg { width: 15px; height: 15px; }
+
         /* ======== 工具区（白幕 · 6 宫格） ======== */
         .tools { background: var(--paper); color: var(--black); border-top: 1px solid var(--hair-lt); }
         .tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -670,6 +742,12 @@
             .contact-inner { padding: 90px 20px 70px; }
             .article-row { grid-template-columns: 56px 1fr; gap: 14px; padding: 26px 4px; }
             .ar-arrow { display: none; }
+            .arch-month-head { padding: 13px 16px; }
+            .arch-month-label { font-size: 1rem; gap: 9px; }
+            .arch-item { grid-template-columns: 64px 1fr; gap: 10px; padding: 14px 16px; }
+            .arch-item-tag { display: none; }
+            .arch-item-arrow { display: none; }
+            .arch-item-title { font-size: 0.95rem; }
             .tool-grid { grid-template-columns: 1fr; }
             .svc-grid { grid-template-columns: 1fr; gap: 34px; margin-bottom: 52px; }
             .svc-item { padding: 0; }
@@ -720,6 +798,7 @@
         <a class="logo" href="#top" aria-label="回到顶部">赵</a>
         <div class="nav-links">
             <a class="nav-link" href="#articles">文章</a>
+            <a class="nav-link" href="#archive">归档</a>
             <a class="nav-link" href="#tools">工具</a>
             <a class="nav-link" href="#services">服务</a>
             <a class="nav-link" href="#about">关于</a>
@@ -846,9 +925,79 @@
         </div>
     </section>
 
+    <!-- ======== 归档区（按月份的文章目录） ======== -->
+    <section class="section archive" id="archive">
+        <p class="sec-kicker reveal">02 — Archive</p>
+        <h2 class="sec-h reveal">文章归档</h2>
+        <p class="sec-sub reveal">按月份整理的写作目录</p>
+
+        <div class="archive-list">
+            <div class="arch-month reveal">
+                <div class="arch-month-head">
+                    <span class="arch-month-label">2026 年 8 月</span>
+                    <span class="arch-month-count">3 篇</span>
+                </div>
+                <a class="arch-item" href="专栏/获得执行力（下）：行动的方法.html">
+                    <time class="arch-item-date" datetime="2026-08-07">08-07</time>
+                    <span class="arch-item-title">行动的方法</span>
+                    <span class="arch-item-tag">获得执行力 · 下</span>
+                    <span class="arch-item-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                </a>
+                <a class="arch-item" href="专栏/获得执行力（中）：为什么我们无法行动？.html">
+                    <time class="arch-item-date" datetime="2026-08-07">08-07</time>
+                    <span class="arch-item-title">为什么我们无法行动？</span>
+                    <span class="arch-item-tag">获得执行力 · 中</span>
+                    <span class="arch-item-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                </a>
+                <a class="arch-item" href="专栏/获得执行力（上）.html">
+                    <time class="arch-item-date" datetime="2026-08-07">08-07</time>
+                    <span class="arch-item-title">获得执行力（上）</span>
+                    <span class="arch-item-tag">获得执行力 · 上</span>
+                    <span class="arch-item-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                </a>
+            </div>
+
+            <div class="arch-month reveal">
+                <div class="arch-month-head">
+                    <span class="arch-month-label">2026 年 7 月</span>
+                    <span class="arch-month-count">1 篇</span>
+                </div>
+                <a class="arch-item" href="专栏/Windows上安装Hermes启用Mem0动态记忆.html">
+                    <time class="arch-item-date" datetime="2026-07-25">07-25</time>
+                    <span class="arch-item-title">Windows 上安装 Hermes 并启用 Mem0 动态记忆</span>
+                    <span class="arch-item-tag">AI 实操</span>
+                    <span class="arch-item-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                </a>
+            </div>
+
+            <div class="arch-month reveal">
+                <div class="arch-month-head">
+                    <span class="arch-month-label">2026 年 5 月</span>
+                    <span class="arch-month-count">1 篇</span>
+                </div>
+                <a class="arch-item" href="专栏/适应性平衡理论.html">
+                    <time class="arch-item-date" datetime="2026-05-15">05-15</time>
+                    <span class="arch-item-title">适应性平衡理论</span>
+                    <span class="arch-item-tag">核心理论</span>
+                    <span class="arch-item-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- ======== 工具区 ======== -->
     <section class="section tools" id="tools">
-        <p class="sec-kicker reveal">02 — Tools</p>
+        <p class="sec-kicker reveal">03 — Tools</p>
         <h2 class="sec-h reveal">工具</h2>
         <p class="sec-sub reveal">把理论变成能上手用的东西</p>
 
@@ -918,7 +1067,7 @@
     <!-- ======== 服务区（黄幕） ======== -->
     <section class="services" id="services">
         <div class="svc-inner">
-            <p class="sec-kicker reveal">03 — Services</p>
+            <p class="sec-kicker reveal">04 — Services</p>
             <h2 class="sec-h reveal">服务</h2>
             <p class="sec-sub reveal">用智能体，把重复的事交给机器</p>
 
@@ -1006,7 +1155,7 @@
     <!-- ======== 联系区（黑幕） ======== -->
     <section class="contact" id="contact">
         <div class="contact-inner">
-            <p class="sec-kicker on-dark reveal">05 — Contact</p>
+            <p class="sec-kicker on-dark reveal">06 — Contact</p>
             <h2 class="contact-title reveal">联系我</h2>
             <p class="contact-sub reveal">抖音看视频，微信聊事情</p>
 
