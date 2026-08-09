@@ -42,7 +42,13 @@
            - 结尾预告：<div class="footer-note"><span class="label">预告</span><p>…</p></div>
         4. 修改系列导航（上一篇 / 下一篇）的链接和标题；
            没有上一篇/下一篇时，保留 disabled 写法
-        5. 站点名常量在下方 SITE 处：改 SITE.name 即可全站换名
+        5. 首页联动一：在 index.html 的 <div class="article-list"> 顶部插入新行
+           （结构照抄现有行），给 <a class="article-row"> 加上 data-month="YYYY-MM"
+           （文章发布月份），并重排全部 ar-num 编号（01/02/03…）
+        6. 首页联动二：index.html 文章区右侧的「文章归档」筛选器（#af-body）：
+           更新对应月份按钮的篇数（.af-count）；没有该月份就新增一个 .af-btn
+           按钮（按时间倒序插入），并更新「全部文章」按钮的篇数
+        7. 站点名常量在下方 SITE 处：改 SITE.name 即可全站换名
            （导航 / 页脚 / <title> 全部自动跟随，不用动其他地方）
         ============================================================
     -->
