@@ -282,6 +282,62 @@
 
         /* ======== 文章区（白幕 · 编号巨型行列表） ======== */
         .articles { background: var(--paper); color: var(--black); }
+        .articles-wrap {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 44px;
+            align-items: start;
+        }
+        .articles-main { min-width: 0; }
+        .articles-empty {
+            display: none;
+            text-align: center;
+            padding: 44px 20px;
+            border: 2px dashed var(--hair-lt);
+            color: var(--gray-lt);
+            font-size: 0.92em; font-weight: 700;
+        }
+        /* ======== 归档筛选器（右栏） ======== */
+        .arch-filter {
+            position: sticky; top: 84px;
+            background: var(--white);
+            border: 2px solid var(--black);
+        }
+        .arch-filter-head {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 13px 16px;
+            background: var(--yellow);
+            border-bottom: 2px solid var(--black);
+        }
+        .af-title {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: var(--font-disp);
+            font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em;
+        }
+        .af-title svg { width: 15px; height: 15px; }
+        .af-hint { font-size: 0.66em; font-weight: 700; letter-spacing: 0.12em; color: rgba(0, 0, 0, 0.55); }
+        .af-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .af-btn {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--white);
+            border: 1.5px solid var(--hair-lt); border-radius: 2px;
+            font-family: var(--font);
+            font-size: 0.88em; font-weight: 700; color: var(--black);
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s, color 0.2s;
+        }
+        .af-btn:hover { border-color: var(--black); }
+        .af-btn.active { background: var(--black); color: var(--paper); border-color: var(--black); }
+        .af-count {
+            font-size: 0.7em; font-weight: 800; letter-spacing: 0.05em;
+            color: var(--black); background: var(--yellow);
+            padding: 2px 8px; border-radius: 2px;
+            white-space: nowrap;
+        }
+        .af-btn.active .af-count { color: var(--black); }
         .article-list { border-top: 1px solid var(--hair-lt); }
         .article-row {
             position: relative;
@@ -347,78 +403,6 @@
         .article-row .ar-main .mask-box:nth-child(1) .m { transition-delay: 0.08s; }
         .article-row .ar-main .mask-box:nth-child(2) .m { transition-delay: 0.16s; }
         .article-row .ar-main .mask-box:nth-child(3) .m { transition-delay: 0.24s; }
-
-        /* ======== 归档区（白幕 · 按月目录） ======== */
-        .archive { background: var(--paper); color: var(--black); border-top: 1px solid var(--hair-lt); }
-        .archive-list { border-top: 1px solid var(--hair-lt); }
-        .arch-month {
-            background: var(--white);
-            border: 2px solid var(--black);
-            margin-bottom: 34px;
-        }
-        .arch-month-head {
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 12px;
-            padding: 15px 22px;
-            background: var(--yellow);
-            border-bottom: 2px solid var(--black);
-        }
-        .arch-month-label {
-            display: inline-flex; align-items: center; gap: 12px;
-            font-family: var(--font-disp);
-            font-size: 1.12rem; font-weight: 700; letter-spacing: 0.05em;
-            color: var(--black);
-        }
-        .arch-month-label::before {
-            content: ''; width: 10px; height: 10px;
-            background: var(--black); display: inline-block;
-        }
-        .arch-month-count {
-            font-family: var(--font-disp);
-            font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em;
-            color: var(--black);
-            background: var(--white);
-            border: 1.5px solid var(--black);
-            padding: 3px 10px; border-radius: 2px;
-            white-space: nowrap;
-        }
-        .arch-item {
-            display: grid;
-            grid-template-columns: 96px 1fr auto 36px;
-            gap: 16px; align-items: center;
-            padding: 18px 22px;
-            border-bottom: 1px solid var(--hair-lt);
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-        .arch-item:last-child { border-bottom: none; }
-        .arch-item:hover { background: var(--black); color: var(--paper); }
-        .arch-item-date {
-            font-family: var(--font-disp);
-            font-size: 0.82rem; letter-spacing: 0.1em;
-            color: var(--gray-lt);
-            font-variant-numeric: tabular-nums;
-            transition: color 0.3s;
-        }
-        .arch-item:hover .arch-item-date { color: var(--yellow); }
-        .arch-item-title { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em; }
-        .arch-item-tag {
-            font-size: 0.72em; font-weight: 700; letter-spacing: 0.1em;
-            color: var(--black); background: var(--yellow);
-            padding: 3px 9px; border-radius: 2px;
-            white-space: nowrap;
-        }
-        .arch-item-arrow {
-            display: flex; align-items: center; justify-content: center;
-            justify-self: end;
-            width: 34px; height: 34px;
-            border: 1.5px solid var(--hair-lt);
-            border-radius: 50%;
-            opacity: 0; transform: translateX(10px) rotate(-45deg);
-            transition: opacity 0.3s, transform 0.35s var(--spring), border-color 0.3s, color 0.3s;
-            color: var(--black);
-        }
-        .arch-item:hover .arch-item-arrow { opacity: 1; transform: translateX(0) rotate(0); border-color: var(--yellow); color: var(--yellow); }
-        .arch-item-arrow svg { width: 15px; height: 15px; }
 
         /* ======== 工具区（白幕 · 6 宫格） ======== */
         .tools { background: var(--paper); color: var(--black); border-top: 1px solid var(--hair-lt); }
@@ -740,14 +724,13 @@
             .services .svc-inner { padding: 76px 20px; }
             .about-wrap { padding: 76px 20px 64px; }
             .contact-inner { padding: 90px 20px 70px; }
+            .articles-wrap { display: flex; flex-direction: column; gap: 26px; }
+            .articles-main { order: 2; }
+            .arch-filter { order: 1; position: static; }
+            .af-body { flex-direction: row; flex-wrap: wrap; }
+            .af-btn { width: auto; flex: 1 1 auto; justify-content: space-between; }
             .article-row { grid-template-columns: 56px 1fr; gap: 14px; padding: 26px 4px; }
             .ar-arrow { display: none; }
-            .arch-month-head { padding: 13px 16px; }
-            .arch-month-label { font-size: 1rem; gap: 9px; }
-            .arch-item { grid-template-columns: 64px 1fr; gap: 10px; padding: 14px 16px; }
-            .arch-item-tag { display: none; }
-            .arch-item-arrow { display: none; }
-            .arch-item-title { font-size: 0.95rem; }
             .tool-grid { grid-template-columns: 1fr; }
             .svc-grid { grid-template-columns: 1fr; gap: 34px; margin-bottom: 52px; }
             .svc-item { padding: 0; }
@@ -798,7 +781,6 @@
         <a class="logo" href="#top" aria-label="回到顶部">赵</a>
         <div class="nav-links">
             <a class="nav-link" href="#articles">文章</a>
-            <a class="nav-link" href="#archive">归档</a>
             <a class="nav-link" href="#tools">工具</a>
             <a class="nav-link" href="#services">服务</a>
             <a class="nav-link" href="#about">关于</a>
@@ -860,10 +842,12 @@
     <section class="section articles" id="articles">
         <p class="sec-kicker reveal">01 — Writing</p>
         <h2 class="sec-h reveal">最新文章</h2>
-        <p class="sec-sub reveal">理论 · 执行力 · AI 实操 · 持续更新</p>
+        <p class="sec-sub reveal" id="articles-sub">理论 · 执行力 · AI 实操 · 持续更新</p>
 
+        <div class="articles-wrap">
+        <div class="articles-main">
         <div class="article-list">
-            <a class="article-row" href="专栏/口播技能-给AI安装口播文案生成器.html">
+            <a class="article-row" href="专栏/口播技能-给AI安装口播文案生成器.html" data-month="2026-08">
                 <span class="mask-box"><span class="m ar-num">01</span></span>
                 <div class="ar-main">
                     <div class="mask-box"><span class="m ar-meta"><span class="ar-badge">AI 技能</span><span class="ar-series">AI 实操 · 技能系列 01</span><time class="ar-date" datetime="2026-08-09">2026-08-09</time></span></div>
@@ -875,7 +859,7 @@
                 </span>
             </a>
 
-            <a class="article-row" href="专栏/Windows上安装Hermes启用Mem0动态记忆.html">
+            <a class="article-row" href="专栏/Windows上安装Hermes启用Mem0动态记忆.html" data-month="2026-07">
                 <span class="mask-box"><span class="m ar-num">02</span></span>
                 <div class="ar-main">
                     <div class="mask-box"><span class="m ar-meta"><span class="ar-badge">AI 实操</span><span class="ar-series">Hermes + Mem0 · 完整教程</span><time class="ar-date" datetime="2026-07-25">2026-07-25</time></span></div>
@@ -887,7 +871,7 @@
                 </span>
             </a>
 
-            <a class="article-row" href="专栏/适应性平衡理论.html">
+            <a class="article-row" href="专栏/适应性平衡理论.html" data-month="2026-05">
                 <span class="mask-box"><span class="m ar-num">03</span></span>
                 <div class="ar-main">
                     <div class="mask-box"><span class="m ar-meta"><span class="ar-badge">核心理论</span><span class="ar-series">理论原著 · V3.2</span><time class="ar-date" datetime="2026-05-15">2026-05-15</time></span></div>
@@ -899,7 +883,7 @@
                 </span>
             </a>
 
-            <a class="article-row" href="专栏/获得执行力（下）：行动的方法.html">
+            <a class="article-row" href="专栏/获得执行力（下）：行动的方法.html" data-month="2026-08">
                 <span class="mask-box"><span class="m ar-num">04</span></span>
                 <div class="ar-main">
                     <div class="mask-box"><span class="m ar-meta"><span class="ar-badge">社群专享</span><span class="ar-series">获得执行力 · 下</span><time class="ar-date" datetime="2026-08-07">2026-08-07</time></span></div>
@@ -911,7 +895,7 @@
                 </span>
             </a>
 
-            <a class="article-row" href="专栏/获得执行力（中）：为什么我们无法行动？.html">
+            <a class="article-row" href="专栏/获得执行力（中）：为什么我们无法行动？.html" data-month="2026-08">
                 <span class="mask-box"><span class="m ar-num">05</span></span>
                 <div class="ar-main">
                     <div class="mask-box"><span class="m ar-meta"><span class="ar-badge">社群专享</span><span class="ar-series">获得执行力 · 中</span><time class="ar-date" datetime="2026-08-07">2026-08-07</time></span></div>
@@ -923,7 +907,7 @@
                 </span>
             </a>
 
-            <a class="article-row" href="专栏/获得执行力（上）.html">
+            <a class="article-row" href="专栏/获得执行力（上）.html" data-month="2026-08">
                 <span class="mask-box"><span class="m ar-num">06</span></span>
                 <div class="ar-main">
                     <div class="mask-box"><span class="m ar-meta"><span class="ar-badge">社群专享</span><span class="ar-series">获得执行力 · 上</span><time class="ar-date" datetime="2026-08-07">2026-08-07</time></span></div>
@@ -935,89 +919,28 @@
                 </span>
             </a>
         </div>
-    </section>
 
-    <!-- ======== 归档区（按月份的文章目录） ======== -->
-    <section class="section archive" id="archive">
-        <p class="sec-kicker reveal">02 — Archive</p>
-        <h2 class="sec-h reveal">文章归档</h2>
-        <p class="sec-sub reveal">按月份整理的写作目录</p>
-
-        <div class="archive-list">
-            <div class="arch-month reveal">
-                <div class="arch-month-head">
-                    <span class="arch-month-label">2026 年 8 月</span>
-                    <span class="arch-month-count">4 篇</span>
-                </div>
-                <a class="arch-item" href="专栏/口播技能-给AI安装口播文案生成器.html">
-                    <time class="arch-item-date" datetime="2026-08-09">08-09</time>
-                    <span class="arch-item-title">给 AI 安装口播技能</span>
-                    <span class="arch-item-tag">AI 技能</span>
-                    <span class="arch-item-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                </a>
-                <a class="arch-item" href="专栏/获得执行力（下）：行动的方法.html">
-                    <time class="arch-item-date" datetime="2026-08-07">08-07</time>
-                    <span class="arch-item-title">行动的方法</span>
-                    <span class="arch-item-tag">获得执行力 · 下</span>
-                    <span class="arch-item-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                </a>
-                <a class="arch-item" href="专栏/获得执行力（中）：为什么我们无法行动？.html">
-                    <time class="arch-item-date" datetime="2026-08-07">08-07</time>
-                    <span class="arch-item-title">为什么我们无法行动？</span>
-                    <span class="arch-item-tag">获得执行力 · 中</span>
-                    <span class="arch-item-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                </a>
-                <a class="arch-item" href="专栏/获得执行力（上）.html">
-                    <time class="arch-item-date" datetime="2026-08-07">08-07</time>
-                    <span class="arch-item-title">获得执行力（上）</span>
-                    <span class="arch-item-tag">获得执行力 · 上</span>
-                    <span class="arch-item-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                </a>
+                <div id="articles-empty" class="articles-empty">该月份暂无文章</div>
             </div>
 
-            <div class="arch-month reveal">
-                <div class="arch-month-head">
-                    <span class="arch-month-label">2026 年 7 月</span>
-                    <span class="arch-month-count">1 篇</span>
+            <aside class="arch-filter reveal">
+                <div class="arch-filter-head">
+                    <span class="af-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>文章归档</span>
+                    <span class="af-hint">按月筛选</span>
                 </div>
-                <a class="arch-item" href="专栏/Windows上安装Hermes启用Mem0动态记忆.html">
-                    <time class="arch-item-date" datetime="2026-07-25">07-25</time>
-                    <span class="arch-item-title">Windows 上安装 Hermes 并启用 Mem0 动态记忆</span>
-                    <span class="arch-item-tag">AI 实操</span>
-                    <span class="arch-item-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                </a>
-            </div>
-
-            <div class="arch-month reveal">
-                <div class="arch-month-head">
-                    <span class="arch-month-label">2026 年 5 月</span>
-                    <span class="arch-month-count">1 篇</span>
+                <div class="af-body" id="af-body">
+                    <button type="button" class="af-btn active" data-month="all"><span>全部文章</span><span class="af-count">6 篇</span></button>
+                    <button type="button" class="af-btn" data-month="2026-08"><span>2026 年 8 月</span><span class="af-count">4 篇</span></button>
+                    <button type="button" class="af-btn" data-month="2026-07"><span>2026 年 7 月</span><span class="af-count">1 篇</span></button>
+                    <button type="button" class="af-btn" data-month="2026-05"><span>2026 年 5 月</span><span class="af-count">1 篇</span></button>
                 </div>
-                <a class="arch-item" href="专栏/适应性平衡理论.html">
-                    <time class="arch-item-date" datetime="2026-05-15">05-15</time>
-                    <span class="arch-item-title">适应性平衡理论</span>
-                    <span class="arch-item-tag">核心理论</span>
-                    <span class="arch-item-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                </a>
-            </div>
+            </aside>
         </div>
     </section>
 
     <!-- ======== 工具区 ======== -->
     <section class="section tools" id="tools">
-        <p class="sec-kicker reveal">03 — Tools</p>
+        <p class="sec-kicker reveal">02 — Tools</p>
         <h2 class="sec-h reveal">工具</h2>
         <p class="sec-sub reveal">把理论变成能上手用的东西</p>
 
@@ -1087,7 +1010,7 @@
     <!-- ======== 服务区（黄幕） ======== -->
     <section class="services" id="services">
         <div class="svc-inner">
-            <p class="sec-kicker reveal">04 — Services</p>
+            <p class="sec-kicker reveal">03 — Services</p>
             <h2 class="sec-h reveal">服务</h2>
             <p class="sec-sub reveal">用智能体，把重复的事交给机器</p>
 
@@ -1175,7 +1098,7 @@
     <!-- ======== 联系区（黑幕） ======== -->
     <section class="contact" id="contact">
         <div class="contact-inner">
-            <p class="sec-kicker on-dark reveal">06 — Contact</p>
+            <p class="sec-kicker on-dark reveal">05 — Contact</p>
             <h2 class="contact-title reveal">联系我</h2>
             <p class="contact-sub reveal">抖音看视频，微信聊事情</p>
 
@@ -1477,6 +1400,42 @@
                     io2.observe(reveals[k]);
                 }
             }
+        })();
+    </script>
+
+    <script>
+        (function () {
+            /* ======== 文章归档筛选（按月份过滤文章列表） ======== */
+            var afBody = document.getElementById('af-body');
+            if (!afBody) return;
+            var rows = Array.prototype.slice.call(document.querySelectorAll('.article-row'));
+            var sub = document.getElementById('articles-sub');
+            var empty = document.getElementById('articles-empty');
+            var labels = { '2026-08': '2026 年 8 月', '2026-07': '2026 年 7 月', '2026-05': '2026 年 5 月' };
+            var DEFAULT_SUB = '理论 · 执行力 · AI 实操 · 持续更新';
+            function applyFilter(month) {
+                var visible = [];
+                rows.forEach(function (row) {
+                    var show = month === 'all' || row.getAttribute('data-month') === month;
+                    row.style.display = show ? '' : 'none';
+                    if (show) visible.push(row);
+                });
+                visible.forEach(function (row, i) {
+                    var num = row.querySelector('.ar-num');
+                    if (num) num.textContent = (i + 1 < 10 ? '0' : '') + (i + 1);
+                });
+                sub.textContent = month === 'all' ? DEFAULT_SUB : (labels[month] || month) + ' · ' + visible.length + ' 篇';
+                empty.style.display = visible.length ? 'none' : 'block';
+                var btns = afBody.querySelectorAll('.af-btn');
+                for (var i = 0; i < btns.length; i++) {
+                    btns[i].classList.toggle('active', btns[i].getAttribute('data-month') === month);
+                }
+            }
+            afBody.addEventListener('click', function (e) {
+                var btn = e.target.closest ? e.target.closest('.af-btn') : null;
+                if (!btn) return;
+                applyFilter(btn.getAttribute('data-month'));
+            });
         })();
     </script>
 </body>
