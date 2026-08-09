@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给 AI 安装口播技能 · __SITE__</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230A0A0A'/%3E%3Ctext x='32' y='45' font-size='36' font-weight='700' text-anchor='middle' fill='%23FFC300' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E8%B5%B5%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap">
+    <!--
+        ============================================================
+        文章模板使用说明（复制本文件，按以下步骤操作）：
+        ------------------------------------------------------------
+        1. 复制本文件，重命名为你的文章名，例如：专栏/我的新文章.html
+           （建议放进 专栏/ 目录，与现有文章放一起）
+        2. 修改 <title>：把「文章标题」四个字换成你的文章标题
+        3. 修改正文区（搜索「从这里开始写」）：
+           - 文章头部：标题 / 一句话副标题 / 日期 / 系列标识
+           - 正文段落：直接写 <p> 段落</p>
+           - 小标题：<h2 class="section-heading">小标题</h2>
+           - 更小的分节：<h3 class="sub-heading">分节</h3>
+           - 关键词标记：<strong class="keyword">关键词</strong>（黄色下划线）
+           - 关键短语高亮：<span class="highlight">高亮</span>（黄底黑字）
+           - 金句引用：<div class="quote-block"><p><strong>金句</strong></p></div>
+           - 问答块：<div class="qa-block"><span class="qa-label">Q1 · 主题</span>
+             <div class="qa-q">问题</div><p>回答</p></div>
+           - 案例块：<div class="case-block"><span class="case-label">举个例子</span>
+             <p>案例内容</p></div>
+           - 框架块：<div class="framework-block"><span class="fw-label">框架名</span>
+             <div class="fw-item"><span class="fw-term">要点</span> —— 解释</div></div>
+           - 黑卡黄边重点块：<div class="highlight-block"><p><strong>案例</strong></p>
+             <p>内容</p></div>
+           - 分隔线：<hr class="divider">
+           - 无序列表：<ul><li>列表项</li></ul>（黄色方块标记）
+           - 编号列表：<ol><li>要点</li></ol>（自动 01/02/03 黄色角标）
+           - 图标条款列表：<ul><li><svg…circle-check…></svg> 允许项</li></ul>
+             （允许/禁止类条款用 Lucide 图标，禁止用 emoji）
+           - 表格：<div class="article-table-wrap"><table><thead><tr><th>列名</th></tr>
+             </thead><tbody><tr><td>内容</td></tr></tbody></table></div>
+             （黄底表头 + 黑白硬边，移动端自动横向滚动）
+           - 公式块：<div class="formula-block"><span class="fb-title">公式名</span>公式内容</div>
+             （黑底黄边；多行直接换行写；注意 <code>&gt;</code> 要写成 <code>&amp;gt;</code>）
+           - 结尾预告：<div class="footer-note"><span class="label">预告</span><p>…</p></div>
+        4. 修改系列导航（上一篇 / 下一篇）的链接和标题；
+           没有上一篇/下一篇时，保留 disabled 写法
+        5. 站点名常量在下方 SITE 处：改 SITE.name 即可全站换名
+           （导航 / 页脚 / <title> 全部自动跟随，不用动其他地方）
+        ============================================================
+    -->
+
+    <!--
+        站点名常量：改这里即可全站换名（导航 / hero / 页脚 / <title> 全部跟随）。
+        SITE.name  = 中文名
+        SITE.latin = 拉丁展示字
+    -->
+    <script>const SITE = { name: "绝顶赵", latin: "JUEDING ZHAO" }; document.title = document.title.replace("__SITE__", SITE.name);</script>
+    <style>
+        :root {
+            --black: #0A0A0A;
+            --panel: #141414;
+            --paper: #F4F2EC;
+            --white: #FFFFFF;
+            --yellow: #FFC300;
+            --yellow-2: #FFD84D;
+            --gray-dk: rgba(255, 255, 255, 0.62);
+            --gray-lt: #6E6E76;
+            --hair-dk: rgba(255, 255, 255, 0.14);
+            --hair-lt: rgba(0, 0, 0, 0.12);
+            --spring: cubic-bezier(.16, 1, .3, 1);
+            --font-disp: "Space Grotesk", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+            --font: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--paper);
+            color: var(--black);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
+
+        /* ======== 胶片噪点 ======== */
+        .grain {
+            position: fixed; inset: 0; z-index: 90;
+            pointer-events: none; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+        }
+
+        /* ======== 顶部导航（blend 反色） ======== */
+        .topnav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; z-index: 120;
+            height: 2px; width: 0; background: var(--yellow);
+        }
+        .logo {
+            width: 34px; height: 34px;
+            background: var(--yellow); color: var(--black);
+            font-size: 1.12rem; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 2px;
+            transition: transform 0.3s var(--spring);
+        }
+        .logo:hover { transform: rotate(-6deg) scale(1.06); }
+        .topnav-back {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.84em; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--white);
+            padding: 8px 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 2px;
+            mix-blend-mode: difference;
+            transition: border-color 0.25s, background 0.25s;
+        }
+        .topnav-back:hover { border-color: var(--yellow); }
+        .topnav-back svg { width: 14px; height: 14px; }
+
+        /* ======== 文章黑幕 hero ======== */
+        .article-head {
+            background: var(--black); color: var(--paper);
+            text-align: center;
+            padding: clamp(130px, 19vh, 190px) 24px 74px;
+        }
+        .article-head-meta {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .badge-community {
+            display: inline-flex; align-items: center;
+            background: var(--yellow); color: var(--black);
+            font-size: 0.74em; font-weight: 800; letter-spacing: 0.14em;
+            padding: 5px 12px; border-radius: 2px;
+            transform: rotate(-1.5deg);
+        }
+        .article-series {
+            font-family: var(--font-disp);
+            font-size: 0.78em; letter-spacing: 0.12em;
+            color: var(--gray-dk); font-weight: 500;
+        }
+        .article-date {
+            font-family: var(--font-disp);
+            font-size: 0.78em; letter-spacing: 0.08em;
+            color: var(--gray-dk);
+            font-variant-numeric: tabular-nums;
+        }
+        .article-head-title {
+            font-size: clamp(2.3rem, 7.5vw, 4.6rem);
+            font-weight: 900; letter-spacing: -0.05em; line-height: 1.12;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(244, 242, 236, 0.92);
+            margin-bottom: 22px;
+        }
+        .article-head-title .accent {
+            color: var(--yellow);
+            -webkit-text-stroke-width: 0;
+        }
+        .article-head-sub {
+            font-size: 1.02em; line-height: 1.85;
+            color: var(--gray-dk);
+            max-width: 560px; margin: 0 auto;
+        }
+
+        /* ======== 正文（暖白幕） ======== */
+        .article-body {
+            max-width: 680px; margin: 0 auto;
+            padding: 66px 24px 0;
+        }
+        .article-body p {
+            font-size: 1.05em; line-height: 1.9;
+            margin-bottom: 1.4em;
+            color: rgba(10, 10, 10, 0.88);
+        }
+        .article-body p strong { font-weight: 800; color: var(--black); }
+        .article-body .section-heading {
+            font-size: 1.55em; font-weight: 900; letter-spacing: -0.03em;
+            margin: 2.1em 0 0.9em;
+            position: relative; padding-bottom: 0.32em;
+        }
+        .article-body .section-heading::after {
+            content: '';
+            position: absolute; left: 0; bottom: 0;
+            width: 2.4em; height: 5px;
+            background: var(--yellow);
+        }
+        .article-body .sub-heading {
+            font-size: 1.18em; font-weight: 800; letter-spacing: -0.01em;
+            margin: 1.9em 0 0.8em;
+        }
+        .article-body .keyword {
+            font-weight: 900; color: var(--black);
+            background: linear-gradient(transparent 62%, var(--yellow) 62%);
+            padding: 0 0.08em;
+        }
+        .article-body .highlight {
+            background: var(--yellow); color: var(--black);
+            padding: 0.05em 0.28em; font-weight: 700;
+        }
+        .quote-block {
+            position: relative;
+            margin: 2em 0; padding: 32px 32px 28px;
+            background: var(--panel); color: #fff;
+            border: 1px solid var(--yellow);
+        }
+        .quote-block::before {
+            content: '\201C';
+            position: absolute; top: 2px; left: 14px;
+            font-size: 3.6em; line-height: 1;
+            color: var(--yellow);
+            font-family: Georgia, 'Times New Roman', serif;
+            pointer-events: none;
+        }
+        .quote-block p {
+            position: relative; z-index: 1;
+            margin-bottom: 0.6em;
+            color: rgba(255, 255, 255, 0.92); font-size: 1.02em; line-height: 1.9;
+        }
+        .quote-block p:last-child { margin-bottom: 0; }
+        .quote-block p strong { color: #fff; font-weight: 800; }
+        .highlight-block {
+            margin: 2em 0; padding: 28px 30px;
+            background: var(--panel);
+            border: 2px solid var(--yellow);
+        }
+        .highlight-block p {
+            font-size: 0.98em; line-height: 1.85; margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .highlight-block p:last-child { margin-bottom: 0; }
+        .highlight-block p strong { color: var(--yellow); font-weight: 800; }
+        .qa-block {
+            margin: 2em 0; padding: 26px 28px;
+            background: var(--white);
+            border: 1.5px solid var(--black);
+        }
+        .qa-block .qa-label {
+            display: inline-block;
+            font-family: var(--font-disp);
+            font-size: 0.76em; font-weight: 700; letter-spacing: 0.12em;
+            color: var(--black); background: var(--yellow);
+            padding: 4px 12px; margin-bottom: 14px;
+        }
+        .qa-block .qa-q { font-size: 1.02em; font-weight: 800; line-height: 1.7; margin-bottom: 12px; color: var(--black); }
+        .qa-block p { font-size: 0.97em; line-height: 1.85; margin-bottom: 0; color: rgba(10, 10, 10, 0.82); }
+        .case-block {
+            margin: 2em 0; padding: 26px 28px;
+            background: var(--panel);
+            border: 1px solid rgba(255, 195, 0, 0.55);
+        }
+        .case-block .case-label {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.76em; font-weight: 700; letter-spacing: 0.12em;
+            color: var(--yellow); margin-bottom: 12px;
+        }
+        .case-block p { font-size: 0.97em; line-height: 1.85; margin-bottom: 10px; color: rgba(255, 255, 255, 0.85); }
+        .case-block p:last-child { margin-bottom: 0; }
+        .case-block p strong { color: #fff; font-weight: 800; }
+        .framework-block {
+            margin: 2em 0; padding: 28px 30px;
+            background: var(--white);
+            border: 1.5px solid var(--black);
+        }
+        .framework-block .fw-label {
+            display: inline-block;
+            font-family: var(--font-disp);
+            font-size: 0.78em; font-weight: 700; letter-spacing: 0.14em;
+            color: var(--black); background: var(--yellow);
+            padding: 4px 14px; margin-bottom: 18px;
+        }
+        .framework-block .fw-item { margin-bottom: 12px; line-height: 1.85; font-size: 0.97em; color: rgba(10, 10, 10, 0.82); }
+        .framework-block .fw-item:last-child { margin-bottom: 0; }
+        .framework-block .fw-term {
+            font-weight: 900; color: var(--black);
+            border-bottom: 2px solid var(--yellow);
+        }
+        .divider { border: none; height: 2px; background: var(--black); margin: 2.6em 0; }
+
+        .footer-note {
+            margin: 2.4em 0 0; padding: 36px 32px;
+            background: var(--panel);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+        .footer-note .label {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.78em; font-weight: 700; letter-spacing: 0.2em;
+            color: var(--yellow); margin-bottom: 14px;
+        }
+        .footer-note p { font-size: 0.95em; line-height: 1.9; color: rgba(255, 255, 255, 0.82); }
+        .footer-note p strong { color: #fff; }
+
+        /* ======== 推广（锦囊妙计） ======== */
+        .promo-block {
+            margin: 2.4em 0; padding: 42px 34px;
+            background: var(--panel);
+            border: 2px solid var(--yellow);
+            text-align: center; color: #fff;
+        }
+        .promo-block .promo-title { font-size: 1.35em; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 16px; color: #fff; }
+        .promo-block p { font-size: 0.94em; line-height: 1.85; color: rgba(255, 255, 255, 0.82); margin-bottom: 12px; }
+        .promo-block p strong { color: #fff; font-weight: 800; }
+        .promo-block .promo-price {
+            font-size: 3.2em; font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+            color: var(--yellow); margin: 16px 0 6px;
+        }
+        .promo-block .promo-wechat { font-size: 1.08em; font-weight: 800; color: #fff; margin: 18px 0 12px; }
+        .promo-block .promo-wechat span { color: var(--yellow); }
+        .promo-block .promo-muted { font-size: 0.85em; color: rgba(255, 255, 255, 0.55); }
+
+        /* ======== 正文列表 ======== */
+        .article-body ul, .article-body ol { margin: 0 0 1.4em; padding: 0; list-style: none; }
+        .article-body ul li {
+            position: relative;
+            padding: 6px 0 6px 24px;
+            font-size: 0.99em; line-height: 1.85;
+            color: rgba(10, 10, 10, 0.86);
+        }
+        .article-body ul li::before {
+            content: '';
+            position: absolute; left: 4px; top: 15px;
+            width: 7px; height: 7px;
+            background: var(--yellow);
+            border: 1.5px solid var(--black);
+            border-radius: 1px;
+        }
+        .article-body ol { counter-reset: ab-ol; }
+        .article-body ol li {
+            position: relative;
+            padding: 6px 0 6px 30px;
+            font-size: 0.99em; line-height: 1.85;
+            color: rgba(10, 10, 10, 0.86);
+            counter-increment: ab-ol;
+        }
+        .article-body ol li::before {
+            content: counter(ab-ol, decimal-leading-zero);
+            position: absolute; left: 0; top: 7px;
+            font-family: var(--font-disp);
+            font-size: 0.8em; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--black); background: var(--yellow);
+            padding: 1px 6px; border-radius: 2px;
+        }
+        .article-body li strong { font-weight: 800; color: var(--black); }
+        .article-body li svg { display: inline-block; width: 15px; height: 15px; vertical-align: -2px; margin-right: 6px; }
+        .article-body li ul { margin: 4px 0 2px; }
+        .article-body li ul li { padding: 3px 0 3px 20px; font-size: 0.95em; }
+
+        /* ======== 正文表格 ======== */
+        .article-table-wrap { margin: 2em 0; overflow-x: auto; }
+        .article-body table {
+            width: 100%; border-collapse: collapse;
+            background: var(--white);
+            border: 2px solid var(--black);
+            font-size: 0.9em;
+        }
+        .article-body th {
+            background: var(--yellow); color: var(--black);
+            font-weight: 900; text-align: left;
+            padding: 12px 14px; border: 1px solid var(--black);
+            letter-spacing: 0.02em;
+        }
+        .article-body td {
+            padding: 11px 14px; border: 1px solid var(--hair-lt);
+            color: rgba(10, 10, 10, 0.85);
+            line-height: 1.75; vertical-align: top;
+        }
+        .article-body tr:nth-child(even) td { background: #FBF9F4; }
+        .article-body td strong { font-weight: 800; color: var(--black); }
+
+        /* ======== 正文公式块 ======== */
+        .formula-block {
+            margin: 2em 0; padding: 24px 28px;
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-left: 4px solid var(--yellow);
+            font-family: var(--font-disp), var(--font);
+            font-size: 0.95em; line-height: 1.9;
+            color: rgba(255, 255, 255, 0.92);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .formula-block .fb-title {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.72em; font-weight: 700; letter-spacing: 0.18em;
+            color: var(--yellow); margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .formula-block b { color: var(--yellow-2); }
+        /* ======== 系列导航 ======== */
+        .series-nav {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            max-width: 720px; margin: 56px auto 0;
+            padding: 0 24px 12px;
+        }
+        .series-card {
+            display: flex; flex-direction: column; gap: 8px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 20px 22px;
+            transition: background 0.3s var(--spring), color 0.3s;
+        }
+        .series-card:hover { background: var(--yellow); color: var(--black); }
+        .series-label {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: var(--font-disp);
+            font-size: 0.74em; font-weight: 700; letter-spacing: 0.14em;
+            color: var(--gray-lt);
+            transition: color 0.3s;
+        }
+        .series-card:hover .series-label { color: rgba(0, 0, 0, 0.6); }
+        .series-label svg { width: 14px; height: 14px; }
+        .series-title { font-size: 0.98em; font-weight: 800; line-height: 1.5; }
+        .series-card.next { text-align: right; align-items: flex-end; }
+        .series-card.disabled { opacity: 0.35; pointer-events: none; }
+
+        /* ======== 页脚（黑） ======== */
+        .footer {
+            background: var(--black); color: var(--paper);
+            margin-top: 64px;
+            padding: 72px 24px 60px; text-align: center;
+        }
+        .footer-wordmark {
+            font-size: clamp(3rem, 9vw, 6rem);
+            font-weight: 900; letter-spacing: -0.05em; line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(244, 242, 236, 0.45);
+            margin-bottom: 30px;
+        }
+        .footer p { font-size: 0.82em; color: rgba(255, 255, 255, 0.55); line-height: 2.1; }
+        .footer p:first-of-type { color: var(--gray-dk); font-weight: 600; }
+
+        /* ======== 动效 ======== */
+        .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s var(--spring); }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+
+        /* ======== 响应式 ======== */
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; height: 56px; }
+            .article-head { padding: 120px 18px 56px; }
+            .article-head-title { -webkit-text-stroke-width: 1.5px; }
+            .article-body { padding: 48px 18px 0; }
+            .article-body p { font-size: 1em; }
+            .series-nav { grid-template-columns: 1fr; padding: 0 18px 12px; }
+            .promo-block { padding: 32px 22px; }
+        }
+    
+        /* ======== 复制块（给 AI 的技能文档） ======== */
+        .copy-block {
+            margin: 2.2em 0;
+            background: var(--panel);
+            border: 2px solid var(--yellow);
+        }
+        .copy-block-head {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            flex-wrap: wrap;
+            padding: 13px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        }
+        .copy-block-title {
+            font-family: var(--font-disp);
+            font-size: 0.74em; font-weight: 700; letter-spacing: 0.18em;
+            color: var(--yellow);
+        }
+        .copy-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--yellow); color: var(--black);
+            border: none; border-radius: 2px;
+            padding: 7px 14px;
+            font-size: 0.8em; font-weight: 800; font-family: var(--font);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s var(--spring);
+        }
+        .copy-btn:hover { background: var(--yellow-2); }
+        .copy-btn:active { transform: translateY(1px); }
+        .copy-btn.copied { background: #fff; }
+        .copy-btn svg { width: 13px; height: 13px; }
+        .copy-block-body {
+            margin: 0;
+            padding: 20px 22px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, "Courier New", monospace;
+            font-size: 0.78em; line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: pre-wrap; word-break: break-word;
+            overflow-x: auto;
+            max-height: 520px; overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== 顶部导航（不要动） ======== -->
+    <nav class="topnav">
+        <a class="logo" href="../index.html" aria-label="返回首页">赵</a>
+        <a class="topnav-back" href="../index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            返回首页
+        </a>
+    </nav>
+    <div class="progress-bar" id="progress-bar"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ======== 文章 ======== -->
+    <article class="article">
+
+        <!--
+            文章头部：
+            - badge-community：黄色标签，文字可自定义，如「社群专享」「核心理论」（不需要就删掉这一行）
+            - article-series：系列标识，如「获得执行力 · 上」「理论原著 · V3.2」（没有系列就删掉）
+            - time：发布日期，改成你发布的那天
+            - 标题：会显示为空心描边大字；想要其中几个字变实心黄色，
+              给它们包一层 <span class="accent">，如：为什么我们<span class="accent">无法行动</span>？
+            - 副标题：替换成你的
+        -->
+        <header class="article-head reveal">
+            <div class="article-head-meta">
+                <span class="badge-community">AI 技能</span>
+                <span class="article-series">AI 实操 · 技能系列 01</span>
+                <time class="article-date" datetime="2026-08-09">2026-08-09</time>
+            </div>
+            <h1 class="article-head-title">给 AI 安装<span class="accent">口播技能</span></h1>
+            <p class="article-head-sub">一段复制即用的技能文档，把原始素材变成可直接拍摄的口播逐字稿——洞见优于鸡汤，可执行优于空泛励志。</p>
+        </header>
+
+        <!-- ============ 从这里开始写 ============ -->
+<div class="article-body">
+
+            <p>做口播、拍短视频，最难的不是讲，而是<strong class="keyword">写</strong>——把脑子里的想法，变成一张嘴就能念出来的逐字稿。</p>
+
+            <p>这个技能就是干这个的：<span class="highlight">把原始素材快速转化为可直接拍摄的口播逐字稿</span>。它不给你列大纲，而是直接给你能念的稿子，还附带洞见标注。</p>
+
+            <p>它是一段<strong>复制即用</strong>的文档——复制给你的 AI（ChatGPT、DeepSeek、Kimi、Hermes 都行），它就装上了口播技能。</p>
+
+            <div class="highlight-block">
+                <p><strong>怎么用？</strong></p>
+                <p>点击下方代码块右上角的「复制全文」，把完整文档发给你的 AI。</p>
+                <p>以后使用的时候告诉它：<strong>「使用口播技能，为我整理逐字稿」</strong></p>
+            </div>
+
+            <div class="copy-block">
+                <div class="copy-block-head">
+                    <span class="copy-block-title">口播技能 · 完整文档</span>
+                    <button type="button" class="copy-btn" id="copy-skill-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        复制全文
+                    </button>
+                </div>
+                <pre class="copy-block-body" id="copy-skill-text">口播技能
+把下面的内容复制给你的AI，就能帮你安装一个口播技能。使用的时候请告诉他使用口播技能，为我整理逐字稿
+---
+name: oral-script
+description: 口播文案生成器，把原始素材转化为可直接拍摄的口播逐字稿。触发词：创建口播文案、生成口播、口播文案。当用户要求生成口播内容、视频脚本、逐字稿时触发。
+---
+
+## 🔀 确认你的运行方式
+
+### 如果你支持安装技能（如 Hermes、OpenClaw、Claude Code、Codex 等）
+请把本文档安装为一个名为 **口播技能（oral-script）** 的技能。安装后，当用户要求生成口播文案、视频脚本、逐字稿时，自动调用本技能。
+
+### 如果你是普通对话AI（如 ChatGPT、DeepSeek、Kimi 等）
+用户发给你就是让你直接用的。按下方结构生成口播逐字稿。
+
+---
+
+# 内容炼金 - 口播文案生成器
+
+## 核心目标
+把原始素材快速转化为**可直接拍摄的口播逐字稿**。
+质量标准：洞见优于鸡汤 | 可验证优于绝对论 | 可执行优于空泛励志
+
+---
+
+## 快速启动
+
+**投喂素材时：**
+```
+选题/观点：[核心主张]
+故事/案例：[具体事件或数据]
+目标时长：[3min / 5min / 7min+]
+```
+
+**如果用户需求不清晰，主动追问。** 不要猜。必须确认以下三点才能动笔：
+- 这条视频想解决什么具体问题？
+- 目标观众是谁？
+- 有没有亲身经历或真实案例或者让人一看就懂的比喻？
+
+**输出：** 可直接念的逐字稿 + 洞见标注
+
+---
+
+## 口播六步框架
+
+> 框架来源：姜胡说 → 绝顶赵改版
+
+1. **结论先行** → 开头就说清楚这条视频要讲什么，必须是"以你相关"——跟用户有关
+2. **遇到问题** → 生活中真实存在的困境是什么
+3. **后果代价** → 这个问题如果不解决，继续下去你会变成什么样
+4. **转折** → 我是怎么解决这个问题的
+5. **解决方案** → 123列出具体做法
+6. **黄金句结尾** → 一句话收住，让人记住
+
+---
+
+## 质量防线
+
+✅ **必须有：**
+- 具体的故事或数据（不是纯概念）
+- 核心观点能一句话说清楚
+- 至少一个可验证的逻辑链
+- 用"通常""大多数"代替"永远""所有人"
+
+❌ **禁用：**
+- 没有来源的论断
+- 鸡汤式励志空泛语
+- 因果链跳跃（A→C，缺B）
+- 无边界的绝对结论
+- 编造案例/数据/数字
+
+---
+
+## 快捷指令
+
+"诊断" → 找出逻辑缺失的具体位置，标注修复建议
+"打磨" → 调整口吻，让逐字稿更可念
+"上强度" → 质疑论述，找缺口和反例
+"最小化" → 压缩到1分钟版本
+
+---
+
+© 绝顶赵 · 基于姜胡说口播框架改编。自由使用，无需署名。</pre>
+            </div>
+
+            <h3 class="sub-heading">运行方式：你的 AI 是哪一种？</h3>
+
+            <div class="article-table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>你的 AI 类型</th><th>怎么做</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>支持安装技能</strong><br>（Hermes、OpenClaw、Claude Code、Codex 等）</td><td>把文档安装为一个名为「口播技能（oral-script）」的技能。安装后，当用户要求生成口播文案、视频脚本、逐字稿时，自动调用本技能。</td></tr>
+                        <tr><td><strong>普通对话 AI</strong><br>（ChatGPT、DeepSeek、Kimi 等）</td><td>用户发给你就是让你直接用的。按下方结构生成口播逐字稿。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="section-heading">口播六步框架</h2>
+
+            <p>这是整套技能的骨架：任何口播内容，都按这六步走。</p>
+
+            <div class="framework-block">
+                <span class="fw-label">口播六步 · 姜胡说 → 绝顶赵改版</span>
+                <div class="fw-item"><span class="fw-term">结论先行</span> —— 开头就说清楚这条视频要讲什么，必须是「以你相关」——跟用户有关。</div>
+                <div class="fw-item"><span class="fw-term">遇到问题</span> —— 生活中真实存在的困境是什么。</div>
+                <div class="fw-item"><span class="fw-term">后果代价</span> —— 这个问题如果不解决，继续下去你会变成什么样。</div>
+                <div class="fw-item"><span class="fw-term">转折</span> —— 我是怎么解决这个问题的。</div>
+                <div class="fw-item"><span class="fw-term">解决方案</span> —— 123 列出具体做法。</div>
+                <div class="fw-item"><span class="fw-term">黄金句结尾</span> —— 一句话收住，让人记住。</div>
+            </div>
+
+            <h2 class="section-heading">投喂素材的正确姿势</h2>
+
+            <p>给 AI 投喂素材时，按这个格式来：</p>
+
+            <div class="formula-block"><span class="fb-title">投喂素材格式</span>选题/观点：[核心主张]
+故事/案例：[具体事件或数据]
+目标时长：[3min / 5min / 7min+]</div>
+
+            <p>如果需求不清晰，AI 会主动追问，不要猜。<strong>必须确认以下三点才能动笔：</strong></p>
+
+            <ol>
+                <li>这条视频想解决什么具体问题？</li>
+                <li>目标观众是谁？</li>
+                <li>有没有亲身经历、真实案例，或者让人一看就懂的比喻？</li>
+            </ol>
+
+            <h2 class="section-heading">质量防线</h2>
+
+            <p>口播稿最容易写成一堆正确的废话，所以技能内置了两条防线：</p>
+
+            <p><strong>必须有：</strong></p>
+            <ul>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 具体的故事或数据（不是纯概念）</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 核心观点能一句话说清楚</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 至少一个可验证的逻辑链</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 用「通常」「大多数」代替「永远」「所有人」</li>
+            </ul>
+
+            <p><strong>禁用：</strong></p>
+            <ul>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> 没有来源的论断</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> 鸡汤式励志空泛语</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> 因果链跳跃（A→C，缺 B）</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> 无边界的绝对结论</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> 编造案例 / 数据 / 数字</li>
+            </ul>
+
+            <h2 class="section-heading">快捷指令</h2>
+
+            <p>装好之后，除了「生成口播」，还有四个随时可用的指令：</p>
+
+            <div class="article-table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>指令</th><th>作用</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>诊断</strong></td><td>找出逻辑缺失的具体位置，标注修复建议</td></tr>
+                        <tr><td><strong>打磨</strong></td><td>调整口吻，让逐字稿更可念</td></tr>
+                        <tr><td><strong>上强度</strong></td><td>质疑论述，找缺口和反例</td></tr>
+                        <tr><td><strong>最小化</strong></td><td>压缩到 1 分钟版本</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="section-heading">出处与授权</h2>
+
+            <p>这个框架不是我凭空发明的——口播六步源自姜胡说的表达框架，我按自己的口播经验做了改版。技能本身：</p>
+
+            <div class="quote-block">
+                <p><strong>基于姜胡说口播框架改编。自由使用，无需署名。</strong></p>
+            </div>
+
+            <hr class="divider">
+
+            <p>把文档复制给 AI 的那一刻，你就拥有一个随时待命的口播文案编辑。剩下的，就是开口。</p>
+
+            <div class="footer-note">
+                <span class="label">预告</span>
+                <p>这是「AI 技能」系列第一篇——<br>后续会继续发布拆书技能、写作技能等，复制即用。</p>
+            </div>
+
+            <div class="promo-block">
+                <div class="promo-title">锦囊妙计</div>
+                <p>想要把你自己的一套方法、一套流程，也做成复制即用的 AI 技能？<br>我可以帮你定制，装完即用。</p>
+                <div class="promo-price">49元</div>
+                <p class="promo-wechat">添加微信购买：<span>think99zj</span></p>
+            </div>
+
+        </div>
+
+        <!-- ============ 写到这里结束 ============ -->
+
+        <!--
+            系列导航：改 href 和标题即可。
+            没有上一篇时，用 disabled 的写法（第一行示例）；
+            没有下一篇时，把 disabled 加到下一篇上。
+        -->
+        <nav class="series-nav">
+            <a class="series-card disabled" href="#" aria-disabled="true">
+                <span class="series-label">上一篇</span>
+                <span class="series-title">独立文章 · 无上一篇</span>
+            </a>
+            <a class="series-card next disabled" href="#" aria-disabled="true">
+                <span class="series-label">下一篇</span>
+                <span class="series-title">AI 技能系列 · 敬请期待</span>
+            </a>
+        </nav>
+
+    </article>
+
+    <!-- ======== 页脚（不要动） ======== -->
+    <footer class="footer">
+        <p class="footer-wordmark" data-site-name>绝顶赵</p>
+        <p><span data-site-name>绝顶赵</span> · 个人博客</p>
+        <p>适应性平衡理论 · 原创者：<span data-site-name>绝顶赵</span></p>
+        <p>基于 MIT-Style with Attribution 协议发布</p>
+    </footer>
+
+    <!-- ======== 底部脚本（不要动） ======== -->
+    <script>
+        (function () {
+            /* 站点名填充：data-site-name / data-site-latin 全部跟随 SITE 常量 */
+            var named = document.querySelectorAll('[data-site-name], [data-site-latin]');
+            for (var i = 0; i < named.length; i++) {
+                named[i].textContent = named[i].hasAttribute('data-site-name') ? SITE.name : SITE.latin;
+            }
+
+            /* 顶部滚动进度发丝线 */
+            var bar = document.getElementById('progress-bar');
+            function onScroll() {
+                if (!bar) return;
+                var h = document.documentElement;
+                var max = h.scrollHeight - h.clientHeight;
+                bar.style.width = (max > 0 ? (h.scrollTop || window.pageYOffset) / max * 100 : 0) + '%';
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            /* 滚动渐显（prefers-reduced-motion 下跳过） */
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var reveals = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                for (var j = 0; j < reveals.length; j++) reveals[j].classList.add('in');
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+            for (var k = 0; k < reveals.length; k++) {
+                reveals[k].style.transitionDelay = Math.min(k * 70, 350) + 'ms';
+                io.observe(reveals[k]);
+            }
+
+            /* 复制全文按钮 */
+            var copyBtn = document.getElementById('copy-skill-btn');
+            if (copyBtn) {
+                var copyText = document.getElementById('copy-skill-text');
+                var CHECK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+                var COPY_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+                function markCopied() {
+                    copyBtn.innerHTML = CHECK_SVG + '已复制';
+                    setTimeout(function () { copyBtn.innerHTML = COPY_SVG + '复制全文'; }, 2000);
+                }
+                function copyFallback(text) {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.top = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try { return document.execCommand('copy'); } catch (e) { return false; }
+                    finally { document.body.removeChild(ta); }
+                }
+                function selectAll() {
+                    var range = document.createRange();
+                    range.selectNodeContents(copyText);
+                    var sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+                copyBtn.addEventListener('click', function () {
+                    var text = copyText.textContent;
+                    if (navigator.clipboard && window.isSecureContext) {
+                        navigator.clipboard.writeText(text).then(markCopied, function () {
+                            if (copyFallback(text)) markCopied(); else { selectAll(); alert('复制失败，已为你选中全文，请按 Ctrl+C 复制'); }
+                        });
+                    } else if (copyFallback(text)) {
+                        markCopied();
+                    } else {
+                        selectAll();
+                        alert('复制失败，已为你选中全文，请按 Ctrl+C 复制');
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
