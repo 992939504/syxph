@@ -62,6 +62,13 @@
 - **付费咨询模块**：`.consult-card`（点击展开详情）。当前定价 **99元/小时**。改价格注意两处：卡片价格行 + 详情里的费用行。
 - **微信引导**：`.svc-note`，微信号 `think99zj`。
 
+## 首页联系区（联系方式）
+
+首页 `id="contact"` 联系区（黑幕）结构：
+
+- **文字链接**：`.contact-links` 两行——抖音（搜索绝顶赵）+ 微信（think99zj）。
+- **二维码并排**：`.contact-qr` 两个 `.qr-col`（左微信右抖音粉丝问答群），图片在 `images/`（`WeChat.png`、`TikTok-group.png`，抖音原文件是 `TikTokgroup.jfif` 转 PNG 而来）。换码时替换图片文件即可，注意保持比例（CSS 已设 `height:auto`，图片勿强制拉伸）。
+
 ## 文章目录
 
 | # | 文章 | 链接 | 日期 |

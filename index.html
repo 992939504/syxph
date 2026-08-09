@@ -653,14 +653,19 @@
             transition: color 0.35s;
         }
         .contact-link:hover .cl-sub { color: rgba(0, 0, 0, 0.66); }
+        .contact-qr {
+            display: flex; justify-content: center; align-items: flex-start;
+            gap: 48px; flex-wrap: wrap;
+        }
+        .qr-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
         .contact-qr .qr-frame {
-            display: inline-block;
+            display: flex; align-items: center; justify-content: center;
             background: var(--panel);
             border: 1.5px solid var(--yellow);
             padding: 10px;
         }
-        .contact-qr img { width: 176px; height: 176px; }
-        .qr-label { margin-top: 16px; font-size: 0.88em; color: var(--gray-dk); letter-spacing: 0.04em; }
+        .contact-qr img { width: 176px; height: auto; display: block; }
+        .qr-label { margin-top: 0; font-size: 0.88em; color: var(--gray-dk); letter-spacing: 0.04em; }
 
         /* ======== 页脚（黑） ======== */
         .footer {
@@ -743,6 +748,7 @@
             .about-cols { grid-template-columns: 1fr; gap: 40px; }
             .about-strip { padding: 40px 0; }
             .contact-links { gap: 10px; }
+            .contact-qr { flex-direction: column; gap: 30px; }
             .contact-link { flex-direction: column; gap: 2px; align-items: center; }
             .top-btn { right: 16px; bottom: 16px; width: 52px; height: 52px; }
             .footer { padding: 64px 20px 52px; }
@@ -1114,10 +1120,18 @@
             </div>
 
             <div class="contact-qr reveal">
-                <span class="qr-frame">
-                    <img src="images/WeChat.png" alt="微信二维码" width="176" height="176" loading="lazy">
-                </span>
-                <p class="qr-label">扫码添加微信 · 备注来意，更快通过</p>
+                <div class="qr-col">
+                    <span class="qr-frame">
+                        <img src="images/WeChat.png" alt="微信二维码" width="176" height="176" loading="lazy">
+                    </span>
+                    <p class="qr-label">扫码添加微信 · 备注来意，更快通过</p>
+                </div>
+                <div class="qr-col">
+                    <span class="qr-frame">
+                        <img src="images/TikTok-group.png" alt="抖音粉丝问答群二维码" loading="lazy">
+                    </span>
+                    <p class="qr-label">抖音粉丝问答群 · 扫码快速加入</p>
+                </div>
             </div>
         </div>
             <div class="marquee marquee--rev" aria-hidden="true">
