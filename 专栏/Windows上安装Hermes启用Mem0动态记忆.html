@@ -334,14 +334,14 @@
             border-radius: 1px;
         }
         .article-body ol { counter-reset: ab-ol; }
-        .article-body ol li {
+        .article-body ol > li {
             position: relative;
             padding: 6px 0 6px 30px;
             font-size: 0.99em; line-height: 1.85;
             color: rgba(10, 10, 10, 0.86);
             counter-increment: ab-ol;
         }
-        .article-body ol li::before {
+        .article-body ol > li::before {
             content: counter(ab-ol, decimal-leading-zero);
             position: absolute; left: 0; top: 7px;
             font-family: var(--font-disp);
@@ -521,11 +521,10 @@
             <h2 class="section-heading">前置准备</h2>
 
             <ol>
-                <li><strong>注册商汤科技，获取 API Key</strong>
+                <li><strong>获取对话模型（商汤 / OpenCodeGo，二选一）</strong>
                     <ul>
-                        <li>打开 https://www.sensenova.cn/ 注册账号，进入控制台创建 API Key，复制保存好（格式类似 sk-xxxxx）</li>
-                        <li>API 端点：https://platform.sensenova.cn</li>
-                        <li>商汤提供免费额度，DeepSeek V4 Flash 模型可以免费用，放心注册</li>
+                        <li><strong>方案 A：注册商汤科技</strong> —— 打开 https://www.sensenova.cn/ 注册账号，进入控制台创建 API Key，复制保存好（格式类似 sk-xxxxx）。API 端点：https://platform.sensenova.cn。商汤提供免费额度，DeepSeek V4 Flash 模型可以免费用，放心注册</li>
+                        <li><strong>方案 B：OpenCodeGo 免费模型（推荐，零注册零费用）</strong> —— 不用注册、不用登录、不用花钱。Base URL：https://opencode.ai/zen（Hermes Studio 会自动补全 /v1，别手动加），Key 固定填 <strong>public</strong>。完整配置见第二步</li>
                     </ul>
                 </li>
                 <li><strong>注册硅基流动，获取 API Key</strong>
@@ -581,23 +580,59 @@
                 <li>Hermes 启动时会自动连接 localhost:6333 上的 Qdrant</li>
             </ol>
 
-            <h2 class="section-heading">第二步：在 Hermes Studio 中配置商汤模型</h2>
+            <h2 class="section-heading">第二步：在 Hermes Studio 中配置模型（商汤 / OpenCodeGo）</h2>
 
-            <p>Hermes Studio 自带了很多内置模型提供商，但商汤需要手动添加。</p>
+            <p>Hermes Studio 自带了很多内置模型提供商，但商汤和 OpenCodeGo 都需要手动添加。下面两种方案任选其一，<strong>推荐方案 B</strong>——连注册都省了。</p>
 
             <ol>
                 <li>打开 Hermes Studio，看左边那一排导航按钮，滑到最下面，点击「模型」</li>
                 <li>进入模型管理页面后，找到「新增 Provider」按钮，选择「自定义」</li>
-                <li>填写以下信息：
+                <li>填写以下信息（按你选的方案填）：
                     <ul>
-                        <li>名称：商汤</li>
-                        <li>API 端点：https://platform.sensenova.cn</li>
-                        <li>API Key：粘贴你在商汤控制台创建的 Key</li>
-                        <li>点击「获取模型」，在模型列表中勾选 DeepSeek V4 Flash</li>
+                        <li><strong>方案 A（商汤）</strong> —— 名称：商汤；API 端点：https://platform.sensenova.cn；API Key：粘贴你在商汤控制台创建的 Key；点击「获取模型」，在模型列表中勾选 DeepSeek V4 Flash</li>
+                        <li><strong>方案 B（OpenCodeGo）</strong> —— 名称：OpenCodeGo；API 端点：https://opencode.ai/zen（<strong>别加 /v1</strong>，Hermes Studio 会自动补全，加了反而连不上）；API Key：填 <strong>public</strong>；点击「获取模型」，在模型列表中勾选 big-pickle（推荐）</li>
                     </ul>
                 </li>
                 <li>点击保存，返回主界面</li>
             </ol>
+
+            <div class="case-block">
+                <span class="case-label">方案 B：OpenCodeGo 免费模型 · 完整速查</span>
+                <p><strong>请求地址（Base URL）：</strong>https://opencode.ai/zen/v1 —— 注意：这是接口本身的地址；在 Hermes Studio 里填 API 端点时要去掉 /v1，只填 https://opencode.ai/zen，客户端会自动补全</p>
+                <p><strong>Chat 接口：</strong>https://opencode.ai/zen/v1/chat/completions（OpenAI 兼容格式）</p>
+                <p><strong>模型列表：</strong>https://opencode.ai/zen/v1/models（这个端点不需要 key 也能访问）</p>
+                <p><strong>Key：</strong>public —— 标准 Bearer 鉴权（Authorization: Bearer public），不需要登录、不需要花钱</p>
+            </div>
+
+            <div class="highlight-block">
+                <p><strong>注意：别用 zen/go/v1 路径</strong></p>
+                <p>https://opencode.ai/zen/go/v1 是 Claude Code 专属网关路径，不认免费模型，实测会报 Model not supported。一律用 https://opencode.ai/zen/v1。</p>
+            </div>
+
+            <p><strong>实测可用的免费模型：</strong></p>
+
+            <div class="article-table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>模型 ID</th><th>备注</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>big-pickle</strong></td><td>响应最快，神秘模型，推荐首选</td></tr>
+                        <tr><td><strong>laguna-s-2.1-free</strong></td><td>响应快</td></tr>
+                        <tr><td><strong>deepseek-v4-flash-free</strong></td><td>DeepSeek 家的，但很慢（38 秒左右），可能要重试</td></tr>
+                        <tr><td><strong>mimo-v2.5-free</strong></td><td>可用</td></tr>
+                        <tr><td><strong>longcat-2.0-free</strong></td><td>可用</td></tr>
+                        <tr><td><strong>nemotron-3-ultra-free</strong></td><td>可用</td></tr>
+                        <tr><td><strong>ling-3.0-tiny-free</strong></td><td>⚠️ 暂时不稳定 —— 上游 503（临时故障）</td></tr>
+                        <tr><td><strong>north-mini-code-free</strong></td><td>⚠️ 暂时不稳定 —— 上游 401（可能要单独鉴权）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="formula-block"><span class="fb-title">请求示例 · curl</span>curl -X POST https://opencode.ai/zen/v1/chat/completions \
+  -H "Authorization: Bearer public" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"big-pickle","messages":[{"role":"user","content":"你好"}]}'</div>
 
             <div class="highlight-block">
                 <p><strong>特别注意：有两个「模型」入口，别点错了</strong></p>
@@ -658,9 +693,29 @@
   }
 }</div>
 
+            <p>上面的 mem0.json 里，<strong>llm 段按你的方案二选一</strong>（embedder 段和 vector_store 段两种方案都一样，保持不变）：</p>
+
+            <div class="framework-block">
+                <span class="fw-label">llm 段 · 两种方案</span>
+                <div class="fw-item"><span class="fw-term">方案 A（商汤）</span> —— model 填 deepseek-v4-flash，api_key 填你在商汤控制台创建的 Key，openai_base_url 填 https://platform.sensenova.cn/v1（也就是上面 mem0.json 里的写法，不用改）</div>
+                <div class="fw-item"><span class="fw-term">方案 B（OpenCodeGo）</span> —— model 填 big-pickle（响应最快，推荐），api_key 填 public，openai_base_url 填 https://opencode.ai/zen/v1（mem0 走标准 OpenAI 接口，这里必须带 /v1——和上面 Hermes Studio 里填端点时去掉 /v1 不一样，别搞混）</div>
+            </div>
+
+            <p>选方案 B 的话，llm 段改成下面这样：</p>
+
+            <div class="formula-block"><span class="fb-title">mem0.json · llm 段（方案 B）</span>"llm": {
+  "provider": "openai",
+  "config": {
+    "model": "big-pickle",
+    "api_key": "public",
+    "openai_base_url": "https://opencode.ai/zen/v1"
+  }
+}</div>
+
             <div class="highlight-block">
                 <p><strong>api_key 不要照抄</strong></p>
-                <p>把两个 "***" 分别换成：第一个（llm 下的）填你在商汤科技控制台创建的 Key；第二个（embedder 下的）填你在硅基流动控制台创建的 Key。</p>
+                <p><strong>方案 A：</strong>llm 下的 api_key 填你在商汤科技控制台创建的 Key；embedder 下的 api_key 填你在硅基流动控制台创建的 Key。</p>
+                <p><strong>方案 B：</strong>llm 下的 api_key 固定填 <strong>public</strong>（OpenCodeGo 不需要注册）；embedder 下的 api_key 仍然填硅基流动的 Key——OpenCodeGo 只提供对话模型、不提供嵌入模型，所以 embedding 这一步还是得靠硅基流动。</p>
             </div>
 
             <p><strong>2.2 在 config.yaml 里启用 Mem0 插件</strong> —— 打开 %USERPROFILE%\.hermes\config.yaml，找到 memory: 这一段，改成这样：</p>
@@ -745,6 +800,7 @@
                         <tr><td><strong>mem0.json 里配了语言参数但没用</strong></td><td>use_input_language 在 configs/prompts.py 第 515 行硬编码为 False，配置文件传什么都白搭</td><td>必须改 prompts.py 源码里的 generate_additive_extraction_prompt 函数</td></tr>
                         <tr><td><strong>配好了但记忆不生效</strong></td><td>在旧对话里测试，旧对话不会动态加载 mem0</td><td>必须新建对话测试</td></tr>
                         <tr><td><strong>安装 mem0 时下载慢/失败</strong></td><td>pip 默认从 PyPI 拉包，国内网速不行</td><td>用清华镜像源：pip install -i https://pypi.tuna.tsinghua.edu.cn/simple</td></tr>
+                        <tr><td><strong>不想注册商汤 / 免费额度不够用</strong></td><td>商汤注册要手机号，额度也有限</td><td>改用 OpenCodeGo 免费模型：API 端点填 https://opencode.ai/zen（别加 /v1，客户端会自动补全），Key 填 public，模型选 big-pickle（详见第二步方案 B）</td></tr>
                     </tbody>
                 </table>
             </div>
