@@ -6,3 +6,8 @@ plan.md
 
 # 管理后台数据（草稿与首页备份，不入库）
 admin/data/
+
+# 命令行管理终端的本地数据（草稿 / 首页备份 / 预览产物，不入库）
+blog-cli/drafts/
+blog-cli/backups/
+blog-cli/tmp/
