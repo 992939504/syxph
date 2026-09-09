@@ -394,6 +394,7 @@
             overflow-x: auto;
             white-space: pre-wrap;
             word-break: break-word;
+            position: relative;
         }
         .formula-block .fb-title {
             display: block;
@@ -403,6 +404,17 @@
             text-transform: uppercase;
         }
         .formula-block b { color: var(--yellow-2); }
+        .formula-copy-btn {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--yellow); color: var(--black);
+            border: none; border-radius: 4px;
+            padding: 5px 12px; font-size: 0.75rem; font-weight: 700;
+            cursor: pointer; font-family: var(--font);
+            transition: background 0.15s;
+            z-index: 2;
+        }
+        .formula-copy-btn:hover { background: var(--yellow-2); }
+        .formula-copy-btn.copied { background: #fff; }
         /* ======== 系列导航 ======== */
         .series-nav {
             display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
@@ -1169,6 +1181,48 @@ description: 当用户要解决一个问题、你发现自己只能给通用建�
             }
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll();
+
+            /* 代码块一键复制按钮 */
+            var COPY_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+            var CHECK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M20 6 9 17l-5-5"/></svg>';
+            var formulaBlocks = document.querySelectorAll('.formula-block');
+            for (var fi = 0; fi < formulaBlocks.length; fi++) {
+                (function(block) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'formula-copy-btn';
+                    btn.innerHTML = COPY_SVG + '复制';
+                    btn.addEventListener('click', function() {
+                        var text = block.textContent;
+                        // 去掉按钮自己的文字
+                        text = text.replace(/^复制$|^已复制$/gm, '').trim();
+                        function done() {
+                            btn.innerHTML = CHECK_SVG + '已复制';
+                            btn.classList.add('copied');
+                            setTimeout(function() {
+                                btn.innerHTML = COPY_SVG + '复制';
+                                btn.classList.remove('copied');
+                            }, 2000);
+                        }
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(text).then(done, function() {
+                                var ta = document.createElement('textarea');
+                                ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px';
+                                document.body.appendChild(ta); ta.select();
+                                try { document.execCommand('copy'); done(); } catch(e) {}
+                                finally { document.body.removeChild(ta); }
+                            });
+                        } else {
+                            var ta = document.createElement('textarea');
+                            ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px';
+                            document.body.appendChild(ta); ta.select();
+                            try { document.execCommand('copy'); done(); } catch(e) {}
+                            finally { document.body.removeChild(ta); }
+                        }
+                    });
+                    block.appendChild(btn);
+                })(formulaBlocks[fi]);
+            }
 
             /* 滚动渐显（prefers-reduced-motion 下跳过） */
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
