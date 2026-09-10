@@ -215,15 +215,20 @@ async function resolveDraft(query) {
     const all = await listDrafts();
     const q = String(query).toLowerCase();
     let hit = all.find((d) => d.id === query);
-    if (hit) return hit;
-    hit = all.find((d) => d.id.toLowerCase() === q);
-    if (hit) return hit;
-    const fuzzy = all.filter((d) => d.id.toLowerCase().indexOf(q) !== -1 || String(d.title).toLowerCase().indexOf(q) !== -1);
-    if (fuzzy.length === 1) return fuzzy[0];
-    if (fuzzy.length > 1) {
-        throw new Error('匹配到多篇草稿，请写得更精确：\n  ' + fuzzy.map((d) => d.id).join('\n  '));
+    if (!hit) hit = all.find((d) => d.id.toLowerCase() === q);
+    if (!hit) {
+        const fuzzy = all.filter((d) => d.id.toLowerCase().indexOf(q) !== -1 || String(d.title).toLowerCase().indexOf(q) !== -1);
+        if (fuzzy.length > 1) {
+            throw new Error('匹配到多篇草稿，请写得更精确：\n  ' + fuzzy.map((d) => d.id).join('\n  '));
+        }
+        if (fuzzy.length === 1) hit = fuzzy[0];
     }
-    throw new Error('找不到草稿：' + query);
+    if (!hit) throw new Error('找不到草稿：' + query);
+    // listDrafts() 的条目只有 id/title/href 等轻量字段，没有 meta / body。
+    // 这里补全，否则 show（读 d.meta 崩）、set（d.body 为 undefined，会把正文写没）、
+    // preview（渲染成空文章）三条命令都会踩坑。
+    const full = await readDraft(hit.id);
+    return Object.assign({}, hit, { meta: full.meta, body: full.body });
 }
 
 /* ============================================================

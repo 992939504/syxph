@@ -9,7 +9,8 @@
  *   ++关键词++   黄色马克笔关键词                `代码`    行内代码
  *   > 金句       金句卡（quote-block）
  *   ::: quote / qa / case / framework / highlight / formula / note   站点专属卡片块
- *   ```lang      代码块（formula-block 样式）
+ *   ```标题       代码块（formula-block 样式，自动挂「复制」按钮）
+ *   ```标题 nocopy  同款外观但不挂复制按钮（目录树 / 结构示意 / 片段）
  *   | 表格 |     Markdown 表格（自动包 article-table-wrap）
  *   ---          分隔线（divider）
  *   无序/有序列表、嵌套列表、链接、图片、行内 HTML（<svg> 等直接透传）
@@ -143,6 +144,25 @@
         return html;
     }
 
+    /* ---------------- 代码块信息串：标题 + 复制开关 ----------------
+     *   "安装命令"          → 标题「安装命令」，挂复制按钮（默认）
+     *   "安装命令 nocopy"   → 标题「安装命令」，不挂复制按钮
+     *   "nocopy"            → 无标题，不挂复制按钮
+     *   "mem0.json copy"    → 显式声明挂按钮（与默认一致，用于自我说明）
+     * 用途：目录树、结构示意、只该看不该整段粘走的片段 → 加 nocopy
+     */
+    function parseBlockInfo(info) {
+        var parts = String(info == null ? '' : info).trim().split(/\s+/).filter(Boolean);
+        var copy = null, title = [];
+        for (var i = 0; i < parts.length; i++) {
+            var w = parts[i].toLowerCase();
+            if (w === 'nocopy' || w === 'no-copy') { copy = false; continue; }
+            if (w === 'copy') { copy = true; continue; }
+            title.push(parts[i]);
+        }
+        return { title: title.join(' '), copy: copy };
+    }
+
     /* ---------------- 站点专属卡片块 ---------------- */
     function renderContainer(type, arg, contentLines) {
         var body = contentLines.join('\n').replace(/^\n+|\n+$/g, '');
@@ -191,10 +211,16 @@
                     }).join('\n') + '\n</div>';
                 }
                 return html;
-            case 'formula': case '公式': case 'code':
-                return '<div class="formula-block">' +
-                    (arg ? '<span class="fb-title">' + esc(arg) + '</span>\n' : '') +
+            case 'formula': case '公式': case 'code': {
+                // 默认值：``` 围栏与 :::code 是「拿来用的」，挂复制按钮；
+                // :::formula / :::公式 是理论公式，不是拿来粘的，默认不挂。
+                // 两者都能用信息串里的 copy / nocopy 覆盖（见 parseBlockInfo）。
+                var binfo = parseBlockInfo(arg);
+                var copyable = binfo.copy === null ? (type === 'code') : binfo.copy;
+                return '<div class="formula-block' + (copyable ? '' : ' no-copy') + '">' +
+                    (binfo.title ? '<span class="fb-title">' + esc(binfo.title) + '</span>\n' : '') +
                     escText(body) + '\n</div>';
+            }
             case 'note': case '预告': case 'footer-note':
                 return '<div class="footer-note">\n<span class="label">' + esc(arg || '预告') + '</span>\n' +
                     splitParagraphs(body).map(function (p) { return '<p>' + inline(p) + '</p>'; }).join('\n') + '\n</div>';
@@ -239,7 +265,7 @@
                 i++;
                 while (i < n && !/^```/.test(lines[i])) { code.push(lines[i]); i++; }
                 i++;
-                out.push(renderContainer('formula', lang, code));
+                out.push(renderContainer('code', lang, code));
                 continue;
             }
 

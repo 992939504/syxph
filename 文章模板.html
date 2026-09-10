@@ -39,6 +39,10 @@
              （黄底表头 + 黑白硬边，移动端自动横向滚动）
            - 公式块：<div class="formula-block"><span class="fb-title">公式名</span>公式内容</div>
              （黑底黄边；多行直接换行写；注意 <code>&gt;</code> 要写成 <code>&amp;gt;</code>）
+           - 复制按钮：块右上角自动挂「复制」（只复制正文，不含标题）。
+             不该被整段粘走的块（目录树 / 结构示意 / 方案 A·B 片段）加 no-copy：
+             <div class="formula-block no-copy">…</div>
+             Markdown 侧写 <code>```标题 nocopy</code>，生成器会自动加上这个 class）
            - 结尾预告：<div class="footer-note"><span class="label">预告</span><p>…</p></div>
         4. 修改系列导航（上一篇 / 下一篇）的链接和标题；
            没有上一篇/下一篇时，保留 disabled 写法
@@ -593,7 +597,7 @@
             </div>
 
             <p>公式块（黑底黄边，多行公式直接换行写，注意 <code>&gt;</code> 要写成 <code>&amp;gt;</code>）：</p>
-            <div class="formula-block"><span class="fb-title">公式标题</span>公式内容 = 变量一 + 变量二
+            <div class="formula-block no-copy"><span class="fb-title">公式标题</span>公式内容 = 变量一 + 变量二
 其中：
 - 变量一：解释
 - 变量二：解释</div>
@@ -668,7 +672,8 @@
             /* 代码块一键复制按钮 */
             var COPY_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
             var CHECK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M20 6 9 17l-5-5"/></svg>';
-            var formulaBlocks = document.querySelectorAll('.formula-block');
+            /* 只有带 data 语义的块才挂按钮：生成器会给「不该复制」的块加 .no-copy */
+            var formulaBlocks = document.querySelectorAll('.formula-block:not(.no-copy)');
             for (var fi = 0; fi < formulaBlocks.length; fi++) {
                 (function(block) {
                     var btn = document.createElement('button');

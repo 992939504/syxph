@@ -171,7 +171,8 @@ wsl.exe -d Ubuntu-D -- bash -lc 'cd /root/workspace/syxph/blog-cli && node blog.
 | `**加粗**` `==高亮==` `++关键词++` `` `代码` `` | 对应站点样式 |
 | `> 一句话` | quote-block 金句卡 |
 | `::: quote / qa / case / framework / highlight / formula / note` … `:::` | 站点卡片块 |
-| ` ```lang ` | formula-block 代码块 |
+| ` ```标题 ` | formula-block 代码块（右上角自动挂「复制」按钮，只复制正文不含标题） |
+| ` ```标题 nocopy ` | 同款外观但不挂复制按钮：目录树 / 结构示意 / 方案 A·B 片段 |
 | `\| 表格 \|` | article-table-wrap 表格 |
 | `---` | 分隔线 |
 | `- 列表` / `1. 编号` | 黄方块 / 黄角标列表 |

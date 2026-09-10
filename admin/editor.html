@@ -462,12 +462,17 @@
 :::</pre>
 
                 <h3>四、代码块</h3>
-                <pre>```安装包结构
+                <pre>```安装命令
+pip install mem0ai
+```
+
+```安装包结构 nocopy
 nihaixia-skill/
 ├── SKILL.md
 └── modules/
 ```</pre>
-                <p>代码块会渲染成黑底黄边的等宽块，<code>```</code> 后面写块标题。</p>
+                <p>代码块会渲染成黑底黄边的等宽块，<code>```</code> 后面写块标题，右上角自动挂一个「复制」按钮（只复制正文，<b>不含标题</b>）。</p>
+                <p>不该让人整段粘走的内容——目录树、结构示意、方案 A/B 这类<b>片段</b>——在标题后加 <code>nocopy</code>，就没有复制按钮。<code>:::formula</code>（理论公式）默认不挂，<code>:::code</code> 默认挂。</p>
 
                 <h3>五、其他</h3>
                 <ul>
