@@ -1193,9 +1193,13 @@ description: 当用户要解决一个问题、你发现自己只能给通用建�
                     btn.className = 'formula-copy-btn';
                     btn.innerHTML = COPY_SVG + '复制';
                     btn.addEventListener('click', function() {
-                        var text = block.textContent;
-                        // 去掉按钮自己的文字
-                        text = text.replace(/^复制$|^已复制$/gm, '').trim();
+                        // 只取正文：克隆后剔除块标题与按钮自身，避免把标签混进剪贴板
+                        var clone = block.cloneNode(true);
+                        var titleEl = clone.querySelector('.fb-title');
+                        if (titleEl && titleEl.parentNode) titleEl.parentNode.removeChild(titleEl);
+                        var btnEl = clone.querySelector('.formula-copy-btn');
+                        if (btnEl && btnEl.parentNode) btnEl.parentNode.removeChild(btnEl);
+                        var text = clone.textContent.trim();
                         function done() {
                             btn.innerHTML = CHECK_SVG + '已复制';
                             btn.classList.add('copied');
