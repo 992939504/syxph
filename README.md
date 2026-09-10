@@ -7,7 +7,7 @@
 绝顶赵（`JUEDING ZHAO`）的个人博客：一个展示「适应性平衡理论」核心思想、执行力系列文章、AI 工具与付费服务的静态网站。
 
 - **仓库**：`https://github.com/992939504/syxph.git`（master 分支）
-- **线上地址**：`https://syxph.363749768.xyz/`（Cloudflare Pages，自动部署，push 后约 1-2 分钟生效）
+- **线上地址**：`https://www.363749768.xyz/`（个人博客主域名，Cloudflare Pages 自动部署，push 后约 1-2 分钟生效；Pages 项目域名 `syxph.pages.dev` 指向同一站点）
 - **版本**：v4 设计系统（黑白撞色 × 暖黄），前身 v3（纸底靛蓝）
 
 ## 核心架构（改代码前必读）
