@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI时代如何恢复思考的能力 · __SITE__</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230A0A0A'/%3E%3Ctext x='32' y='45' font-size='36' font-weight='700' text-anchor='middle' fill='%23FFC300' font-family='PingFang SC, Noto Sans SC, sans-serif'%3E%E8%B5%B5%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap">
+    <!--
+        ============================================================
+        文章模板使用说明（复制本文件，按以下步骤操作）：
+        ------------------------------------------------------------
+        1. 复制本文件，重命名为你的文章名，例如：专栏/我的新文章.html
+           （建议放进 专栏/ 目录，与现有文章放一起）
+        2. 修改 <title>：把「文章标题」四个字换成你的文章标题
+        3. 修改正文区（搜索「从这里开始写」）：
+           - 文章头部：标题 / 一句话副标题 / 日期 / 系列标识
+           - 正文段落：直接写 <p> 段落</p>
+           - 小标题：<h2 class="section-heading">小标题</h2>
+           - 更小的分节：<h3 class="sub-heading">分节</h3>
+           - 关键词标记：<strong class="keyword">关键词</strong>（黄色下划线）
+           - 关键短语高亮：<span class="highlight">高亮</span>（黄底黑字）
+           - 金句引用：<div class="quote-block"><p><strong>金句</strong></p></div>
+           - 问答块：<div class="qa-block"><span class="qa-label">Q1 · 主题</span>
+             <div class="qa-q">问题</div><p>回答</p></div>
+           - 案例块：<div class="case-block"><span class="case-label">举个例子</span>
+             <p>案例内容</p></div>
+           - 框架块：<div class="framework-block"><span class="fw-label">框架名</span>
+             <div class="fw-item"><span class="fw-term">要点</span> —— 解释</div></div>
+           - 黑卡黄边重点块：<div class="highlight-block"><p><strong>案例</strong></p>
+             <p>内容</p></div>
+           - 分隔线：<hr class="divider">
+           - 无序列表：<ul><li>列表项</li></ul>（黄色方块标记）
+           - 编号列表：<ol><li>要点</li></ol>（自动 01/02/03 黄色角标）
+           - 图标条款列表：<ul><li><svg…circle-check…></svg> 允许项</li></ul>
+             （允许/禁止类条款用 Lucide 图标，禁止用 emoji）
+           - 表格：<div class="article-table-wrap"><table><thead><tr><th>列名</th></tr>
+             </thead><tbody><tr><td>内容</td></tr></tbody></table></div>
+             （黄底表头 + 黑白硬边，移动端自动横向滚动）
+           - 公式块：<div class="formula-block"><span class="fb-title">公式名</span>公式内容</div>
+             （黑底黄边；多行直接换行写；注意 <code>&gt;</code> 要写成 <code>&amp;gt;</code>）
+           - 复制按钮：块右上角自动挂「复制」（只复制正文，不含标题）。
+             不该被整段粘走的块（目录树 / 结构示意 / 方案 A·B 片段）加 no-copy：
+             <div class="formula-block no-copy">…</div>
+             Markdown 侧写 <code>```标题 nocopy</code>，生成器会自动加上这个 class）
+           - 结尾预告：<div class="footer-note"><span class="label">预告</span><p>…</p></div>
+        4. 修改系列导航（上一篇 / 下一篇）的链接和标题；
+           没有上一篇/下一篇时，保留 disabled 写法
+        5. 首页联动一：在 index.html 的 <div class="article-list"> 顶部插入新行
+           （结构照抄现有行），给 <a class="article-row"> 加上 data-month="YYYY-MM"
+           （文章发布月份），并重排全部 ar-num 编号（01/02/03…）
+        6. 首页联动二：index.html 文章区右侧的「文章归档」筛选器（#af-body）：
+           更新对应月份按钮的篇数（.af-count）；没有该月份就新增一个 .af-btn
+           按钮（按时间倒序插入），并更新「全部文章」按钮的篇数
+        7. 站点名常量在下方 SITE 处：改 SITE.name 即可全站换名
+           （导航 / 页脚 / <title> 全部自动跟随，不用动其他地方）
+        ============================================================
+    -->
+
+    <!--
+        站点名常量：改这里即可全站换名（导航 / hero / 页脚 / <title> 全部跟随）。
+        SITE.name  = 中文名
+        SITE.latin = 拉丁展示字
+    -->
+    <script>const SITE = { name: "绝顶赵", latin: "JUEDING ZHAO" }; document.title = document.title.replace("__SITE__", SITE.name);</script>
+    <style>
+        :root {
+            --black: #0A0A0A;
+            --panel: #141414;
+            --paper: #F4F2EC;
+            --white: #FFFFFF;
+            --yellow: #FFC300;
+            --yellow-2: #FFD84D;
+            --gray-dk: rgba(255, 255, 255, 0.62);
+            --gray-lt: #6E6E76;
+            --hair-dk: rgba(255, 255, 255, 0.14);
+            --hair-lt: rgba(0, 0, 0, 0.12);
+            --spring: cubic-bezier(.16, 1, .3, 1);
+            --font-disp: "Space Grotesk", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+            --font: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--paper);
+            color: var(--black);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
+
+        /* ======== 胶片噪点 ======== */
+        .grain {
+            position: fixed; inset: 0; z-index: 90;
+            pointer-events: none; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+        }
+
+        /* ======== 顶部导航（blend 反色） ======== */
+        .topnav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px;
+        }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; z-index: 120;
+            height: 2px; width: 0; background: var(--yellow);
+        }
+        .logo {
+            width: 34px; height: 34px;
+            background: var(--yellow); color: var(--black);
+            font-size: 1.12rem; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 2px;
+            transition: transform 0.3s var(--spring);
+        }
+        .logo:hover { transform: rotate(-6deg) scale(1.06); }
+        .topnav-back {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.84em; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--white);
+            padding: 8px 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 2px;
+            mix-blend-mode: difference;
+            transition: border-color 0.25s, background 0.25s;
+        }
+        .topnav-back:hover { border-color: var(--yellow); }
+        .topnav-back svg { width: 14px; height: 14px; }
+
+        /* ======== 文章黑幕 hero ======== */
+        .article-head {
+            background: var(--black); color: var(--paper);
+            text-align: center;
+            padding: clamp(130px, 19vh, 190px) 24px 74px;
+        }
+        .article-head-meta {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .badge-community {
+            display: inline-flex; align-items: center;
+            background: var(--yellow); color: var(--black);
+            font-size: 0.74em; font-weight: 800; letter-spacing: 0.14em;
+            padding: 5px 12px; border-radius: 2px;
+            transform: rotate(-1.5deg);
+        }
+        .article-series {
+            font-family: var(--font-disp);
+            font-size: 0.78em; letter-spacing: 0.12em;
+            color: var(--gray-dk); font-weight: 500;
+        }
+        .article-date {
+            font-family: var(--font-disp);
+            font-size: 0.78em; letter-spacing: 0.08em;
+            color: var(--gray-dk);
+            font-variant-numeric: tabular-nums;
+        }
+        .article-head-title {
+            font-size: clamp(2.3rem, 7.5vw, 4.6rem);
+            font-weight: 900; letter-spacing: -0.05em; line-height: 1.12;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(244, 242, 236, 0.92);
+            margin-bottom: 22px;
+        }
+        .article-head-title .accent {
+            color: var(--yellow);
+            -webkit-text-stroke-width: 0;
+        }
+        .article-head-sub {
+            font-size: 1.02em; line-height: 1.85;
+            color: var(--gray-dk);
+            max-width: 560px; margin: 0 auto;
+        }
+
+        /* ======== 正文（暖白幕） ======== */
+        .article-body {
+            max-width: 680px; margin: 0 auto;
+            padding: 66px 24px 0;
+        }
+        .article-body p {
+            font-size: 1.05em; line-height: 1.9;
+            margin-bottom: 1.4em;
+            color: rgba(10, 10, 10, 0.88);
+        }
+        .article-body p strong { font-weight: 800; color: var(--black); }
+        .article-body .section-heading {
+            font-size: 1.55em; font-weight: 900; letter-spacing: -0.03em;
+            margin: 2.1em 0 0.9em;
+            position: relative; padding-bottom: 0.32em;
+        }
+        .article-body .section-heading::after {
+            content: '';
+            position: absolute; left: 0; bottom: 0;
+            width: 2.4em; height: 5px;
+            background: var(--yellow);
+        }
+        .article-body .sub-heading {
+            font-size: 1.18em; font-weight: 800; letter-spacing: -0.01em;
+            margin: 1.9em 0 0.8em;
+        }
+        .article-body .keyword {
+            font-weight: 900; color: var(--black);
+            background: linear-gradient(transparent 62%, var(--yellow) 62%);
+            padding: 0 0.08em;
+        }
+        .article-body .highlight {
+            background: var(--yellow); color: var(--black);
+            padding: 0.05em 0.28em; font-weight: 700;
+        }
+        .quote-block {
+            position: relative;
+            margin: 2em 0; padding: 32px 32px 28px;
+            background: var(--panel); color: #fff;
+            border: 1px solid var(--yellow);
+        }
+        .quote-block::before {
+            content: '\201C';
+            position: absolute; top: 2px; left: 14px;
+            font-size: 3.6em; line-height: 1;
+            color: var(--yellow);
+            font-family: Georgia, 'Times New Roman', serif;
+            pointer-events: none;
+        }
+        .quote-block p {
+            position: relative; z-index: 1;
+            margin-bottom: 0.6em;
+            color: rgba(255, 255, 255, 0.92); font-size: 1.02em; line-height: 1.9;
+        }
+        .quote-block p:last-child { margin-bottom: 0; }
+        .quote-block p strong { color: #fff; font-weight: 800; }
+        .highlight-block {
+            margin: 2em 0; padding: 28px 30px;
+            background: var(--panel);
+            border: 2px solid var(--yellow);
+        }
+        .highlight-block p {
+            font-size: 0.98em; line-height: 1.85; margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .highlight-block p:last-child { margin-bottom: 0; }
+        .highlight-block p strong { color: var(--yellow); font-weight: 800; }
+        .qa-block {
+            margin: 2em 0; padding: 26px 28px;
+            background: var(--white);
+            border: 1.5px solid var(--black);
+        }
+        .qa-block .qa-label {
+            display: inline-block;
+            font-family: var(--font-disp);
+            font-size: 0.76em; font-weight: 700; letter-spacing: 0.12em;
+            color: var(--black); background: var(--yellow);
+            padding: 4px 12px; margin-bottom: 14px;
+        }
+        .qa-block .qa-q { font-size: 1.02em; font-weight: 800; line-height: 1.7; margin-bottom: 12px; color: var(--black); }
+        .qa-block p { font-size: 0.97em; line-height: 1.85; margin-bottom: 0; color: rgba(10, 10, 10, 0.82); }
+        .case-block {
+            margin: 2em 0; padding: 26px 28px;
+            background: var(--panel);
+            border: 1px solid rgba(255, 195, 0, 0.55);
+        }
+        .case-block .case-label {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.76em; font-weight: 700; letter-spacing: 0.12em;
+            color: var(--yellow); margin-bottom: 12px;
+        }
+        .case-block p { font-size: 0.97em; line-height: 1.85; margin-bottom: 10px; color: rgba(255, 255, 255, 0.85); }
+        .case-block p:last-child { margin-bottom: 0; }
+        .case-block p strong { color: #fff; font-weight: 800; }
+        .framework-block {
+            margin: 2em 0; padding: 28px 30px;
+            background: var(--white);
+            border: 1.5px solid var(--black);
+        }
+        .framework-block .fw-label {
+            display: inline-block;
+            font-family: var(--font-disp);
+            font-size: 0.78em; font-weight: 700; letter-spacing: 0.14em;
+            color: var(--black); background: var(--yellow);
+            padding: 4px 14px; margin-bottom: 18px;
+        }
+        .framework-block .fw-item { margin-bottom: 12px; line-height: 1.85; font-size: 0.97em; color: rgba(10, 10, 10, 0.82); }
+        .framework-block .fw-item:last-child { margin-bottom: 0; }
+        .framework-block .fw-term {
+            font-weight: 900; color: var(--black);
+            border-bottom: 2px solid var(--yellow);
+        }
+        .divider { border: none; height: 2px; background: var(--black); margin: 2.6em 0; }
+
+        .footer-note {
+            margin: 2.4em 0 0; padding: 36px 32px;
+            background: var(--panel);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+        .footer-note .label {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.78em; font-weight: 700; letter-spacing: 0.2em;
+            color: var(--yellow); margin-bottom: 14px;
+        }
+        .footer-note p { font-size: 0.95em; line-height: 1.9; color: rgba(255, 255, 255, 0.82); }
+        .footer-note p strong { color: #fff; }
+
+        /* ======== 推广（锦囊妙计） ======== */
+        .promo-block {
+            margin: 2.4em 0; padding: 42px 34px;
+            background: var(--panel);
+            border: 2px solid var(--yellow);
+            text-align: center; color: #fff;
+        }
+        .promo-block .promo-title { font-size: 1.35em; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 16px; color: #fff; }
+        .promo-block p { font-size: 0.94em; line-height: 1.85; color: rgba(255, 255, 255, 0.82); margin-bottom: 12px; }
+        .promo-block p strong { color: #fff; font-weight: 800; }
+        .promo-block .promo-price {
+            font-size: 3.2em; font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+            color: var(--yellow); margin: 16px 0 6px;
+        }
+        .promo-block .promo-wechat { font-size: 1.08em; font-weight: 800; color: #fff; margin: 18px 0 12px; }
+        .promo-block .promo-wechat span { color: var(--yellow); }
+        .promo-block .promo-muted { font-size: 0.85em; color: rgba(255, 255, 255, 0.55); }
+
+        /* ======== 正文列表 ======== */
+        .article-body ul, .article-body ol { margin: 0 0 1.4em; padding: 0; list-style: none; }
+        .article-body ul li {
+            position: relative;
+            padding: 6px 0 6px 24px;
+            font-size: 0.99em; line-height: 1.85;
+            color: rgba(10, 10, 10, 0.86);
+        }
+        .article-body ul li::before {
+            content: '';
+            position: absolute; left: 4px; top: 15px;
+            width: 7px; height: 7px;
+            background: var(--yellow);
+            border: 1.5px solid var(--black);
+            border-radius: 1px;
+        }
+        .article-body ol { counter-reset: ab-ol; }
+        .article-body ol li {
+            position: relative;
+            padding: 6px 0 6px 30px;
+            font-size: 0.99em; line-height: 1.85;
+            color: rgba(10, 10, 10, 0.86);
+            counter-increment: ab-ol;
+        }
+        .article-body ol li::before {
+            content: counter(ab-ol, decimal-leading-zero);
+            position: absolute; left: 0; top: 7px;
+            font-family: var(--font-disp);
+            font-size: 0.8em; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--black); background: var(--yellow);
+            padding: 1px 6px; border-radius: 2px;
+        }
+        .article-body li strong { font-weight: 800; color: var(--black); }
+        .article-body li svg { display: inline-block; width: 15px; height: 15px; vertical-align: -2px; margin-right: 6px; }
+        .article-body li ul { margin: 4px 0 2px; }
+        .article-body li ul li { padding: 3px 0 3px 20px; font-size: 0.95em; }
+
+        /* ======== 正文表格 ======== */
+        .article-table-wrap { margin: 2em 0; overflow-x: auto; }
+        .article-body table {
+            width: 100%; border-collapse: collapse;
+            background: var(--white);
+            border: 2px solid var(--black);
+            font-size: 0.9em;
+        }
+        .article-body th {
+            background: var(--yellow); color: var(--black);
+            font-weight: 900; text-align: left;
+            padding: 12px 14px; border: 1px solid var(--black);
+            letter-spacing: 0.02em;
+        }
+        .article-body td {
+            padding: 11px 14px; border: 1px solid var(--hair-lt);
+            color: rgba(10, 10, 10, 0.85);
+            line-height: 1.75; vertical-align: top;
+        }
+        .article-body tr:nth-child(even) td { background: #FBF9F4; }
+        .article-body td strong { font-weight: 800; color: var(--black); }
+
+        /* ======== 正文公式块 ======== */
+        .formula-block {
+            margin: 2em 0; padding: 24px 28px;
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-left: 4px solid var(--yellow);
+            font-family: var(--font-disp), var(--font);
+            font-size: 0.95em; line-height: 1.9;
+            color: rgba(255, 255, 255, 0.92);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            position: relative;
+        }
+        .formula-block .fb-title {
+            display: block;
+            font-family: var(--font-disp);
+            font-size: 0.72em; font-weight: 700; letter-spacing: 0.18em;
+            color: var(--yellow); margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .formula-block b { color: var(--yellow-2); }
+        .formula-copy-btn {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--yellow); color: var(--black);
+            border: none; border-radius: 4px;
+            padding: 5px 12px; font-size: 0.75rem; font-weight: 700;
+            cursor: pointer; font-family: var(--font);
+            transition: background 0.15s;
+            z-index: 2;
+        }
+        .formula-copy-btn:hover { background: var(--yellow-2); }
+        .formula-copy-btn.copied { background: #fff; }
+        /* ======== 系列导航 ======== */
+        .series-nav {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            max-width: 720px; margin: 56px auto 0;
+            padding: 0 24px 12px;
+        }
+        .series-card {
+            display: flex; flex-direction: column; gap: 8px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 20px 22px;
+            transition: background 0.3s var(--spring), color 0.3s;
+        }
+        .series-card:hover { background: var(--yellow); color: var(--black); }
+        .series-label {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: var(--font-disp);
+            font-size: 0.74em; font-weight: 700; letter-spacing: 0.14em;
+            color: var(--gray-lt);
+            transition: color 0.3s;
+        }
+        .series-card:hover .series-label { color: rgba(0, 0, 0, 0.6); }
+        .series-label svg { width: 14px; height: 14px; }
+        .series-title { font-size: 0.98em; font-weight: 800; line-height: 1.5; }
+        .series-card.next { text-align: right; align-items: flex-end; }
+        .series-card.disabled { opacity: 0.35; pointer-events: none; }
+
+        /* ======== 页脚（黑） ======== */
+        .footer {
+            background: var(--black); color: var(--paper);
+            margin-top: 64px;
+            padding: 72px 24px 60px; text-align: center;
+        }
+        .footer-wordmark {
+            font-size: clamp(3rem, 9vw, 6rem);
+            font-weight: 900; letter-spacing: -0.05em; line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(244, 242, 236, 0.45);
+            margin-bottom: 30px;
+        }
+        .footer p { font-size: 0.82em; color: rgba(255, 255, 255, 0.55); line-height: 2.1; }
+        .footer p:first-of-type { color: var(--gray-dk); font-weight: 600; }
+
+        /* ======== 动效 ======== */
+        .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s var(--spring); }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+
+        /* ======== 响应式 ======== */
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; height: 56px; }
+            .article-head { padding: 120px 18px 56px; }
+            .article-head-title { -webkit-text-stroke-width: 1.5px; }
+            .article-body { padding: 48px 18px 0; }
+            .article-body p { font-size: 1em; }
+            .series-nav { grid-template-columns: 1fr; padding: 0 18px 12px; }
+            .promo-block { padding: 32px 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== 顶部导航（不要动） ======== -->
+    <nav class="topnav">
+        <a class="logo" href="../index.html" aria-label="返回首页">赵</a>
+        <a class="topnav-back" href="../index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            返回首页
+        </a>
+    </nav>
+    <div class="progress-bar" id="progress-bar"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ======== 文章 ======== -->
+    <article class="article">
+
+        <!--
+            文章头部：
+            - badge-community：黄色标签，文字可自定义，如「社群专享」「核心理论」（不需要就删掉这一行）
+            - article-series：系列标识，如「获得执行力 · 上」「理论原著 · V3.2」（没有系列就删掉）
+            - time：发布日期，改成你发布的那天
+            - 标题：会显示为空心描边大字；想要其中几个字变实心黄色，
+              给它们包一层 <span class="accent">，如：为什么我们<span class="accent">无法行动</span>？
+            - 副标题：替换成你的
+        -->
+        <header class="article-head reveal">
+<div class="article-head-meta">
+<time class="article-date" datetime="2026-09-25">2026-09-25</time>
+</div>
+<h1 class="article-head-title">AI时代如何恢复思考的能力</h1>
+<p class="article-head-sub"></p>
+</header>
+
+        <!-- ============ 从这里开始写 ============ -->
+        <div class="article-body">
+
+<p>之前看了一个帖子，大概是一个大学教师，因为让AI去推导，觉得自己好像没有任何思考能力。我在很多地方都见过这些说法就是大家觉得自己好像被AI替代了，没有任何思考能力。或者说思考能力下降了<br>这话一听好像是对的，但其实不对。<br>为什么不对呢？因为不是AI让我们失去了思考能力，而是AI让我们空闲下来的时间，我们自己所做的活动，让我们失去了思考能力，我们分析一下<br>AI能帮人做什么？AI可以帮你做一些重复劳动，帮你写代码，这些都是可以帮你节省时间的事情 所以说这个角度看<br>AI是一种效率工具，可以帮你做事。但帮你做完事了，你自己空下的时间，都去干嘛呢？ <br>以守望先锋的大锤为例。这个英雄没什么操作空间，比较笨重。把盾打开，搁那一站，卡住位置，就基本没事干了 一个常用操作护盾和护甲的相互循环之外就没了。所以攻略里面会问一句，请问省下来的注意力应该做什么<br>而在AI时代之后，我们也都该想想这个问题，当AI帮我们 做了事情之后，我们剩下的注意力都去做了什么？</p>
+<p>一般有下面两种情况<br><strong>第一种情况最常见的，那就是刷刷短视频，看看论坛，隔一会看一下AI执行的怎么样了，然后继续</strong><br><strong>第二种情况，看书 并且思考并理解里面的内容或者其他非短线活动</strong> <br><strong>我想大部分人肯定是第一种情况，问题就在第一种情况</strong></p>
+<p>所以回到开头的问，为什么有些人会觉得自己在AI时代的思考能力下降呢？就是因为AI给他空出的时间，他都去做那些第一种情况所做的短线活动，比如说短视频、游戏，那么很快，这些活动的设计特性就会让你的阈值越来越高，越来越只能接受短平快的内容，所以你会觉得自己好像没有思考能力了。<br>不管是游戏还是短视频，它们在情感、情绪上的奖励是很快的，它天生就是为了短平快而设计的，不像书本，不像思考，奖励往往在苦思冥想10分钟、5分钟之后才会获得<br>说个不恰当的比喻，就像像你每天起飞个四五次之后，第二天觉得自己好像没反应了，但是你要是禁欲个四五天，会发现明明是很正常的舞蹈自己都能起反应。<br>所以答案就是，<strong>当AI替我们工作之后，我们之所以觉得自己的思考能力下降了，是因为我们把空下来的时间都放在了一些短线活动上，而没有持续投入到长线活动上。自然而然，人们的习惯会倾向于短平快。但好消息是，这种习惯是可逆的</strong><br>怎么解决，就是去做那些需要长线集中注意力的活动</p>
+<p>如何去实操一步一步恢复你的思考能力呢<br>我介绍一下我的方法，不是强制去戒断这些东西，比如说逼迫自己戒了短视频游戏，而是转移自己的注意力<br>比如说在AI工作的时候去冥想呀。把注意力集中在呼吸上<br>或者去深度的读一本书，去理解它，就像我一般会问一个问题，这一段说的什么？核心内容我可以用自己的话说出来吗？这句话有效的边界是什么？什么时候没有效果？作者写这句话的时候，他的前置条件是什么？<br>亦或者去做一些手工，比如拼一些玩具呀，这是很多人所喜欢的<br>再或者就是像我这样，去把自己的想法写下来，写成一篇文字，然后只要又有时间，就把它修改，修改来修改去，真的也许对人有用呢<br>这篇文章就是这么出来的。也许不对，也许对，我不知道。但希望对大家有用</p>
+
+        </div>
+        <!-- ============ 写到这里结束 ============ -->
+
+        <!--
+            系列导航：改 href 和标题即可。
+            没有上一篇时，用 disabled 的写法（第一行示例）；
+            没有下一篇时，把 disabled 加到下一篇上。
+        -->
+        <nav class="series-nav">
+<a class="series-card disabled" href="#" aria-disabled="true">
+<span class="series-label">上一篇</span>
+<span class="series-title">这是系列的第一篇</span>
+</a>
+<a class="series-card next disabled" href="#" aria-disabled="true">
+<span class="series-label">下一篇</span>
+<span class="series-title">这是系列的最后一篇</span>
+</a>
+</nav>
+
+    </article>
+
+    <!-- ======== 页脚（不要动） ======== -->
+    <footer class="footer">
+        <p class="footer-wordmark" data-site-name>绝顶赵</p>
+        <p><span data-site-name>绝顶赵</span> · 个人博客</p>
+        <p>适应性平衡理论 · 原创者：<span data-site-name>绝顶赵</span></p>
+        <p>基于 MIT-Style with Attribution 协议发布</p>
+    </footer>
+
+    <!-- ======== 底部脚本（不要动） ======== -->
+    <script>
+        (function () {
+            /* 站点名填充：data-site-name / data-site-latin 全部跟随 SITE 常量 */
+            var named = document.querySelectorAll('[data-site-name], [data-site-latin]');
+            for (var i = 0; i < named.length; i++) {
+                named[i].textContent = named[i].hasAttribute('data-site-name') ? SITE.name : SITE.latin;
+            }
+
+            /* 顶部滚动进度发丝线 */
+            var bar = document.getElementById('progress-bar');
+            function onScroll() {
+                if (!bar) return;
+                var h = document.documentElement;
+                var max = h.scrollHeight - h.clientHeight;
+                bar.style.width = (max > 0 ? (h.scrollTop || window.pageYOffset) / max * 100 : 0) + '%';
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            /* 代码块一键复制按钮 */
+            var COPY_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+            var CHECK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M20 6 9 17l-5-5"/></svg>';
+            /* 只有带 data 语义的块才挂按钮：生成器会给「不该复制」的块加 .no-copy */
+            var formulaBlocks = document.querySelectorAll('.formula-block:not(.no-copy)');
+            for (var fi = 0; fi < formulaBlocks.length; fi++) {
+                (function(block) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'formula-copy-btn';
+                    btn.innerHTML = COPY_SVG + '复制';
+                    btn.addEventListener('click', function() {
+                        // 只取正文：克隆后剔除块标题与按钮自身，避免把标签混进剪贴板
+                        var clone = block.cloneNode(true);
+                        var titleEl = clone.querySelector('.fb-title');
+                        if (titleEl && titleEl.parentNode) titleEl.parentNode.removeChild(titleEl);
+                        var btnEl = clone.querySelector('.formula-copy-btn');
+                        if (btnEl && btnEl.parentNode) btnEl.parentNode.removeChild(btnEl);
+                        var text = clone.textContent.trim();
+                        function done() {
+                            btn.innerHTML = CHECK_SVG + '已复制';
+                            btn.classList.add('copied');
+                            setTimeout(function() {
+                                btn.innerHTML = COPY_SVG + '复制';
+                                btn.classList.remove('copied');
+                            }, 2000);
+                        }
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(text).then(done, function() {
+                                var ta = document.createElement('textarea');
+                                ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px';
+                                document.body.appendChild(ta); ta.select();
+                                try { document.execCommand('copy'); done(); } catch(e) {}
+                                finally { document.body.removeChild(ta); }
+                            });
+                        } else {
+                            var ta = document.createElement('textarea');
+                            ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px';
+                            document.body.appendChild(ta); ta.select();
+                            try { document.execCommand('copy'); done(); } catch(e) {}
+                            finally { document.body.removeChild(ta); }
+                        }
+                    });
+                    block.appendChild(btn);
+                })(formulaBlocks[fi]);
+            }
+
+            /* 滚动渐显（prefers-reduced-motion 下跳过） */
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var reveals = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                for (var j = 0; j < reveals.length; j++) reveals[j].classList.add('in');
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+            for (var k = 0; k < reveals.length; k++) {
+                reveals[k].style.transitionDelay = Math.min(k * 70, 350) + 'ms';
+                io.observe(reveals[k]);
+            }
+        })();
+    </script>
+</body>
+</html>
